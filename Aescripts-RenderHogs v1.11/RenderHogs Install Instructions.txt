@@ -1,0 +1,7 @@
+﻿Thank you for downloading RenderHogs!  Please copy the “djRenderHogs v1.11.jsxbin” file to the Scripts UI Panels folder:
+
+Mac Users:
+/Applications/Adobe After Effects <version>/Scripts/ScriptUI Panels/
+
+Windows Users:
+C:\Program Files\Adobe\Adobe After Effects <version>\Support Files\Scripts\ScriptUI Panels\

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionList>
+    <Extension Id="com.aescripts.proio.panel">
+        <HostList>
+            <Host Name="AEFT" Port="1975"/>
+            <Host Name="PPRO" Port="1765"/>
+        </HostList>
+    </Extension>
+    <Extension Id="com.aescripts.proio.settings">
+        <HostList>
+            <Host Name="AEFT" Port="1976"/>
+            <Host Name="PPRO" Port="1766"/>
+        </HostList>
+    </Extension>
+    <Extension Id="com.aescripts.proio.relink">
+        <HostList>
+            <Host Name="AEFT" Port="1878"/>
+            <Host Name="PPRO" Port="1768"/>
+        </HostList>
+    </Extension>
+    <Extension Id="com.aescripts.proio.about">
+        <HostList>
+            <Host Name="AEFT" Port="1879"/>
+            <Host Name="PPRO" Port="1769"/>
+        </HostList>
+    </Extension>
+</ExtensionList>

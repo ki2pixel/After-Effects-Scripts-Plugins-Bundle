@@ -1,0 +1,19 @@
+﻿【Script installation】
+
+1. Copy the ReTrack.jsxbin file to the AE script directory:
+
+Win: ...Adobe After Effects CC\Support Files\Scripts\ScriptUI Panels\
+Mac: Applications\Adobe After Effects CC\Scripts\ScriptUI Panels\
+
+
+2. Open the AE software settings, check *Allow script to read and write and access the network:
+Win: Edit - Preferences - General
+Mac: After Effects CC - Preferences - General
+
+AE CC2019.1 or later at:
+Win: Edit - Preferences - Scripts and Expressions
+Mac: After Effects CC - Preferences - Scripts and Expressions
+
+
+3. You can see the ReTrack.jsxbin script under the window menu at the top of the software
+

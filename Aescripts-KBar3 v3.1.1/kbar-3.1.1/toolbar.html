@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>KBar Toolbar</title>
+        <style id="style">
+            * {
+                font-family: 'Roboto', sans-serif;
+                padding: 0;
+                margin: 0;
+            }
+            * {
+                -webkit-user-select: none;
+            }
+        </style>
+        <script>
+            if (typeof cep_node !== 'undefined') {
+                window.require = cep_node.require;
+                window.Buffer = cep_node.Buffer;
+                window.process = cep_node.process;
+            }
+        </script>
+    <link href="styles/vendor.css" rel="stylesheet"><link href="styles/toolbar.css" rel="stylesheet"></head>
+    <body unselectable="on">
+        <div id="page"></div>
+    <script src="js/vendor.js"></script><script src="js/toolbar.js"></script></body>
+</html>

@@ -1,0 +1,4 @@
+﻿{
+	"EditMonkey.jsxbin" : "ADOBE_AE_SCRIPT_UI",
+	"EditMonkey" : "ADOBE_AE_SCRIPT_UI"
+}

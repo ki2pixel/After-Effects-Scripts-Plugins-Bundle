@@ -1,0 +1,37 @@
+# IDE & project settings
+.idea/
+.vscode/
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs & temps
+*.log
+*.tmp
+*.bak
+
+# Archives / installers (large binaries)
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.tgz
+*.bz2
+*.xz
+*.iso
+*.dmg
+*.pkg
+*.exe
+*.msi
+
+# Generated manifests / large exports
+blob_manifest.json
+blob_manifest_fresh.json
+regenerated_manifests/
+
+# Misc
+*.swp

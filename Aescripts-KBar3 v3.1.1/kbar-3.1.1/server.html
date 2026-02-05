@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>KBar Server</title>
+    </head>
+    <body>
+        <body>
+            This page is not designed to load in a standalone web browser. It can only be loaded in CEP.
+        </body>
+        <script>
+            const SERVER_JS = '/js/server.js';
+
+            /**
+             * The intention of this initialization logic is to make it possible to load the server
+             * code in CEP that runs with HMR or simply standalone. At the time of writing webpack
+             * has a bug where if you configure HMR to emit served files on disk it won't do it. As
+             * a result the only way to get the code that must run is to fetch it first and inject
+             * it into the node execution context. This hack isn't necessary if running standalone
+             * as the files are already on disk. If the HMR bug ever gets fixed the edge case code
+             * can be removed.
+             */
+            function initForCep() {
+                const isWebpackHmrRunning = location.href.indexOf('http') === 0;
+
+                if (isWebpackHmrRunning) {
+                    const pathToServerJs = SERVER_JS + '?t=' + +new Date();
+
+                    fetch(pathToServerJs)
+                        .then((r) => r.clone().text())
+                        .then((code) => cep_node.require('vm').runInThisContext(code, { filename: SERVER_JS }))
+                        .catch(console.error);
+                } else {
+                    const dirname = typeof __dirname !== 'undefined' ? __dirname : cep_node.__dirname;
+                    cep_node.require(dirname + SERVER_JS);
+                }
+            }
+
+            function initForBrowser() {
+                alert('This page is not designed to load in a standalone web browser. It can only be loaded in CEP.');
+            }
+
+            window.addEventListener('load', () => {
+                if (typeof cep_node !== 'undefined') {
+                    initForCep();
+                } else {
+                    initForBrowser();
+                }
+            });
+        </script>
+    </body>
+</html>

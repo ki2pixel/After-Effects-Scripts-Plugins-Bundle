@@ -1,0 +1,21 @@
+[Script installation]
+
+
+1. Copy the TypeMonkey.jsxbin and (TypeMonkey_TextMods) and Freebie folders to the AE script directory:
+
+Win: ... Adobe After Effects CC \ Support Files \ Scripts \ ScriptUI Panels \
+
+Mac: Applications \ Adobe After Effects CC \ Scripts \ ScriptUI Panels \
+
+
+2. Open the AE software settings and check the * to allow the script to read, write and access the network
+
+Win: Edit-Preferences-General
+Mac: After Effects CC-Preferences-General
+
+
+3. TypeMonkey script can be seen under the window menu at the top of the software
+
+
+
+
