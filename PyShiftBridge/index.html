@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'" />
+    <title>PyShiftBridge</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>PyShiftBridge</h1>
+        <div class="sub">CEP mailbox bridge (JSON) → PyShiftAE</div>
+      </header>
+
+      <section class="card">
+        <div class="row">
+          <label for="opacityValue">Opacité Fill</label>
+          <input id="opacityValue" type="number" min="0" max="100" step="1" value="75" />
+        </div>
+        <button id="btnSetOpacity" class="btn">Modifier Opacité Shape</button>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <div class="badge" id="status">Idle</div>
+          <div class="mono" id="bridgePath"></div>
+        </div>
+        <pre id="log" class="log"></pre>
+      </section>
+    </div>
+
+    <script src="./js/CSInterface.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

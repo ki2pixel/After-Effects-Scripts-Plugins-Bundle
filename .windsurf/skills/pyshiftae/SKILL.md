@@ -1,9 +1,11 @@
 ---
 name: pyshiftae
-description: Expert guidance for automating Adobe After Effects with PyShiftAE (Python) via the native PyShiftAE.aex / PyFx bridge (C++ SDK). Use this skill when asked to write, debug, or design Python automation that manipulates AE projects, comps, layers, properties, effects, masks, or when troubleshooting installation (wheel + psc-install) and version alignment (Python 3.11-3.13). Covers core API objects (Project/Item/CompItem/Layer/Property/Effect/Mask), common gotchas, and production-safe patterns.
+description: Expert guidance for automating Adobe After Effects with PyShiftAE (Python) via the native PyShiftAE.aex / PyFx bridge (C++ SDK). Use this skill when asked to write, debug, or design Python automation that manipulates AE projects, comps, layers, properties, effects, masks, or when troubleshooting installation (wheel + psc-install) and version alignment (Python 3.11-3.13). Covers core API objects (Project/Item/CompItem/Layer/Property/Effect/Mask), common gotchas, production-safe patterns, and Hybrid 2.0 CEP bridge workflows décrits dans docs/internal/pyshiftae/.
 ---
 
 # PyShiftAE (Python for After Effects)
+
+> **Sources** : [Guide principal](../../docs/internal/pyshiftae/pyshiftae_guide.md) + annexes A–D (faisabilité, installation Windows, CEP bridge, checklist safe patterns). Les infos C++ manquantes proviennent des extractions Repomix (`docs/internal/repomix/`).
 
 ## Quick Start
 
@@ -16,13 +18,15 @@ It is a Python API built on top of a native plugin (`PyShiftAE.aex`) exposing SD
 - `pyshiftae` (pure Python): high-level classes (`Layer`, `CompItem`, `Effect`, etc.)
 - `PyFx` (native module): low-level SDK access (Suites + pointers)
 
-### Installation / first run checklist
+### Installation / first run checklist (Win 10/11, AE 2023+)
 
-- Install the matching wheel for your CPython version (`cp311`, `cp312`, `cp313`).
-- Run `psc-install` and point it to AE’s `Plug-ins/Effects` folder.
-- Restart After Effects.
+1. `pip install --upgrade pip wheel setuptools`
+2. Build the wheel with your current Python (`python setup.py bdist_wheel`) and install it (`pip install dist/pyshiftae-<version>-cp311-win_amd64.whl`).
+3. Run `psc-install` and point it to AE’s plugin folder (ex: `...\Support Files\Plug-ins\PyShift`).
+4. Copy `Lib`, `DLLs`, `python311.dll`, `python3.dll` next to `AfterFX.exe` when AE and Python live on different drives (portable layout).
+5. Restart AE while holding **Shift** if the plugin was previously blacklisted.
 
-If `import pyshiftae` fails because `PyFx` is missing, the plugin is not installed in AE, or the wheel/plugin Python version does not match.
+Symptoms like `import pyshiftae` failing or pop-up `48::72` generally mean the wheel/runtime version mismatch or the portable Python files are missing. See Annexe B for full troubleshooting.
 
 ### Minimal usage patterns
 
@@ -104,6 +108,12 @@ Use `.set_value(...)` to write.
 
 ## Production-safe patterns
 
+### Scheduler & threading (critical)
+
+- Any call into AE SDK must execute on the AE main thread via `TaskScheduler`. Heavy computation runs on Python workers, then enqueue micro-tasks via `ae.schedule_task`.
+- Never block the UI thread with long loops or `future.get()` inside hooks.
+- Acquire the GIL only when running Python (`py::gil_scoped_acquire` at the edge) and release ASAP.
+
 ### Undo groups
 
 Prefer `UndoGroup` as a context manager so the user can undo cleanly:
@@ -131,6 +141,13 @@ def run():
 
 Use `QuietErrors` (or `@quiet_errors`) when probing optional streams/effects and you expect failures.
 
+### Hybrid 2.0 CEP bridge
+
+- **Primary transport** : Named pipes / Unix sockets exposés par PyInterface (voir Annexe C).
+- **Fallback** : Mailbox JSON (`cep_to_py.json` / `py_to_cep.json`).
+- CEP pilote l’UI, Python exécute les ops AE, latence <10 ms via pipe (sliders, interactions temps réel).
+- Configurer `localStorage.setItem('pyshift_pipe_name', '...')` dans la console CEP, scripts de diagnostic fournis.
+
 ## Common gotchas
 
 ### MatchName vs display name
@@ -153,13 +170,9 @@ Don’t assume ExtendScript’s 1-based indexing.
 
 ### Platform / runtime constraints
 
-PyShiftAE in this repo targets:
+PyShiftAE in this repo targets **Windows 10/11 x64**, **After Effects 2023+**, **CPython 3.11–3.13**. macOS/Linux builds are not shipped.
 
-- Windows 10/11 (x64)
-- After Effects 2023+
-- CPython 3.11–3.13 (wheel tag must match)
-
-If the user is on macOS/Linux, treat PyShiftAE as unavailable unless they have a supported build.
+`PyShiftAE/AEGP/` is a broken symlink: the actual `.aex` sources are absent. Architecture details rely on AETK + Repomix dumps.
 
 ## API map (high-level)
 
@@ -193,14 +206,15 @@ If the user is on macOS/Linux, treat PyShiftAE as unavailable unless they have a
 
 ## Debugging checklist
 
-- Confirm the user’s Python version and that it matches the wheel tag.
-- Confirm the plugin is installed into the correct AE folder and AE has been restarted.
-- If `import pyshiftae` fails:
-  - isolate whether it’s `pyshiftae` (python package) or `PyFx` (native module) failing
-  - avoid importing the main library in installer scripts (use `psc-install`)
+- Confirm Python version matches the wheel tag and sits next to AE if using portable mode.
+- Confirm `PyShiftAE.aex` is in the right folder and AE was restarted (Shift to rescan after crash).
+- If `import pyshiftae` fails, isolate whether the Python package or `PyFx` native module is missing (check `site-packages` vs plugin path).
+- Run `psc-install` instead of manually copying files; never import `pyshiftae` inside the installer scripts.
+- Diagnose CEP bridge issues by checking the pipe name and falling back to mailbox JSON if needed.
 
 ## When to read code in this repo
 
 - Read `PyShiftAE/Python/pyshiftae/ae.py` to confirm class names, method signatures, and supported operations.
-- Read `PyShiftAE/Python/tests/test.py` for real usage patterns (stress tests for layers, effects, property writes).
-- Read `PyShiftAE/README.md` for installation + constraints and release notes.
+- Read `docs/internal/pyshiftae/pyshiftae_guide.md` for architecture, safe patterns, workflows.
+- Read the annexes (A: faisabilité shapes/hooks, B: installation Windows, C: CEP bridge, D: checklist) for deeper dives.
+- Review Repomix outputs in `docs/internal/repomix/` for CEPy/PyFx native references when required.

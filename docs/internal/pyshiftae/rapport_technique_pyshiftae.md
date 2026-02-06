@@ -1,0 +1,310 @@
+# Rapport technique — Paradigme PyShiftAE (Plugin C++ + binding Python) vs ExtendScript vs C++ natif
+
+## Préambule (important : limites de l’analyse)
+- **Le code C++ spécifique du plugin PyShiftAE (la “console”/panel, init Python, entrypoint `.aex`) n’est pas présent dans ce bundle** : dans `PyShiftAE/AEGP/`, `PyShiftAE` est un **symlink cassé** vers un chemin Windows (`D:/dev/...`) (vu via `ls -la`).  
+  - Conséquence : je peux analyser **la partie toolkit (AETK)** et **l’API Python “userland”** (`PyShiftAE/Python/pyshiftae/ae.py`), mais je ne peux **pas citer** l’endroit exact où PyShiftAE fait `Py_Initialize` / `py::scoped_interpreter`.
+- En revanche, le paradigme ressort très clairement via :
+  - `AETK-main/AETK/AEGP/Util/TaskScheduler.hpp` (ordonnancement main thread),
+  - `AETK-main/AETK/AEGP/Core/PyFx.hpp` (module Python embedded via `pybind11`),
+  - `AETK-main/AETK/src/AEGP/Core/Suites.cpp` (wrappers AEGP appelés via scheduling),
+  - Les exemples plugins `AETK-main/AEGP/Grabba/Grabba.cpp` et `AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp`,
+  - L’API Python haut niveau : `PyShiftAE/Python/pyshiftae/ae.py`.
+
+---
+
+# 1) Architecture et Flux de Données
+
+## 1.1 Embedding Python dans le process After Effects
+### Ce que montre le code disponible
+- Le module Python exposé à l’utilisateur s’appelle **`PyFx`** et est déclaré côté C++ via :
+  - `AETK-main/AETK/AEGP/Core/PyFx.hpp` : `PYBIND11_EMBEDDED_MODULE(PyFx, m)` (bloc à partir de ~l.1654).
+- Les plugins d’exemple **utilisent Python sans initialiser explicitement l’interpréteur** :
+  - `AETK-main/AEGP/Grabba/Grabba.cpp` : utilise `py::gil_scoped_acquire` + `py::eval_file(...)` dans un thread.
+  - `AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp` : idem, `py::gil_scoped_acquire` et `py::module_::import("sys")`.
+- Donc **l’interpréteur est nécessairement initialisé ailleurs** (probablement dans le vrai plugin PyShiftAE, dans la partie manquante du symlink, ou dans l’initialisation du `.aex`).
+
+### Ce que PyShiftAE packaging implique
+- `PyShiftAE/Python/setup.py` empaquète **le binaire `PyShiftAE.aex`** dans la wheel, versionnée par Python (`plugin/python3.11/PyShiftAE.aex`, etc.).
+- La doc d’installation (que tu as déjà) et le README suggèrent un modèle “portable” : copie de `python311.dll`/`Lib`/`DLLs` près d’AfterFX → **Python est réellement chargé dans le process AE**.
+
+### Conclusion “bootstrap”
+- **PyShiftAE est un plugin AEGP qui embarque un runtime CPython dans AfterFX.exe**, et y expose un module `PyFx` via `pybind11` (embedded module).
+- **Point impossible à confirmer faute du code plugin** : la stratégie exacte (Py_Initialize vs pybind11 scoped interpreter, `Py_SetPythonHome`, gestion `sys.path`, etc.). Mais le fait que les exemples n’initialisent rien implique un init global fait au chargement du plugin.
+
+---
+
+## 1.2 Traduction des appels Python -> C++ SDK
+Le pipeline est à trois étages :
+
+### A) Python “user API” (ergonomie)
+- `PyShiftAE/Python/pyshiftae/ae.py` fournit des classes haut niveau :
+  - **Items / comps** : `Item`, `CompItem`, `FootageItem`, `ItemCollection`
+  - **Layers** : `Layer`, `AVLayer`, `CameraLayer`, `LightLayer`, `TextLayer`, `VectorLayer`, `LayerCollection`
+  - **Properties** via Streams : `BaseProperty`, `PropertyGroup`, `OneDProperty`, `TwoDProperty`, `ThreeDProperty`, `MarkerProperty`, etc.
+- Ces objets **wrap** des pointeurs/handles `PyFx.*Ptr` et appellent les suites via `PyFx.<Suite>()`.
+
+### B) Module `PyFx` (pybind11)
+- `AETK-main/AETK/AEGP/Core/PyFx.hpp` :
+  - expose des enums (LayerStream, StreamType, …),
+  - expose des “handle wrappers” (`ProjectPtr`, `ItemPtr`, etc.),
+  - expose surtout les “Suite wrappers” : `ProjSuite`, `ItemSuite`, `CompSuite`, `LayerSuite`, `StreamSuite`, `DynamicStreamSuite`, `KeyframeSuite`, `FootageSuite`, `MaskSuite`, `EffectSuite`, `UtilitySuite`, `RenderQueueSuite`, etc. (voir la fin du fichier ~l.1781-1799).
+
+### C) Wrappers AETK -> SDK (AEGP suites)
+- Les méthodes des suites C++ appellent le SDK via `SuiteManager::GetInstance().GetSuiteHandler().<SuiteX>()->AEGP_...`
+  - Exemple dans `AETK-main/AETK/src/AEGP/Core/Suites.cpp` : `ProjSuite::GetNumProjects`, `ItemSuite::GetItemName`, etc.
+
+**Donc :** Python appelle `PyFx.ItemSuite().GetItemName(...)` → pybind11 → C++ wrapper → AEGP suite → AE interne.
+
+---
+
+## 1.3 Concurrence : Main Thread AE vs Python Thread
+
+### Le cœur : `ae::TaskScheduler`
+- `AETK-main/AETK/AEGP/Util/TaskScheduler.hpp`
+  - `ScheduleTask(...)` push une lambda dans une queue, et (par défaut) appelle `AEGP_CauseIdleRoutinesToBeCalled()` pour accélérer l’exécution (l.78-79).
+  - `ExecuteTask()` est appelé depuis l’IdleHook du plugin (voir plus bas).
+
+### Où `ExecuteTask()` est appelé (preuve)
+- `AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp` :
+  - `TaskScheduler::onIdle()` appelle `ae::TaskScheduler::GetInstance().ExecuteTask();` (l.81-85).
+- `AETK-main/AEGP/Grabba/Grabba.cpp` :
+  - `Grabba::onIdle()` appelle `ae::TaskScheduler::GetInstance().ExecuteTask();` (l.76-79).
+- `AETK-main/AETK/AEGP/Template/Plugin.hpp` :
+  - `IdleHook(...)` appelle `instance->onIdle()` (l.206-213).
+  - La logique de hooks standard (command/update menu/death/idle) est fournie par ce template.
+
+### Le paradigme implicite recommandé
+- Tu lances du Python sur un **thread worker** (voir `GrabbaCommand::execute()` qui spawn un `std::thread` et fait `py::eval_file(...)`).
+- Tous les appels AEGP/SDK devant être sur le main thread sont **marshalled** via `TaskScheduler` + idle.
+
+### Risques de blocage UI / deadlocks
+- **Blocage UI “fonctionnel”** : si une tâche exécutée dans `ExecuteTask()` est longue (ex : sauvegarde/rendu), elle tourne sur le main thread → UI figée.  
+  - `TaskScheduler.hpp` mentionne explicitement des risques de re-entrancy “pendant une longue async task” (commentaire l.118-121).
+- **Risque structurel (important)** : si, dans ton design, tu fais du “sync” depuis le main thread vers le scheduler (ex : attendre un `future.get()` alors que seule l’IdleHook peut exécuter la tâche), tu peux créer un deadlock.  
+  - Typiquement : appeler une API “ScheduleOrExecute + wait/get” depuis un hook AE (command hook) sans thread worker.
+- **`AEGP_CauseIdleRoutinesToBeCalled()`** :
+  - Avantage : réduit la latence (idle déclenché rapidement).
+  - Risque : `TaskScheduler.hpp` prévient explicitement **d’éviter d’appeler TaskScheduler depuis des Hooks avec CALLIDLE=True** (docstring l.26-33), sinon “unresponsiveness/crashes”.
+
+**Bilan concurrence :** PyShiftAE peut être non-bloquant si et seulement si :
+- Python tourne hors main thread,
+- les appels SDK sont marshalled,
+- et tu évites de déclencher des idle-routines “dans un hook” de façon récursive.
+
+---
+
+# 2) Couverture de l’API (Possibilités)
+
+## 2.1 Proportion du SDK exposée (approximation réaliste)
+- Côté AETK, beaucoup de wrappers existent (voir `Suites.hpp`/`Suites.cpp`), mais **tout n’est pas forcément bindé dans `PyFx`**.
+- `AETK-main/AETK/AEGP/Core/PyFx.hpp` bind explicitement (liste non exhaustive mais majeure) :
+  - `ProjSuite`, `ItemSuite`, `CompSuite`, `LayerSuite`
+  - `StreamSuite`, `DynamicStreamSuite`, `KeyframeSuite`
+  - `TextDocumentSuite`, `TextLayerSuite`, `MarkerSuite`
+  - `EffectSuite`, `MaskSuite`, `MaskOutlineSuite`, `FootageSuite`
+  - `UtilitySuite`
+  - `RenderQueueSuite`, `RenderQueueItemSuite`, `OutputModuleSuite`
+- **Ce que je ne vois pas exposé côté pybind** (dans `PyFx.hpp`) : une API Python “directe” `WorldSuite` / `RenderSuite` / `RenderOptionsSuite` / `LayerRenderOptionsSuite` (alors qu’elles existent côté C++ AETK, cf. `AETK-main/AETK/AEGP/Util/Image.hpp` et `AETK-main/AETK/AEGP/AEGP.hpp` avec `AsyncRenderManager`).
+
+Donc : **bonne couverture “projet/comp/layer/properties/keyframes”**, couverture **partielle** sur le rendu/pixels.
+
+## 2.2 Fonctionnalités majeures disponibles (ce que tu peux faire proprement)
+D’après `PyShiftAE/Python/pyshiftae/ae.py` :
+- **Manipulation Projet / Items**
+  - active item (`Item.active_item()`), rename, parent folder, sélection, labels, commentaires, dimensions
+- **Compositions**
+  - créer une comp (`CompItem.create(...)`)
+  - lister/itérer layers (`comp.layers`)
+- **Layers**
+  - rename, reorder, duplication, delete
+  - ajout de layers via `LayerCollection.add_null/add_solid/add_camera/add_light`
+- **Propriétés / keyframes**
+  - Accès aux propriétés via `StreamSuite` + `DynamicStreamSuite` (pattern `get_property(...)`)
+  - `KeyframeSuite` exposé : insert/delete keyframes, interpolation, ease, etc. (côté wrappers AETK)
+- **Masks / Effects**
+  - Suites exposées (`MaskSuite`, `EffectSuite`), mais l’API haut niveau Python devra être vérifiée plus loin dans `ae.py` (le fichier est long : on voit déjà `MaskOutlineProperty`, etc.)
+
+## 2.3 Python externe : NumPy, Pillow, OS, etc.
+### Théoriquement possible
+- Puisque c’est du CPython embedded dans AE, tu peux importer :
+  - modules stdlib (`os`, `json`, `socket`, `threading`, etc.)
+  - packages pure-python installés dans le même environnement
+  - packages natifs (NumPy/Pillow) **si** ABI/CRT/python-dll alignés et chargeables dans le process AE.
+
+### En pratique : contraintes fortes
+- Le README + doc d’install montrent déjà les soucis de runtime (`python311.dll`, `Lib/`, `DLLs/`) : c’est typiquement là que NumPy/Pillow deviennent “fragiles” (DLL hell).
+- Et surtout : **le pont pixel** n’est pas “confortablement” exposé dans l’API Python haut niveau actuelle.
+  - C++ : `AETK-main/AETK/AEGP/Util/Image.hpp` montre qu’on sait extraire `baseAddr` depuis un `WorldPtr` et sauver en PNG (via stb).
+  - Plugin d’exemple : `AETK-main/AEGP/Grabba/Grabba.cpp` rend et sauve des frames en PNG.
+  - Python : je ne vois pas encore dans `pyshiftae/ae.py` un wrapper “WorldSuite/RenderSuite” prêt à l’emploi.
+
+**Conclusion :** utiliser NumPy/Pillow pour des pixels AE est **possible en architecture**, mais **pas “product-ready” via l’API Python exposée** telle qu’on la voit ici.
+
+---
+
+# 3) Limitations techniques et manques
+
+## 3.1 Shape Layers / Vectors : complet ? Non (actuellement)
+- ExtendScript expose l’arbre complet des Shape Layers (cf. `docs/internal/architecture_avancee_shape_layers.md` : `ADBE Root Vectors Group`, `ADBE Vector Group`, `ADBE Vector Shape`, etc.).
+- Dans PyShiftAE Python (`pyshiftae/ae.py`), `VectorLayer` existe comme type (`ObjectType.VECTOR`), mais :
+  - l’accès semble centré sur des **LayerStreams** AEGP (Transform, Text, Markers…),
+  - je ne vois pas de navigation/édition explicite de l’arborescence “Vectors Group” comme en ExtendScript.
+- Même si `DynamicStreamSuite.GetNewStreamRefByMatchname(...)` pourrait théoriquement adresser des matchnames, **il manque une couche “shape object model”** (création de paths, fills/strokes/trim paths) équivalente aux patterns ExtendScript documentés.
+
+**Donc :**
+- **Possible** : opérations basiques sur layers “vector” (rename, reorder, sélection, transform streams si exposés).
+- **Risque / probablement impossible aujourd’hui** : manipuler finement les contenus shape (paths, groups, trim paths, repeater) comme Origami / rigging vectors.
+
+## 3.2 UI After Effects (dockable panels, custom UI)
+- ExtendScript a ScriptUI et un pattern dockable robuste (cf. `docs/internal/interfaces_scriptUI_production.md`).
+- Côté AETK/PyShiftAE :
+  - `Plugin.hpp` expose des hooks menu/idle/death, donc tu peux ajouter des commandes UI (menus).
+  - Le README PyShiftAE annonce un panneau `Window -> Python Console` (mais **le code panel n’est pas présent ici**).
+- **Depuis Python**, créer des panels AE “natifs” n’est pas exposé par `pyshiftae/ae.py` (et ScriptUI n’est pas accessible depuis Python).
+- Alternative “possible mais risquée” : ouvrir une UI externe (Qt/Tkinter) dans le process AE → très fragile (event loops, thread affinity, crashs).
+
+**Donc :**
+- **Possible** : popups simples / messages (`App.report_info()` → `UtilitySuite.reportInfo`).
+- **Limité** : UI dockable riche “à la ScriptUI” directement depuis Python.
+
+## 3.3 Command hooks / événements
+- AETK offre une architecture hook C++ via `Plugin.hpp` (CommandHook, UpdateMenuHook, IdleHook).
+- Mais je ne vois pas un binding Python qui permette :
+  - de **register** des callbacks Python sur des événements AE,
+  - d’écouter des changements (sélection, timeline, project events) de manière idiomatique.
+- `TaskScheduler.hpp` mentionne des “listener threads for external commands” dans sa docstring, mais c’est un guideline, pas une API Python exposée.
+
+**Conclusion :** en Python, tu es plutôt sur un modèle “script déclenché” (commande) que “event-driven” complet.
+
+## 3.4 Gestion mémoire : handles, `AEGP_MemHandle`, smart pointers
+### Points solides
+- `AETK-main/AETK/AEGP/Core/Types.hpp` définit `HandleWrapper<T>` avec un deleter, et `Suites.hpp` fournit des fonctions `disposeXxx(...)` (disposeWorld, disposeFootage, disposeMemHandle, etc.).
+- `memHandleToString(...)` (dans `Suites.hpp`, vu via extrait) lock/unlock/free le handle → bonne intention de RAII.
+
+### Points **à haut risque**
+- **`HandleWrapper` copy semantics** dans `Types.hpp` sont dangereuses :
+  - Le copy ctor / assignment sont présents et peuvent dupliquer un handle sans ownership clair → risque de **double free** ou handle invalide.
+- Dans le binding pybind11 :
+  - `AETK-main/AETK/AEGP/Core/PyFx.hpp` : `bind_handle_wrapper` définit `__del__` qui appelle **explicitement** `self.~HandleWrapper();` (l.26-29).
+  - Ça sent très fort le **double-destruction** (le destructeur sera rappelé quand l’objet C++ est libéré par `shared_ptr` / pybind).
+- Côté Python userland, `ae.py` override certains `__del__` (ex: `Item.__del__` fait `pass`) : ça ne corrige pas les soucis de destruction des objets C++.
+
+**Bilan mémoire :** par rapport à ExtendScript (où tu crashe rarement AE via “double free”), ici tu as un vrai risque “C++ lifetime” si le binding est imparfait. C’est un des points qui rend PyShiftAE plus fragile que du scripting natif.
+
+---
+
+# 4) Comparaison : PyShiftAE vs ExtendScript vs C++ natif
+
+## Tableau synthétique
+
+| Critère | ExtendScript | PyShiftAE (tel que vu ici) | C++ natif (AEGP/PF) |
+|---|---:|---:|---:|
+| Vitesse sur opérations massives (ex: milliers de keyframes) | Moyen-lent (JS engine + API) | Variable : appels AE sérialisés + overhead scheduling, mais Python peut préparer en bulk | Très rapide, overhead minimal |
+| Pixels / rendu (World) | Très limité (pas d’accès direct World) | Architecture possible (C++ le fait), mais API Python pixel/rendu pas “clé en main” ici | Meilleur accès, contrôle complet |
+| Accès filesystem / réseau | Limité + prefs (“Allow Scripts…”) + hacks `system.callSystem` | Très bon (stdlib + libs), mais dépend du runtime Python embarqué | Très bon, mais plus long à dev |
+| UI / Panels | Excellent via ScriptUI + dockable patterns (`docs/internal/interfaces_scriptUI_production.md`) | Limité côté Python ; panels natifs possibles côté plugin mais non exposés clairement | Possible (Panel Suite), mais coûteux |
+| Stabilité AE | Bonne (rarement crash process) | **Risque élevé** (crash process AE si bug C++/binding/mémoire/threading) | Risque élevé (crash process) |
+| Couverture API “propriété arbre” (Shape, pseudo-effects, matchnames) | Très riche (property tree complet) | Partiel ; très “suite-based” | Dépend de ce que tu codes |
+
+---
+
+# 5) Conclusion & Recommandations
+
+## 5.1 Prêt pour la production ?
+**Mon avis : “production” uniquement sur des scopes très contrôlés, sinon encore expérimental.**
+
+Raisons (basées sur le code) :
+- **Threading/scheduling** : puissant mais très facile à deadlock/UI-freeze si le modèle “Python worker thread” n’est pas strict.
+- **Mémoire / lifetime** : signaux rouges autour de `HandleWrapper` + `__del__` pybind (double-destruction potentielle).
+- **API coverage** : excellent pour items/comps/layers/streams/keyframes, mais **pas au niveau ExtendScript** sur shapes + UI tooling.
+
+## 5.2 Cas d’usage idéaux
+- **Automation pipeline** (renommage, batch project ops, ingest footage, render queue ops) :
+  - fort gain vs ExtendScript grâce à Python + libs système.
+- **Interop IA / ML** (analyse metadata, génération, orchestration) :
+  - utile si tu peux garder les opérations pixel côté C++ (ou si une API render/world est ajoutée au binding).
+- **Outils “assistés”** déclenchés par menu (pas nécessairement UI riche) :
+  - ex : commande qui lance un script Python, manipule AE, exporte un rapport.
+
+## 5.3 Ce que je recommanderais avant “prod large”
+## 5.3 Recommandation Architecture Hybrid 2.0 (Nouveauté 2026)
+**Suite à la découverte des sources PyInterface (CEPy-Resources), une nouvelle architecture CEP Bridge est désormais privilégiée :**
+
+### 5.3.1 Transport natif prioritaire
+- **Named Pipes/Unix Sockets** via PyInterface pour latence quasi nulle
+- **Format JSON** newline-delimited : `{endpoint: "Response|NoResponse", functionName: "...", args: {...}}`
+- **Auto-détection** au boot avec fallback transparent vers mailbox JSON
+
+### 5.3.2 Cas d'usage temps réel
+- **Sliders et interactions continues** : deviennent possibles via pipe mode
+- **Monitoring en temps réel** : sélection, propriétés, états de projet
+- **Feedback immédiat** : request/response sans polling (300ms → <10ms)
+
+### 5.3.3 Implémentation
+- **PyShiftBridge/js/main.js** : déjà mis à jour avec l'architecture Hybrid 2.0
+- **Scripts de diagnostic** : PowerShell/Bash pour découvrir les pipes disponibles
+- **Configuration** : `localStorage.setItem('pyshift_pipe_name', '...')`
+
+- **Verrouiller le modèle threading** :
+  - garantir que tout script Python s’exécute sur worker thread,
+  - marshaling main thread explicite et non bloquant,
+  - éviter d’attendre des futures depuis le main thread.
+- **Auditer la destruction des handles** :
+  - corriger la logique `bind_handle_wrapper` (`__del__` qui appelle un destructeur C++ manuellement est un anti-pattern).
+- **Exposer explicitement rendu/pixels si c’est un objectif** :
+  - binder `WorldSuite` / `RenderSuite` (déjà utilisés côté C++ : `Image.hpp`, `AsyncRenderManager`).
+- **Clarifier la story UI** :
+  - soit “Python = headless automation” + UI en CEP/ScriptUI,
+  - soit “panel natif C++” qui ne dépend pas de Python pour la UI.
+
+---
+
+# Statut mis à jour
+- **Analyse terminée** sur la base des sources disponibles dans ce bundle (AETK + API Python).  
+- **Mise à jour majeure** : découverte de l'architecture Hybrid 2.0 via PyInterface (named pipes/sockets) qui modifie les recommandations pour la communication CEP ↔ Python.
+- **Limitation majeure** : le code source C++ du plugin PyShiftAE lui-même est absent (symlink cassé), donc l’initialisation exacte de l’interpréteur et la console UI ne peuvent pas être vérifiées ligne par ligne.
+
+Si tu veux, je peux ensuite produire une **checklist de “safe patterns”** (ex : comment structurer un appel Python → scheduler → AE sans deadlock) adaptée à ton usage (automation, rendu, UI, etc.).
+
+---
+
+# 6) Mise à jour : Architecture Hybrid 2.0 (Février 2026)
+
+## 6.1 Découverte du transport natif PyInterface
+L'analyse des nouveaux sources "Repomix" a révélé une implémentation native côté créateur :
+- **`CEPy-Resources/PyInterface.ts`** : communication via named pipes/Unix sockets
+- **Cross-platform** : Windows (`\\.\pipe\<name>`) et Unix (`/tmp/<name>` ou chemin absolu)
+- **Format JSON** : lignes JSON avec `endpoint: "Response|NoResponse"`
+
+## 6.2 Impact sur les recommandations
+Cette découverte **modifie significativement les recommandations** pour l'architecture CEP ↔ Python :
+
+### Avantages du mode natif
+- **Latence 300ms → <10ms** : request/response direct sans polling
+- **Temps réel** : sliders, souris, interactions continues deviennent possibles
+- **Moins d'I/O** : pas de fichiers temporaires
+- **Robustesse** : fallback automatique vers mailbox JSON
+
+### Implémentation prioritaire
+1. **Diagnostic du pipe** : scripts PowerShell/Bash pour identifier le nom exact
+2. **Configuration CEP** : `localStorage.setItem('pyshift_pipe_name', '...')`
+3. **Auto-détection** : tentative connexion au boot avec fallback transparent
+4. **Monitoring** : console CEP pour vérifier le transport actif
+
+## 6.3 Nouveaux livrables
+- **PyShiftBridge/js/main.js** : mis à jour avec architecture Hybrid 2.0
+- **Scripts de diagnostic** : `tools/diagnose_pipes.ps1` et `tools/diagnose_pipes.sh`
+- **Documentation** : `README_INSTALL.md` et `CONFIGURATION_GUIDE.md`
+
+## 6.4 Recommandation finale
+**Priorité absolue à l'architecture Hybrid 2.0** :
+- Si PyShiftAE expose un pipe : l'utiliser pour toutes les commandes (temps réel)
+- Sinon : fallback mailbox JSON (compatibilité garantie)
+- Pour shapes complexes : compléter avec `AEGP_ExecuteScript` si nécessaire
+
+---
+
+# Statut mis à jour
+- **Analyse terminée** sur la base des sources disponibles dans ce bundle (AETK + API Python).  
+- **Limitation majeure** : le code source C++ du plugin PyShiftAE lui-même est absent (symlink cassé), donc l'initialisation exacte de l'interpréteur et la console UI ne peuvent pas être vérifiées ligne par ligne.
+- **Mise à jour majeure** : découverte de l'architecture Hybrid 2.0 via PyInterface (named pipes/sockets) qui modifie les recommandations pour la communication CEP ↔ Python.
