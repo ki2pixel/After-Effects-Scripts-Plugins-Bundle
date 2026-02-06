@@ -1,13 +1,7 @@
 ---
+trigger: always_on
 description: After Effects development standards covering PyShiftAE runtime patterns, ExtendScript/JSX conventions, CEP bridge, shape layers, ScriptUI panels, and production-ready patterns
-globs:
-  - "PyShiftAE/**/*.py"
-  - "PyShiftBridge/**/*.py"
-  - "PyShiftBridge/**/*.js"
-  - "docs/internal/pyshiftae/**/*.md"
-  - "Scripts_AE/**/*.jsx"
-  - "docs/internal/after_effects/**/*.md"
-alwaysApply: true
+globs: 
 ---
 
 # After Effects Development - Windsurf Rules
