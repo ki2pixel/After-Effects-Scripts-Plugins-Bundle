@@ -1,8 +1,0 @@
-﻿Please copy the “jsxbin” file to the Scripts UI Panels folder:
-
-Mac Users:
-/Applications/Adobe After Effects <version>/Scripts/ScriptUI Panels/
-
-Windows Users:
-C:\Program Files\Adobe\Adobe After Effects <version>\Support Files\Scripts\ScriptUI Panels\
-

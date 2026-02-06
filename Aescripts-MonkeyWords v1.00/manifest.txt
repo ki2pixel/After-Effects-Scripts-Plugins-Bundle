@@ -1,4 +1,0 @@
-﻿{
-	"MonkeyWords.jsxbin" : "ADOBE_AE_SCRIPT_UI",
-	"MonkeyWords" : "ADOBE_AE_SCRIPT_UI"
-}

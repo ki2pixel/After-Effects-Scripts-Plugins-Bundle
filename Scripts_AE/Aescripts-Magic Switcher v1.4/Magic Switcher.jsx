@@ -1,0 +1,1132 @@
+/*
+ * Decompiled with Jsxer
+ * Version: 1.7.4
+ * JSXBIN 2.0
+ */
+
+var MS_panelGlobal = this;
+var MSPalette = (function () {
+  function MS_Settings() {
+    var about_win = new Window("dialog");
+    about_win.text = "Settings & About ";
+    about_win.preferredSize.width = 280;
+    about_win.preferredSize.height = 266;
+    about_win.orientation = "column";
+    about_win.alignChildren = ["center", "top"];
+    about_win.spacing = 0;
+    about_win.margins = 0;
+    var panel1 = about_win.add("group", undefined, undefined, {
+      name: "panel1",
+    });
+    panel1.orientation = "column";
+    panel1.alignChildren = ["left", "top"];
+    panel1.spacing = 0;
+    panel1.margins = 9;
+    var group5 = panel1.add("group", undefined, { name: "group5" });
+    group5.preferredSize.width = 280;
+    group5.orientation = "row";
+    group5.alignChildren = ["left", "center"];
+    group5.spacing = 10;
+    group5.margins = 3;
+    var group6 = panel1.add("group", undefined, { name: "group6" });
+    group6.preferredSize.width = 280;
+    group6.orientation = "row";
+    group6.alignChildren = ["left", "center"];
+    group6.spacing = 10;
+    group6.margins = 3;
+    var checkbox1 = group5.add("checkbox", undefined, undefined, {
+      name: "checkbox1",
+    });
+    checkbox1.text = "Ignore locked layers";
+    var MS_lockedLayer_value = eval(
+      app.settings.getSetting(script_name, "MS_lockedLayer"),
+    );
+    checkbox1.value = MS_lockedLayer_value;
+    checkbox1.onClick = function () {};
+    var checkbox2 = group5.add("checkbox", undefined, undefined, {
+      name: "checkbox2",
+    });
+    checkbox2.text = "Ignore Shy layers";
+    checkbox2.alignment = ["left", "center"];
+    var MS_shyLayer_value = eval(
+      app.settings.getSetting(script_name, "MS_shyLayer"),
+    );
+    checkbox2.value = MS_shyLayer_value;
+    checkbox2.onClick = function () {};
+    var checkbox3 = group6.add("checkbox", undefined, undefined, {
+      name: "checkbox3",
+    });
+    checkbox3.text = "Apply only to selected layers when they are selected";
+    checkbox3.alignment = ["left", "center"];
+    var MS_selected_layers_value = eval(
+      app.settings.getSetting(script_name, "MS_selected_layers"),
+    );
+    checkbox3.value = MS_selected_layers_value;
+    checkbox3.onClick = function () {};
+    var edittext1 = panel1.add("edittext", undefined, undefined, {
+      multiline: true,
+      readonly: true,
+    });
+    edittext1.text = "EditText";
+    edittext1.text =
+      "\nMagic Switcher lets you enhance your workflow by instantly turning ON & OFF Layer Styles, Effects and Adjustment layer in your comp.\n\nMagic Switcher works in two modes -\n-- Selecting specific layers to affect\nOr\n-- Selecting NONE and affecting the whole comp.\n\nWork fast. Have fun.\n\nConcept & Design by Igloo Creative House\nDeveloped by Script Fighter\n\nCheck out Igloo Creative House\'s works: https://www.igloocreative.co/\nCheck out Script-Fighter tools: www.gumroad.com/script_fighter\n\nSupport: thescriptfighter@gmail.com";
+    edittext1.preferredSize.width = 280;
+    edittext1.preferredSize.height = 170;
+    var panel2 = panel1.add("group", undefined, undefined, { name: "panel2" });
+    panel2.preferredSize.width = 280;
+    panel2.preferredSize.height = 30;
+    panel2.orientation = "row";
+    panel2.alignChildren = ["center", "center"];
+    panel2.spacing = 8;
+    panel2.margins = 0;
+    var button1 = panel2.add("button", undefined, undefined, {
+      name: "button1",
+    });
+    button1.text = "Product Page";
+    var button2 = panel2.add("button", undefined, undefined, {
+      name: "button2",
+    });
+    button2.text = "More tools";
+    var button3 = panel2.add("button", undefined, undefined, {
+      name: "button3",
+    });
+    button3.text = "Support";
+    var divider1 = about_win.add("panel", undefined, undefined, {
+      name: "divider1",
+    });
+    divider1.alignment = "fill";
+    var group2 = about_win.add("group", undefined, { name: "group1" });
+    group2.orientation = "row";
+    group2.spacing = 10;
+    group2.margins = 10;
+    group2.alignment = ["fill", "bottom"];
+    var button4 = group2.add("button", undefined, "OK");
+    button4.alignment = "fill";
+    button4.preferredSize.width = 135;
+    var button5 = group2.add("button", undefined, "Cancel");
+    button5.alignment = "fill";
+    button5.preferredSize.width = 135;
+    var divider1 = about_win.add("panel", undefined, undefined, {
+      name: "divider1",
+    });
+    divider1.alignment = "fill";
+    var panel3 = about_win.add("group", undefined, undefined, {
+      name: "panel2",
+    });
+    panel3.preferredSize.width = 280;
+    panel3.preferredSize.height = 1;
+    panel3.orientation = "row";
+    panel3.alignChildren = ["center", "center"];
+    panel3.spacing = 8;
+    panel3.margins = 0;
+    var group1 = about_win.add("group", undefined, { name: "group1" });
+    group1.orientation = "row";
+    group1.spacing = 5;
+    group1.margins = 0;
+    group1.alignment = ["fill", "bottom"];
+    var statictext1 = group1.add("statictext", undefined, undefined, {
+      name: "statictext1",
+    });
+    statictext1.text = "Developed by: ";
+    statictext1.alignment = ["left", "bottom"];
+    var ScriptFighterText = group1.add("statictext", undefined, undefined, {
+      name: "statictext1",
+    });
+    ScriptFighterText.text = " Script-Fighter \xa9";
+    ScriptFighterText.alignment = ["left", "bottom"];
+    ScriptFighterText.addEventListener("mousedown", function (event) {
+      SF_OpenTheWebLink("https://gumroad.com/script_fighter");
+    });
+    ScriptFighterText.graphics.foregroundColor =
+      ScriptFighterText.graphics.newPen(
+        ScriptFighterText.graphics.PenType.SOLID_COLOR,
+        [1, 1, 1],
+        1,
+      );
+    ScriptFighterText.addEventListener("mouseover", function (event) {
+      ScriptFighterText.graphics.foregroundColor =
+        ScriptFighterText.graphics.newPen(
+          ScriptFighterText.graphics.PenType.SOLID_COLOR,
+          [0.5, 0.5, 0.5],
+          1,
+        );
+    });
+    ScriptFighterText.addEventListener("mouseout", function (event) {
+      ScriptFighterText.graphics.foregroundColor =
+        ScriptFighterText.graphics.newPen(
+          ScriptFighterText.graphics.PenType.SOLID_COLOR,
+          [1, 1, 1],
+          1,
+        );
+    });
+    button1.onClick = function () {
+      SF_OpenTheWebLink("https://script-fighter.gumroad.com/l/imWqy");
+    };
+    button2.onClick = function () {
+      SF_OpenTheWebLink("https://gumroad.com/script_fighter");
+    };
+    button3.onClick = function () {
+      SF_OpenTheWebLink(
+        "https://mail.google.com/mail/u/0/?fs=1&to=thescriptfighter@gmail.com&su=Magic-Switcher+Support&tf=cm",
+      );
+    };
+    button4.onClick = function () {
+      app.settings.saveSetting(script_name, "MS_lockedLayer", checkbox1.value);
+      app.settings.saveSetting(script_name, "MS_shyLayer", checkbox2.value);
+      app.settings.saveSetting(
+        script_name,
+        "MS_selected_layers",
+        checkbox3.value,
+      );
+      about_win.close();
+    };
+    button5.onClick = function () {
+      about_win.close();
+    };
+    about_win.show();
+  }
+  function SF_OpenTheWebLink(url) {
+    var cmd = "";
+    $.os.search("Windows") != -1 ? (osMechine = "PC") : (osMechine = "mac");
+    if (osMechine == "mac") {
+      cmd += 'open "' + String(url) + '"';
+    } else {
+      cmd = 'explorer "' + String(url) + '"';
+    }
+    try {
+      system.callSystem(cmd);
+    } catch (e) {
+      alert(e);
+    }
+  }
+  var script_name = "Megic Switcher";
+  if (!app.settings.haveSetting(script_name, "MS_lockedLayer")) {
+    app.settings.saveSetting(script_name, "MS_lockedLayer", true);
+  }
+  if (!app.settings.haveSetting(script_name, "MS_shyLayer")) {
+    app.settings.saveSetting(script_name, "MS_shyLayer", true);
+  }
+  if (!app.settings.haveSetting(script_name, "MS_selected_layers")) {
+    app.settings.saveSetting(script_name, "MS_selected_layers", false);
+  }
+  var msg1 = "msg1";
+  var msg2 = "msg2";
+  var msg3 = "msg3";
+  var msg4 = "msg4";
+  var msg5 = "msg5";
+  var msg6 = "msg6";
+  var msg7 = "msg7";
+  var msg8 = "msg8";
+  var msg9 = "msg9";
+  var MSPalette =
+    MS_panelGlobal instanceof Panel
+      ? MS_panelGlobal
+      : new Window("palette", undefined, undefined, { resizeable: false });
+  if (!(MS_panelGlobal instanceof Panel)) {
+    MSPalette.text = "Magic Switcher";
+  }
+  MSPalette.orientation = "column";
+  MSPalette.alignChildren = ["fill", "fill"];
+  MSPalette.preferredSize.width = 400;
+  MSPalette.preferredSize.height = 300;
+  MSPalette.spacing = 5;
+  MSPalette.margins = 2;
+  var layerStyleGrp = MSPalette.add("group", undefined, {
+    name: "layerStyleGrp",
+  });
+  layerStyleGrp.preferredSize.width = 261;
+  layerStyleGrp.preferredSize.height = 85;
+  layerStyleGrp.orientation = "row";
+  layerStyleGrp.alignChildren = ["left", "center"];
+  layerStyleGrp.spacing = 0;
+  layerStyleGrp.margins = 0;
+  var layerStyle_text_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00M%00%00%00%0F%08%06%00%00%00%C2%A1%C2%99B%C3%97%00%00%03BIDATX%C2%85%C3%A5%C2%96%C3%91q%C3%9B0%0C%C2%86%C2%BF%C3%B6%C3%BA%1EoPe%C2%82%C3%A8%01%C3%AF%C3%91%06%C3%B5%06v%26%C2%883A%C2%94%09%C2%A2n%C2%A0NPe%C2%82*%C3%AF%C2%B8%C2%8B%3AA%C2%95%09%C2%AAL%C3%90%3E%C3%B0gL%C2%B3%C2%B6%C3%A3%5E%C3%92%C2%A6w%C3%85%1D%C3%8F%16%09%02%3F%C2%81%1F%20%C3%A1%3F%12w%C2%AF%C3%9C%C2%BD~%C2%AE%C2%9D%C2%B7%C3%AE%5E%C2%BB%C3%BB%0Fw%C2%AF%C2%9E%0F%C3%AB%C3%AF%C2%8A%C2%BB7%C3%AE%C3%9E%C3%BC%C3%86%C2%96%0A%C2%B8%7C%C2%AE%C3%9Fw%C3%8F5%C3%B0%C3%8AR%C2%BE%C2%86%C3%93%C2%BDAs%C3%B79%C2%B0%02N%C2%81%7B%C2%A0%05F%60%C2%A9%C3%B9%06h%C3%8D%C2%ACM%C3%B6T%40%0D%C3%94f%C3%96%C2%BB%7B%C3%94%3DIl4f6im)%3B5%C3%90%C2%99Y%C2%BD%05C%C2%9D%C3%AE7%C2%B3Z%0C%2B%C2%A5%C3%93%03%C2%83%C2%BE%073%5B%25%C3%BBg%40%C2%A7%C2%91%C2%9F%C2%AF%C2%94%C3%ADJS%C2%BDp%0F%C2%BB%C3%8Eof%C3%B5%C3%8E%C2%A0i%C3%83g)_%013%19%0082%C2%B3%C3%81%C3%9D%0B9m%C2%93%C2%AD%C3%8B%08%5E%07%3B%07ne%C2%A3%20%C2%94G%C2%A5Q%08%C3%90%C2%A9t%C3%86%0CC!%0C%00%C2%9F%C2%84%C3%A1%C3%92%C3%9DG%05iJ%0E%3Bj%C3%BD%C3%9C%C3%9Dk3%C2%8Bks%C3%99O%C2%83%13%03%C3%96%C3%AB3%C2%96%C3%B8%12%C3%A8%C2%95%C3%B8i%C2%87%C3%AFi%1F%C3%93%1A%C3%A0%01(%23%00wo%C2%81%C2%BBD%C2%A7%C2%95%C2%A1RA%C2%9C%09d%C3%8C%C3%AA9pcf%C3%B3%04%C3%AC%00%5C%0Bt%C2%94%0B3%C3%9B%C3%96%C2%9B%C2%8A%7C%C3%9D%C3%9D%3BaZ%C2%89%C2%A9Dv*%C2%98%0B%C3%96%C3%AC%C2%85%C2%90%C3%A8%7B%C2%B1%C2%BEJlG%02%C2%94f6j%7FC%08%C3%BE%C2%8A5%11r%C3%9F%C3%85%C2%BE%C2%A0%C2%BD%07%3E%26%19C%C2%81%C2%B9%01%3Eh%C2%AA%250g%25%C2%A0s%C3%A0H%C2%80%1F%C2%83%C2%92%C3%9DX1%10%C3%B3d%C3%AE%C2%97%C3%92%C2%91%0C%C2%84%C3%84%C3%95%0Ar%C2%97%26%20%17%05%C3%A6%5Ex%1A1%C3%B5%04%C2%B8%C3%98%C2%A2%5E%11%C3%98%C2%B4t%C3%B7t~%12%C3%86_%7C%03K3%C2%9B%C3%9E%C3%AE%02%C2%90%18%C3%989%C2%A7%0C%C3%9D%00s%C2%B1l%05%C3%9C%C3%86%C2%9E%20)X%C2%97c%C2%A5%C3%AF%C2%8DR%C2%8C%C2%99%C3%8EE%09%2B%09%C3%89)%C2%81%C3%8F%C3%AE%3Ee%2C%C3%8D%C2%A5%01%C3%9E%C2%8BU%2B%C3%82%C3%81%C3%9B-z3%C2%8D*%1B%23%C2%A1%2F%C3%86%C3%A0%3D%C3%BA%06Fw%2F%C3%B7%05%C3%AD%C2%81M6%C3%84%C2%A6Zez-%C2%81%5D%C2%B1%C3%99G%C2%80%C2%A3~%3B3%C2%AB%C3%A2%20%C3%B4%C2%96%C2%9Eu%3F%C3%99)%3A%C3%B8%C2%92%C3%90%C2%9CK%C3%A0%C2%98%C2%90%C2%B4%3AQ%C2%9Bm%C3%81%03k%C3%A6wi%C2%B5%24%C3%92%03S%C2%8AM%C3%B8zB%3F%C2%AEt%C2%A6%26%C3%B3%C3%9D%C2%A4%C3%A5Y%264%1D%09%19%C2%BBT%1D%C3%87%C3%BEP%13%C3%8A%C3%B6Q%C3%8C%C2%ACSI%5C%02%0F%C3%B1%265%C2%B3%C3%91%C3%9Do%C2%81%C2%95%C2%BBO%3AL%C2%95%1C%C3%AA%C2%90%C3%B7%C3%95Lv%0B%C2%95x%C3%81f%C2%90%26%C3%A0T%C2%BD%C2%B61%C2%B3A%C2%B7%C3%B2\'Bo%C3%9B%C3%A7%C2%A7%250%C2%B7%C3%93%C2%B9b2%16%C3%80%C3%99%1E%C3%9F%1B%C3%A5y%0D%7C%C3%91X%C2%AA%C2%B9~%24%C3%B4%C2%AF8%3F%C3%93%5C.%11X%C2%9B%C3%8D%C3%8F%09%C2%BD%C3%A1%1A%C3%B8N%C2%A0%C3%B8%04T%3B%C2%B2%C2%BF!f%C3%96%C3%89%C3%9F%02%C3%B8%26%0C)%C3%93ZBE%2C%C3%98%0CN%C3%BC%C3%BF5k%15%C2%B9%C3%AD3B%22%C3%AFd%7F%01%5C%C2%99Y%C2%BB%C3%8F%C3%B7%C2%9B%C2%A7%C2%80%C2%AB%C2%99%16%04*o%05%C2%90%3C-%C2%8E%C2%B7%C3%B5%C2%A7Cl%1C%C2%88%013%C3%AB%0F%C3%90%C2%8F%C3%8F%C2%A5%C2%B3%C3%B4%0D%C2%B9Cw%C3%86%C3%BA%C3%92%1A%C3%B2d%C2%A6%C3%AB%C3%91%C3%B7%C2%93A%3BDT~%C2%83z%C3%82%C2%AB%C2%8BJ%C2%AE%02%C2%8AC%18%C3%BD%C2%BB%C3%B2%C3%94%C3%AD%C3%B9%C2%A4%C3%A8%C2%AD%14%C2%9F%19%C2%AF.b%C3%A5%07%C3%82%C3%AB%C3%BD%C3%85%03%06%2F%104B%C3%99%C3%9C%C2%A8%07%C3%BC%0BR%12%C2%9E4%7F%2C%C2%89%3F%01%C3%81%C3%9D%C2%BD%1C%3C%3B%C2%A9%C3%B0%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var layerStyle_text = layerStyleGrp.add(
+    "image",
+    undefined,
+    File.decode(layerStyle_text_imgString),
+    { name: "image1" },
+  );
+  var sprateGrp1 = layerStyleGrp.add("group", undefined, {
+    name: "sprateGrp1",
+  });
+  sprateGrp1.preferredSize.width = 55;
+  sprateGrp1.alignment = ["left", "center"];
+  var btnsGrp = layerStyleGrp.add("group", undefined, { name: "btnsGrp" });
+  btnsGrp.orientation = "row";
+  btnsGrp.alignChildren = ["center", "center"];
+  btnsGrp.spacing = 5;
+  btnsGrp.margins = 0;
+  btnsGrp.alignment = ["right", "center"];
+  var onGrp1 = btnsGrp.add("group", undefined, { name: "onGrp1" });
+  onGrp1.orientation = "stack";
+  onGrp1.alignChildren = ["left", "center"];
+  onGrp1.spacing = 0;
+  onGrp1.margins = 0;
+  var on_Enabled_LS_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%003%00%00%003%08%06%00%00%00%3A%C2%A10*%00%00%0D%26IDATh%C2%81%C2%BD%C2%9A%5D%C2%AC%5D%C3%87U%C3%87%7Fkf%C3%B6%3E%1F%C3%B7%C3%8B%C2%A9%C3%B3%C3%A1%C2%9BF%C2%B1iRC%C2%8A%C2%89%C3%BC%00Q%C2%85%C3%92TM_%C2%A1H%7DG%C3%A5%C2%B5%C2%85%26%12%C2%AA%40J%C2%85*%10%1F%0F%20%C2%90%C2%8A%C3%94H%20%C2%84%C2%A0%0FH%C2%80%C2%90%02%C3%A9%03H%C2%B4%22U%20%C2%B5%C2%82%C3%A2Z%01%C2%B7nH%C3%AD%C2%98%C3%98%C3%B1%17%C2%BE%C2%BE%C3%B7%C3%BA%C3%BA%C2%9Es%C3%B6%C2%9E%C3%85%C3%83%C2%9A%C2%99%C2%BD%C3%8F%C2%B9%C2%B6c%C3%97UF%C3%9A%C3%9A%C3%BB%C3%AC%C2%AFY%C3%BF%C3%B9%C2%AF%C3%B5_kf%1Fa%C2%A1%C3%A9%C3%B1%C3%B55%C3%A0%C2%89i%C3%83%C2%91%18%C3%A5%C2%B0*%03%C2%91%C3%85%C2%BBn%C3%9D%C3%AE%C3%A2V%C3%B4n%C3%AEU%10a%C3%A2%C2%9C%C2%9E%C2%AA%03o%02\'%C3%A5%C3%A8%C3%B9k%C3%BD%7BB%C2%B9%C3%B9%C3%B8%C2%BA%03%C2%9Ez%C3%A3%7B%C3%A1%C3%8B%C3%A7%C3%8E%C3%9E%C3%B8%C3%94%C3%85s%C2%93%C2%A5%C3%89%04%C2%BC(%C2%83%01x%01%C3%B1Py%C2%BB%C3%9F%C2%89%20%0E%5C%C3%9FzY%C3%B8%7D%C2%9B%16u%1EML%C3%87%1A!%C2%AA%C2%A2%0A%C2%B3%16b%C2%84%C2%B6%C2%85%C3%89%0CT%C2%85%C3%81%00%1EX%1F%5C%7F%C3%A4%C3%A0%C3%A8%C2%9Bz%7C%C3%BD%C3%B7%C2%81cr%C3%B4%7CL%C3%9D%1B%C2%90%1BS%C3%B9%C3%85%C3%97%5E%C3%97%17%C3%9F%C3%BA%C3%9E%C3%B6%C3%BA%C2%B9%C3%B3-%C2%822%C2%AC%C2%A1%0E0%C2%AC%C2%85%10%40%1C%C3%94%C2%95%10%04p%C3%A0%5D%C3%82%20%10%7C%C3%813%07n%C3%AF%10w%C2%87m%C3%AC%C2%81H%C3%BB%C2%B6%C2%B1sQa%C3%9A(%C3%8D%0CZ%C2%85%C3%9D%5De%C3%9A%C3%80%C2%B4%01%C2%8D%C3%82%C3%83%1F%C3%B6%3C%C3%BES%C3%8B%C3%A7%3F%C3%BE%C2%B3%C3%B2%C3%B9Q%C2%AD%C3%BF%24G%C3%8F%C3%87%C3%8C%C3%8CS%C3%BF%C3%B1%C2%BA%C2%BEx%C3%B2%C3%84%C3%96%C3%BA%C3%85K-u%0DKCaPA%15%60440%5E%C2%A0%C2%AA%C3%81%C2%8B%C3%A0%04%5C%3AgL%C2%A57%C2%B9%C2%85%C3%9F7c%24%C3%A3%C2%8A%3D%10j%C2%BF%C3%9B6%C3%BDn%C2%95Y%23%C3%8CZ%C2%985J%15%C2%84Y%02s%7DW9%7B%C2%B6a%3A%C3%9DZWV%5E%7C%C3%B6%C3%A7%C2%B9%00%C2%BC%16%C3%B4%C3%B8%C3%BA%C3%9A%C2%89S%C3%95%0B%C2%A7%C3%9F%C2%BA%C2%BA%C2%BE%C2%B9%C3%99%C2%B2oM%18V%C2%B04%16%C2%86%C2%95%C2%81%18%C2%8F%208%08%15%04\'x%0F%C3%9E%C2%83Kn%26%C2%80x%C3%81%25%C2%96%C3%AE%C2%A4%C2%A9B%04Hn%15%13%C2%98%C2%98%C2%B6%C2%A6%15f%C2%8D2k%C2%A1i%C2%84%C3%9D%09%C3%8C%1A%C2%98L%C2%95A%0D%C2%BB%03%C3%98%C3%9Cl9%C3%BD%C3%96%C3%B6%C3%BA%C2%89%07%C3%AE%7BA%C2%8F%C2%AF%C3%BFr%00%C2%9E%C2%B8%C3%B8%C3%9E%C3%AE%C2%B3%C2%97.G%C3%86caT%0B%C3%83%01%2C%C2%8F%C2%85%C3%A1%40%C2%92%C2%9B%19%10%C3%A7%60P%0B%3E%C2%B9%C2%98%C2%93%04J%40z%3E%25%C3%BE%0E%C3%80%C2%B4%C3%9Dq%C2%AB%1D%23%C2%B363%C2%A4L%1AA%C2%A3%C2%B1%11*%C2%98M%C2%95%C2%BA%C2%B6%C3%91sNqA%C2%B8t9r%C3%B1%C3%BC%C3%AE%C2%B3%7C%C3%94%3F%11%C2%A6%0DG._%C2%98%2Ci%C2%B4%C3%98%18%C2%8E%C3%8C%C3%A0%C3%B1H%C2%A8%2B%C2%A8j%0B%C2%BA%C3%9AA%08P%C3%97%06D%10%7C0%20%0E%C2%8B\'w%07%20r%C2%8B%C3%89x%C2%8D%10%C2%91%22%08ukL%C2%B5%C2%AD%C3%A0g%C3%90%C2%B4%C3%A0%23%20%C2%8A%C3%B3%023e%C3%98fw%C2%80%1B%C2%BBp%C3%B9%C3%82di%C3%9A%C2%8C%C2%8F%C2%84%18%C3%A5%C3%B0%C2%ACQF%23a4%C2%82%C2%A5%11%C2%8C%06%C2%B0%C2%B4%04u0%40%C3%A3%143!%C3%80%20%C2%98%C3%91%22%C3%A0%C2%9Dt%C2%AE%C3%A6%C3%AE%1C%C3%88bk%C2%93j%014%C2%AD%C2%A2%08m%03%C3%B5%14%C2%9A%08Mc%C3%BDU3%18%C3%8C%40P%C3%84%C2%9B%C2%9A%C3%AELL(b%C2%94%C3%83A%C2%90%C2%81%C3%B3%16%C3%98u-%C3%94%03%C2%A8%C2%87bJV%C2%9Bz%0D%06%06%C3%8A%07%C2%A8%C2%82%C3%A0%7B%C3%AE%C2%95%C2%BD%2B%C3%9C%05%2B%C2%B9%C2%95%C3%A0%C3%B7%C3%86JT%08*4%C2%AD%0D%C2%9C%C2%88%C3%A2%15Bc%C3%B15%C3%B1J%C3%B0%C3%82%C2%8D%C2%990%C2%8CJ%C2%8C0%18(%C3%8E%3Ce%10%C3%80b!%04s%C2%A9%C2%AA%C2%B2%5C%C3%A2%2BI%60%C2%A0%1E%C2%98%C2%B1%C3%81%1B(%C2%97%C2%A498%00%C2%99S.w%C2%87%0Ce%26%C2%A0cUUi%5B%7BGV%3Ai%C2%AD%C2%BF%C2%BA%05EP%60X%2B%C2%AA%C3%82%2CB%C2%A8%14%C2%9F%062%00%C2%84%C3%8A%40%0C%13%3B%C2%83%C2%A10%1A%C3%82p%00U%06%15%C2%AC%13%03c%C3%AE%C3%95W%C2%AE%C2%BB%C2%A9%12%60%3E%C2%BE%C2%B4%C3%A4%1AS%C3%8A%C2%A8%06L%C2%BCIs%C3%9BZ%5C%C3%A1%14q0i%C2%84%16%C2%A5%C2%8DJU%C2%99%C3%BD%05%C2%8C%C3%B7PU%0E%170f%C2%821%C3%A3%C2%9D%10%7C%02%C3%A0%C3%AC%C2%BC%C3%B3%C3%86%C3%84%C2%BD%00Yl%22%C2%A5%5C%C2%B1D%C2%9C%C3%B2yDK%C2%A0%C2%87%C3%8A%C3%80FQ%C3%AA%C2%89%C3%92T%C2%A6r%3E%C3%88%3C3%C3%8E%09%C3%8E%5Bb%C3%B2Np%C3%81%5C%C3%88%07K%C2%8C.%C2%98%1C%C2%8B%C3%AB%1E%C2%BCW%007%03%04%06%C3%8A%C3%BBn%0F%C2%80%C2%83Y%C2%AB4%11BL6%C3%8Dl%C2%A0-%C3%9F-0%C3%A3%C2%9D%C2%B1%11jILI%17%C3%B0%0E%C2%BC%C2%B7%C2%87%C3%AFE%C2%B5%C3%AE%06%14%0A%5E%C2%93%04%C2%B7J%C3%B0%C3%90%06%40%25%C3%857L%5B%08%5EKYe%C3%8C%04%C2%BA%C2%9C%C2%91%C3%84%40%C2%82%10*c%C3%83%C2%85%C2%94%5B%1CwW%16%C3%9F%23(\'%26%14N%04%C3%97%08%15J%C2%AB%C3%A0%C2%BD)%C2%98O%C3%9E%23sn%26%16%0B%C2%92%C3%B2%C2%868J%C2%80%C3%BB%C2%94S%C2%90.Q%7D%C2%90%C3%8D%09%C2%A8%18%C2%8062g%C2%9F%0B%C2%82%C3%B3%C2%8B1%C3%A3%C3%8D%C2%A5%7C%C2%95%03%C3%8A6%C3%B1)%C3%A0%0B%C2%A0%0F%1E%C2%8C8%2Bf%C2%9D%17%24Z5%10*%C2%87o%C2%94%C2%AAU%7C%C2%90%C3%B9%C2%98!%C2%A3%C3%8D%C3%AC%C3%B8%5C%C3%BFX%C2%AD%22%C2%89%C2%95%C2%9B%C3%85%C3%8B%C2%AD%26X%C2%B7%C3%82%C2%AC%C2%B7%C2%B9%C2%BExM%C3%84%C3%B2%C2%8D%C3%99%C2%A88\'%C2%88(%226%C3%90f%C2%B7%C3%82%C2%A2%C2%9B%C3%A5*%C3%98%C3%BBL%C2%A3%14%10%C2%A4%C2%89%C3%98%C2%A2%05z%1B4%C3%8A%5E%C3%85%C3%AB%C3%9F%C2%9Fc%C3%BBfh%C3%BA%C3%8FJJ%C2%A0%C2%A4t%C3%A0%C2%BC%01%C3%881%5C*%11%C2%8A%C2%9AI%C2%B9%C2%90Y%12%C2%97%C2%8E%C3%BB%C3%AEU2%C2%B5%C3%95P%C3%93%19%C2%B4%C2%B2%C2%86%5B%7D%067%3A%08%40%C2%BB%C3%B5%5D%C3%9Ak%C2%AF%C3%A0%C2%BD%15%C2%AE%C3%9E%5B%3D%1D%C2%97%C2%9Fa6S%2B%22%C2%B7OPq%C2%8D%C2%90rD%C2%8C%C2%A0%C3%8B%C2%9F%60%3A34%C3%AD%C2%B5W%18%0D%5C*S%C2%92%3D%C2%A9%7FIr%2C%3E%C3%87%C2%8F%C3%B5Q%C3%80%14%C3%84%22%C3%85%C3%95pi%2F%C2%94%7D%06%12%C2%A3%C3%8D%2B%C3%B4%C3%81_c%C3%B9%C3%90%17q%C3%95%C2%BE%C2%B9%01nv%C3%8Ep%C3%AD%C3%94%C3%AF%20%C3%97_NU%C2%B6%C3%A0%0F%C3%BFm%C3%B6%066%C3%9F%C3%BE*%C3%97%C3%8F%C3%BC.%C3%83%C2%810%1A%0Am%C2%AB%C3%94%3F%C3%B9we%0E%7F%C3%AE%C2%9F%1F%C2%B0d%1D%C2%A4%C2%B8v%0E%7C%C2%A3%C2%AD\'%02%5E%0B%C2%8BV%5D%C3%B9%C2%8E%C2%8D%2C%C2%89s%C2%8C%C3%B4%C2%B6V%C2%95%C3%9D%C2%99%22%C2%8F%C3%BD9%2B%1F%C3%BD%C2%AD%3D%40%00%C3%82%C3%B8%20%C3%BB%C2%8F%C3%BE%05%C3%AD%C3%BA%C2%97%C3%99%C3%99U%C2%A6%C3%8D%C2%BC%2F%C2%AE~%C3%A496%C3%BD%C3%93%5C%C3%9Dj%C2%995%C3%8A%C3%AEt%C3%BE%C3%BA%3B%17Zv%26%C3%8A%2C%C2%AAy%5E%C2%AF%7F%C2%91%C2%9E%C2%9D%C3%99%C3%A6%C2%BC.%C2%91Q%C2%BB%C2%9E%7B%C3%A5%C2%9Bsy%C2%91%C2%8FU%C3%92%C3%82%C3%82%C2%83%C2%BF%C3%8A%C3%92%C2%81%C3%8F%C2%94%C3%8E%C2%BF%7F%C3%ACOx%C3%B5%C3%AF%7F%C2%89c%C3%9F%C3%B8%1C%3F%3C%C3%B1%C2%97%C3%A5%C3%BC%C3%9AG%C2%9Ec%3B%3C%C3%8D%C3%95%C2%AD%5EU%C2%99%C3%9A%C2%81%C2%A3%7F%C3%8C%C2%A5%C2%AD%15nL%C2%95%C3%89%02%C3%98%C2%AD%1B%C2%91%26%C3%9A%C3%AC3%C3%B7%C3%9D%C2%B7%C2%A5ok%C2%8Eu%C2%80%60%2B*%C2%92.%26%C3%97%C3%B2%C2%82%C2%84%C3%BC%14%20%C2%82%C2%A6%C3%BAi%C3%96FV%1F%C3%BDb%C3%A9%C3%B8%C3%95%C2%97%3E%C3%87%C3%86%C3%99%C2%97%C2%A8*%C2%AB%C3%99.%C2%9F~%C2%89%C3%AB%C3%97Ns%C3%A4%13%C2%BFm%2C%C3%BC%C3%84s%C2%9C%C3%BB%C3%8E%2B%3C%C2%BC%00f%C2%B4z%C2%88%C3%BD%C2%87%C2%9Fg%C3%B7%C3%B2%1F%C2%94B3%C2%B7%26%0A%C2%AA%0E)%C3%81%02%C2%88%C3%9A%C3%90%C2%BB%C3%98%C3%85%C2%B5OI%3D%09Ur3%C3%93%C3%AA%12%2By(%C3%BA%14%03MT%C3%9A%C3%B1%C3%93%C3%85%C2%B5%C2%AE%5E8%C3%8E%C2%953%2Fq%C3%A8%C2%91%C2%8A%C3%83%C2%87*%C2%9Ex%C2%AC%C3%A6%C3%B1%C2%835%C3%9B%C3%AF~%C2%BDs%C2%A9%03%C2%9F%C3%A4%C2%BD%2B%C2%BD92p%C3%A9%C3%9C%1B%00%3C%C3%BA%C3%A4%C3%B34%C3%A3%C2%A7%C3%B7%C2%B8%C3%99%5C%C2%BF%C2%8B%C3%B9M%C2%92%7D.\'yA%C2%92%00%C2%B8t%C2%BD%C2%8B%C2%9B%C2%AC%1AY%C2%BD%C3%92%16%05%C2%A6%C2%AD%C2%A2%C2%A3\'K%7F%C3%93%C3%89%06U%25%C2%AC%2C9%C3%AE%5B%C3%B5%7Ch%C2%9F%C3%A7%C2%A1%C3%BD%C2%9E%C3%BBW%C2%B7%C2%99l%C2%9F.%C3%B7-%3D%C3%B8%C3%899%3B%C3%BF%C3%BD%1B%C3%8F%C2%97%C3%A3%C3%BB%7F%C3%BA%C2%8F%C2%B8zc%C3%A5%C3%96%40%C3%9C%C3%BC%C3%96%C2%B7%C2%AF%C2%B0%C2%B3(%00%C2%9D%1Fv%C3%8Ct%0Cu%C3%9Bl%C3%A7%C3%8C%5C%C2%9F%C3%8E%C2%A7%C3%B9P%C3%AD%C2%A8k%C3%87p%C3%A8%18%0D%1D%C2%83%C3%A5C%C3%A5%C2%BE%C2%9D%C2%AD%0E%18%C3%80%C3%86%C2%A5%C3%A3%C2%9C%C3%B8%C3%B6W%00%18%C2%AE%1Cb%C3%BF%C3%A3%C3%8F%C3%9D%C2%82%C2%99%C3%85%C3%88%C3%AF%C3%AC2%3B%C2%93%C3%9D%7D%01%10%C3%A9%C3%A2%25%23.%C2%A3%C2%91%C3%9E%C3%A5%C2%9CM%C3%9C%7C%7C%C2%A7%C3%B4w%C3%9FCG%C2%A9%06%C3%BB%C3%B6%C2%B8C%C2%B5%C3%9A%C2%B17%C2%9Bl%C2%A0%C2%93n%00%00F%23%C3%A1%C3%8A%C3%A9%C2%AF%C2%B3%C2%9B%40%1E%7C%C3%B2%C3%B9%C2%B9%C3%ABeyra%2B%C2%B9%2F3%C3%A4%3B%C2%9B%0B%C2%98%C2%A2f%C2%99V%C2%A1%C3%A8%C2%B9%0D%C2%BF%C2%8D%C2%88%0F%0E7%7D%C2%B3%C2%B0S%0D%C3%B6%C3%B1%C3%B8%C3%8F%7D%C2%85%C3%AD%1Dec%3Bru3rys%C2%99%C3%A5%C3%87%C3%BE%C2%B0%18%C3%B6%7Fg%C3%BF%C2%91%C3%BD%1F*%C2%AB%C3%80%C2%80M%C2%BF%C2%83lr%C3%B6%C2%8D%2F%C3%ADe%C2%A4%C3%8FJ%C3%9Ezy%C2%AE%C2%90%C3%A5%C3%92x%C2%BB%C2%BE%C2%9A%C3%A5%C3%A7%C2%B22%C2%B8%C3%BE%0B%1C%C2%B6%02%C2%94Va0%C2%97%C3%9A%C3%B8%C2%9F%C3%9F%C3%A3%C2%81%C2%9F%C3%B93%00%1E%C3%BD%C3%98%C2%AF09%C3%B8)%26%C2%9B%C3%9F%25%C3%94%C3%BB%C2%B8o%C3%B5I%7C%12%C2%88%C3%99d%C2%83%2Bo%C3%BF)%C3%8B%C3%A3%C3%B9%C3%95%0E%C3%A7%C2%85%C2%BA%16%C2%A6%C2%9B%C3%9F%C3%A6%7F%C3%BF%C3%BB%C2%AB%3C%C3%B2%C2%B1y7%C2%93%C3%A2V%C2%94%C2%BD%C2%88%23%0A%C3%A0bW%C3%95%C3%B7%C2%98*%C3%8CH%C2%9A%C2%AD%C2%89%C3%AFFDD%C3%A6%C2%99J%C2%9B%C3%B7%C3%82l%C3%A3e~%C3%B0%C2%9D_%2F%C2%9D%0F%C2%96%0E%C2%B2%C2%BA%C3%BE%19%C3%86%C3%BB%C2%9F)%40%C2%A6%C2%BB%1B%C2%BC%C3%B1%2F%C2%9F%C2%A5%C3%92%C2%B3%2C%2F-T%C2%A8bks%2B%C3%8B%C2%8Ex%C3%B9k%C3%ACn%C3%8F%C2%BB%C2%A1%2C%C3%B4%C2%99%C2%990%C3%93%C3%92%40%3B%C3%A9j%C3%88909%C3%8F%C2%88%C2%94%C2%87T%C2%BA%C2%8E%C3%A9%C2%81%C2%AA%C2%93%11%C3%95%C3%8E%C3%9F%C3%B0%C2%83o%3D%C3%85%C2%A5%1F%C3%BE5%C2%B3%C3%89F1%C3%A4%C3%BA%C3%A6i%C3%8E%C2%9C%C3%BC%2B%C2%8E%C2%BD%C3%BCi%C2%96%C3%83%7F%C2%B1o%C3%8D3%1A%09%C3%BD%C2%B6%C2%B2%C3%A4%18%C2%8FL(%C3%B6-os%C3%AD%C2%AD%C3%9F%C2%98%C2%BB%C2%BE%3Cv%C2%84%C2%90S%C2%85%C3%B5%C3%9B%C2%8F%23%C3%89%C2%803%C2%A0%144%C3%A6fN%10%C3%AD*Y%1B%C2%99%C2%9E%C2%AF%C2%A6%C2%9B%C3%85%C2%99%C2%9B%C2%89S%C3%AE%5B%C2%83%C2%9D%C3%9Dw%C3%99%7C%C3%BB7y%C3%AB%C3%B5%2F1%C2%99F%C3%9A%C3%96%12%C3%AB%C2%A0%C2%B6%C2%A5%C3%9D%7D%C2%AB%15%C3%83%C2%A1%C2%A3%C2%AA%C2%84%C2%8D%C3%BF%7C%C2%84%0BWZ%C2%B6%C2%AE%C2%B7%C2%AC%C2%ADzF%23G%5D%0B%C3%83%C2%A1cv%C3%BDU%C3%9E%C3%B9%C2%B7%C2%879w%C2%B1%C3%819X%5E%C3%B1%C2%A9%1F%C2%B3%3E%C2%974%C3%A2lYW%C2%9D%C2%96%C3%98%C3%89%C3%93%C2%94%1E%C2%98%C2%BE%12v%C3%BE%C2%AAhw%C2%9CN%C3%9B%C2%A2%C2%B9PU%C2%9E%C3%B1Xi%5B%C3%8F%C2%BE5O%C3%9BjY%C3%A1%C3%8F%C2%8B%C3%ABKc%C2%87%C3%8F%C2%AB9%C3%8E%C2%B1%C3%AE%C2%85%C3%BB%1B%C2%8B%C2%9F%C3%91%40%C2%A8*!xam%C3%95%C2%B1%C2%B4d%1B6%C3%A0%C2%8CG%C2%8E%C3%A0%C2%A5%C2%AC%C3%9C%14%01p%19%196%C2%97%C3%A9%C3%85L%C2%99%C3%8Fdy%C2%9E%03%C2%91%1E%C3%94%C3%B4%C2%A6%C3%85%C3%B9I%086%0B%5D%C3%B1b%1D%C3%B6fW%22v%3D%3F%12*a%C3%A4%C2%94a%C2%BA\'%C2%AF%C3%B6%C2%88%C2%A4O%24%0E%C3%9C%C2%B2%C3%8C%C2%BD%5B%C3%BA%C2%AF%14%C2%88%12Md%5D%3E%C3%97-%0F%2F0%C2%93%5D%0Ap%C2%A0b%C3%B4%C3%86Ds%C2%99%C2%A8%C3%B5%5E%0E6%C3%89%C3%8B%C3%93%C3%96%C3%856%C2%B7%C2%B6%C2%96%C3%9Fq%C2%B3k%C3%A9%C3%95%C2%95%C3%9B%7B%3DF%3A7%2B%1E%03%C2%88Z%5C%C2%8B%C2%B9%7D%07%26M%C2%A0rP%01E%01%C2%8A%18%C3%88%C3%8Dg%C2%8F%C2%8B%C2%86%C3%9D%C2%AE%C2%BD%C3%9F%7D%7B%C2%AE%C2%97%5C%C2%A7%16%2B%C2%A9%C3%A0Eb%01a%25M_%002%C2%90%C2%82%C3%98%C2%A1%C2%A2%C3%B6%C2%A9%01%5B%C2%95%C2%8F(%0E%C3%B7c_%C3%BC%C2%BB%5D%C2%8BjxbTZ%C3%95%C3%82%C2%92v%25r%C2%89%C3%B7%0E%C2%8C%C3%83*%C3%89%C3%A4%5E%C2%90%1E%C3%AA%C2%B9%C2%9A%C2%8D%C2%92%22%C3%88%07%02H3%10Q%C2%B3)y%C2%88bS%00Z%05%C2%A7%C2%8Bn%26f%C2%A4%156%C3%B6%22I%C3%A8%13%2B%C3%99g%C3%B3%C2%A8h\'r%5D%C2%BBW%C2%80%3A%7Fh%C2%83%18%0B%C2%A8%C2%B2%C2%B8%C2%9Ee!%C3%85%C2%90%C3%B3%C3%B9nI%C3%93%C3%AE%C3%8CF%0E%175Z%25%C3%9A%C2%83.O%14%C3%85%C2%A1h%09%2B%C3%97%C2%A7H%C3%AF%3Cv%C3%B6%C3%A0%C2%98%03%C2%A2E%19%15%C2%A1U%C2%881%C3%9A%C2%A7%C3%82%C3%B4%C3%AD3%C2%96%7D%C3%AA%C2%B8%C2%BFnfF%C2%88%C2%BD%08%C2%88%C2%A9%26%C2%8Bjn%C3%95%266%C2%9C(Q%5D%C2%89K%03%C3%98%C3%AD%C2%BA%7Cp\'%C2%A8t%0F%1B%C3%B6%C3%81I%0A%C3%80%C2%A81%19-%C3%86%12%10Q%C2%A2%08*%11%C3%8DU%00%7D5s%C3%85%C3%BD%3A%C3%BF%24%C2%87%C2%91%C2%A0%C2%9AD!%C2%8F%1Cv%3E%26%03Dzvi%C3%89%C3%99%C3%AF%07%C3%A5%C2%A6%C3%A7%0A(4%C2%81%C3%88.g%C2%80J%13%01%C2%89%25%C3%87\'0%3AA%C3%92GQ%1C.%C2%A9F%13!%084%C2%98%C2%9E%3B5ws%C2%A9%C3%94%11t%C3%AE%2B%C2%99%40)%2B%C3%BA%C2%AD%C3%8F%C3%91-!%C3%86%C3%AE%C2%9Aj%2F%C3%B8%C3%93%C2%A2%C2%86*%C2%B4Qi%C2%A3%105%C3%92%C2%A60P%C3%AD%03%C3%94I%C3%B0%C2%9ES%15%C2%B0%C2%9B%C3%B4%3Cb_%C2%A5%3C%C3%90%C3%A2%C3%AC%0BVt%C2%A8S%22%C3%A93%C2%83Z%18%C2%96PJ%03E%C3%BB%C2%A3%05%C2%8D%C2%A6%C2%A0)%C2%81%C2%9E%C3%81d9%C2%9E%C2%8B%C2%97%C2%9C.(%C3%BB%60e%C3%96%C2%A9%10%5C%7C3%C3%B8%C2%B5%C3%AB%3E%5E%5B%C3%8A%C2%99%15%11%22%C2%82%C2%A8%C2%A28%22%C2%8Ah*MR%C3%879w%C2%91%C2%A4%C2%BA%13%C3%B4%C2%AE%C3%9D%0E%C3%9A%22K%C2%99%11%C3%A8j%3C%C2%8D%C3%9D\'%C3%81%C2%98X%C2%B1%C3%9C%C2%93%C2%9D%C3%9D%C2%BE%C2%B5Vn%C3%ADzp%5Bo%06%C3%A0%C3%A4%C3%90%C2%AD%7Ck%C3%96%5E%C3%BB%C2%85%5DUZ%154%7D%C2%94%C2%B7u%C2%AB%16%C2%A7%0E%11M5%5CW%19%18%C2%88%C2%9EY2%C2%B7%7B%C3%9F%C2%A6%7B%0E%C2%98%C2%93bM%7F%08R%20%C2%B6%C2%B1%C2%B8%C2%9C%C2%AD%C2%A9%C3%99%C2%B7%C2%9A%C2%91%C3%82%C3%90-%7F%13%C2%B6N%C3%9A%60%1F_%C3%BF%C3%B8%C2%99%C3%8D%07%C3%BEaV%5DX%C2%9FD%C3%8B%C2%AA%C3%81%C2%BB4%0B%C2%90%C2%B9%19%C2%AC%C2%A4Ra.%C3%8F%2CX%7F%C3%97%60%16Nt%C2%80b%C2%91%C3%AD%C3%98%C3%BB%C2%B7S%C3%93Fb%C2%84!J%C3%95%3Et%C3%BE%C3%A0%C3%AA%C2%A5%C3%8F%C3%8A%C3%91%C3%B3%C2%AF%C3%A5%C3%89%C3%B9%C2%B1%C2%87%C2%976%3E%C3%BF%C3%9E%C2%8D%03_%0B%C3%A1%C2%BD%C2%87wUP%C2%8D%C2%80%23%C2%8A%C2%9A%C3%A7%C2%91%C3%8B%C2%A4%C3%8E%C2%84%C3%85b%C3%B1Gm%C2%AA%C2%B78%C2%A6c%C2%A6c%2B%C3%A2%C2%80%C2%B1W%7Cs%C3%A0%C3%9C%C2%81%C2%A5%C2%AB_%00%C2%8EAo%10%C3%B3%C3%BF%C3%8D.%C3%AE%7C%C3%B8%C2%85%C2%89n~Zes%C3%9C%C2%A6%C2%A1%C2%9A%C3%BB%2FL%C2%AFR%C2%B8%C3%A3%C2%94r%C3%87%C2%A8%C3%BA%C2%BB%C3%98%C2%A1%C2%80%C3%B2_%1B%C2%8F%20%C2%BA%C2%BA3%C2%90%C3%95%7F%7Dp%C3%BC%C3%AE%C3%9E%C3%BF%C2%9B%C3%8D%C2%BD%2F%C3%BD%13%C2%B0%C2%8D%C3%AEH%C3%93%C3%8Aa%60%C3%B0c4%C3%B7%5E%C3%9B%24x%3D%C3%A5%5D%C2%BC%C3%A9%3F%01%C3%BF%1F%C2%B16Q%153%02%7F%C2%BE%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var on_Enabled_LS = onGrp1.add(
+    "image",
+    undefined,
+    File.decode(on_Enabled_LS_imgString),
+    { name: "image2" },
+  );
+  on_Enabled_LS.alignment = ["left", "center"];
+  var on_disabled_LS_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%002%00%00%002%08%06%00%00%00%1E%3F%C2%88%C2%B1%00%00%07JIDATh%C2%81%C3%9DZ%C3%8Bn%14I%16%3D%11%C2%91%C2%95%C2%99%C2%95%C3%A5%C2%B7%3D%C2%86B%C3%86%C3%88%C3%86%C2%98%C3%86%C3%93jZb%C3%87%C2%A6%07%C2%A1%C3%B6%C2%A2%C2%BF%60Z%C2%B3%C2%9E%C3%8F%C3%A0%1B%C3%98%22%C2%B1a%C3%91%C2%A3%16K%16%C3%93%12%5E%C2%B0d%C2%855%C2%98F~%C3%91n%19%C2%B9%C3%BC%C3%86%C2%AE%C2%B2%C2%A9t%3E%C3%A3%C3%9EY%C3%A4%C2%A3%C2%AA%0C%C3%86e%C3%B5%C2%A8%C3%AD%C2%9AS%C2%BAR)nd%C3%A6%C2%B9yOD%C3%9C%C2%88*111%C2%81%C3%A1%C3%A1a%0C%0C%0C%60%60%60%00%0F%1E%3C%18%C2%96R%C3%9E%11B%C3%9C%14B%5C%12B%18%C2%B8%00%10B%C3%84%00%C2%B6%C2%89h%09%C3%80%C3%AC%C3%83%C2%87%0Fw%0E%0E%0E%C3%B0%C3%A4%C3%89%C2%93%C3%84%7F%C3%BB%C3%B6m%C3%B4%C3%B6%C3%B6%C3%A2%C3%B1%C3%A3%C3%87%05%00%C3%93%C2%AE%C3%AB%C3%BEP%C2%AB%C3%95%C3%AE%C2%86A8EL%C2%A68G%C3%B2%C3%8D%C2%90RB)%23%2C%C2%98%C2%85%C3%B9%C3%81%C3%81%C3%81%C2%97%C2%8E%C3%A3%C3%BC%C3%82%C3%8C3%C3%A3%C3%A3%C3%A3%11%00%C2%88%C3%89%C3%89I%3C%7D%C3%BA%C2%B4P(%14%C3%BEQ%C2%A9T~%C3%B4%3Do%C2%9A%C2%98q%C3%A4%C2%BA%C3%B0%7D%1FQ%14%C2%9Dw%0C%00%00%C3%9B%C2%B6a%C3%9B6%C2%9CR%09f%C2%A1%00%C2%A7T%C2%9A)%C2%97%C3%8B%3F%C3%87q%C3%BC%C2%AF%5B%C2%B7nE%C2%86%C3%AB%C2%BA%10BL%C2%AF%C2%AE%C2%AE%C3%BE%C2%B8%C2%B7%C2%B77%1D%C3%B8%01%C3%AA%C3%B5%3A%C2%A2(%02%11%C2%9D7%C3%BF%26%1C%40)%C2%85%C2%82Y%40__%1F%C2%BA%C2%BB%C2%BA%C2%A7%C2%B5%C3%96(%C2%97%C3%8B%C2%BB%00%C3%BE%C2%AD%5E%C2%BCx1%7Cxx%C3%B8%C3%8F%C3%9F%C3%9E%C2%BD%C3%BB%7B%18%C2%86p%C3%9D%3A%C3%A28%06%00%08!.%C2%94%01%0C%C2%AD5%C2%82%20%00%C3%80%C3%B0%3C%C3%AFzWWW%C2%ADZ%C2%AD%C2%BE2%C2%A2(%C2%BA%C2%B3%C2%B8%C2%B0x%C3%97u%5D%18%C2%86%01%22J%2F%C2%BA%C2%B8%C3%90Z%C3%A7%C2%AAY%C3%B9m%C3%A5%C3%AEW%C2%B7%C2%BE%C2%BAc0%C3%B3M%C3%9F%C3%B7%C2%A6%C3%8C%C2%82%09%22%C2%82%14%C3%B2%C2%BCy%C2%B6%05%26%C2%86%C2%92%0AA%C3%A0O%01%C2%B8i%C3%94%C3%AB%C3%B5Ka%18%C2%9A%C2%96e%C2%81%C3%81%10%C3%B2bg%23%031A%C2%93%06%C2%87lFQt%C3%89%C3%98%C3%9F%C3%9F7%C2%82%20%C2%84%C2%94%0AJ%C2%A9%C3%B3%C3%A6w%26%24%C2%BC%25%7C%C3%9F7%0Cf%C2%86%C2%94%22%C2%B7NB%C3%86%C2%99%C2%99%C2%91%C2%AC%C3%9A-3C%C3%A7%C2%A0%C2%99%C2%B3%C3%81%C3%8C%10%C3%87%1A%3B%05%19gf%C2%86d%C3%A6%C3%B3%C3%A6%C3%B3%C2%87%C2%91KKt%C2%B8%C2%B4%C2%989%C2%91%16%03%C2%B9u%12r%C3%9E%C3%8C0%C2%88%08%C2%A2%C3%A9%C3%93I%C3%888%C3%A7%19A%C2%87%C3%A7%24%C3%8F%08%C2%84hX\'!%C3%A5LDiF%C3%BE%60Bzzz%C3%A0y%C3%9E%C2%9F%C2%BFwI97I%C3%AB%C3%AC%C3%A8%C3%AB%C3%ABC%C2%B9%5C%C3%86%C3%B0%C2%A5%C3%A1%C2%BC%C3%8D%C3%B7%7D%C2%ACW%C3%96%C2%B1%C2%B1%C2%B1%01%C2%ADu%C3%8B%2C%C3%B8%C3%9D%C3%9F%C2%BE%C3%8B%C2%BF%C2%BF%7D%C3%BB%16%C2%BB%3B%C2%BB%C3%B9%C2%AC%C3%93%C3%9F%C3%9F%C2%8Fon%7F%03%00%C3%98%C3%9F%C3%9F%C3%87%C3%AB%C3%BF%C2%BC%C2%86%C2%94%C2%B2%C3%ADY%C2%B4%C2%91%11%C2%81%C2%86%C2%B5%C2%81k%C3%97%C2%AEatt4%C2%BFI%06%C3%93416%3E%C2%86%C3%81%C2%A1A%C3%8C%C3%8F%C3%8F%23%0C%C3%83%C2%9CLs%C2%BF%C3%89%C3%89IlmmAJ%C2%99T%C3%9B%C2%A2%C3%A1%C3%97Z%23%08%03X%C2%96%05)N%09%26%C3%A5%C3%8C%C3%8C%C2%90g%C3%9D%05%0E%0D%0Eadd%04D%04%22%C3%82%C3%A6%C3%A6%26%C3%A6%C3%A6%C3%A6%C2%B0%C2%B0%C2%B0%C2%80%20%08%40D%C3%A8%C3%AA%C3%AA%C3%82%C3%94%C3%94%14%C2%988%C2%97k%C3%96%C2%9F%C2%88%20%C2%A5%C3%84%C3%98%C3%98%18t%C2%AC%C3%81%C3%8C-%C2%BE8%C2%8AQ%C3%BFX%C2%87%C2%8Eu%C3%9BR%C3%8F3r%C2%96%C2%84%C2%8C_%1FG%26%C3%87%C3%99%C3%99Y%C2%AC%C2%AE%C2%AE%C3%A6%C2%BE%C3%85%C3%85E%C3%9C%C2%BF%7F%1F%C2%A5R%09%C2%A5R%09%C2%83C%C2%83%C3%98%C3%BB%C3%B0%01J)%1C%C2%97%C3%B0%C3%A8%C3%A8(%C3%96%2B%15%C3%B8%C2%BE%0F%26%C3%8A%C3%BDYy%C2%9E%0D%C2%80%2F-%09%19%C3%A7%3C%23%C3%8C%C3%9C%C2%96u%C3%B7%C3%B4%40%08%01%C2%AD5%C3%B6%C3%B6%C3%B6%C3%B0%C3%BB%C3%8A%0A%C3%8CB%01%C2%B6e%C2%A1h%C3%9B%C2%90B%60yi%09Zkh%C2%AD%C3%91%C3%9B%C3%9B%C2%8B%C3%AC%C3%BEY%C2%9B%C3%96%1A%C2%BE%C3%AFCk%C2%8D%C2%BF~%C3%BD5%C2%84%C2%94%20%C2%A2%16%3F%C3%9A%C3%A4%C2%93%C2%99%C3%96%3A%C2%AB%C2%B5%C3%84%C2%A9%C3%86%0C%14%C2%8B%C3%85%5C%02%C3%9B%C3%9B%C3%9B%10B%C3%82qJ(%C2%95%C2%BAP%C3%AA%C3%AA%C2%82S*%C3%81%3D%3A%C3%8A%C3%BB(%C2%A5%C2%A05%C2%81%C2%B9UZ%0B%0B%0B%20%22%14%C2%8BE%C2%8C%C2%8C%C2%8C%407%C3%B9%129%C2%89TU%C2%A7%C3%B3B%C2%BA%20%26%19i%C3%A3C%C2%A4%C3%A1y%5E%0B!%C2%88dO%60%18%0A%C2%86a%C3%802M%14m%3B%C3%B7GQ%C2%84%C3%83%C3%83%03h%1D%C2%B7%5C%C3%B7ny%19%5B%5B%5B%20%22%5C%C2%BDz%15%C2%85%C3%B4%C2%AC%C2%80(%C3%9D%C3%B5%C3%A5%C2%83%C2%A3%1Df%C3%89%18K%06%3B%C3%B3%C2%A9%C3%86%00%C3%BC%C2%A6%40._%C2%BE%C2%9C%C3%B82%C2%A4ivJ%C2%A5%C2%BCO%18%C2%86%0D%C3%AD7%05%22%C2%84%C3%80%C2%9B7o%10%C2%86!%C2%88%08%C3%97\'%26r%1F%C2%A7%7C2%C3%99%C2%B4%C3%83-%0F%C3%A4x%C2%91%C3%B2Yc%C3%86~%C2%B5%C2%8Az%C2%BD%0E%C2%AD5l%C3%9B%C3%86%C3%98%C3%B88%18%00%C2%A5%C2%81%C2%9A%C2%96%C2%85%2BW%C2%AE%C3%A4Z%C3%9F%C3%9D%C3%9D%C3%8D%C3%BD%C3%8Dc%C2%80%01%04A%C2%80%C3%B7%C3%AF%C3%9F%C2%B7%C2%B4k%C2%AD%C2%A13%3E%C3%87%C2%8A%C3%99%2FYc%1D%C3%89.%C3%BC%C3%82%C3%A2(%C2%84%C2%80i%C2%9AX%5B%5B%C3%83%C3%84%C3%84%04%00%C3%A0%C3%86%C2%8D%1Bp%5D%17%C3%95j%15%C2%96e%C2%A1%C2%BF%C2%BF%1F%22-%19%0E%0E%0E%C2%B0%C2%B3%C2%B3%C2%83%C2%9E%C2%9E%1E%C3%88t%40%1F%C3%87%C3%A6%C3%A6%26%C2%BA%C2%BB%C2%BB%C3%91%C3%9F%C3%9F%C2%9F%C2%B7%7Dn%C3%B29%09%C2%99%C2%9F%C2%88%20%C2%B3Y%C3%A24%13%00%C2%A4%10%C2%A8V%C2%ABx%C2%B7%C2%BC%C2%9C%C2%BFA%C3%9B%C2%B6Q.%C2%97100%C2%90%C3%8Fh%C3%95j%15%C2%B3%C2%AF%5EA%0A%C2%91%0F%C3%89%C2%96%C2%8C%C2%A4%C3%B7%C2%94B%C3%A0%C3%B7%C2%95%15%04A%C2%90%C3%BB%C2%B2%40%C3%9A%C3%A1%C2%94%C2%99%C3%96%C3%BA%C2%8C%C3%BB%11!%C2%A0%C2%94Be%7D%1D%07%C2%87%C2%87I%C2%892%C3%9C(Q%3C%C3%8FC%C2%A5RA%C2%A5R%C2%81%10%02%C2%96R%C2%90J%C3%A5%C3%A9oy%C2%9B%402%C3%B52ccc%03%23%23%23%C3%B9%5B%C3%8E%C2%9Eu%1A%C2%A7O%C3%B6%23-%11%C2%9E%16%0B%C2%80%C2%9E%C3%AEn03*kk%C2%98%C2%9F%C2%9F%07%C2%A5o%12)9!%04z%7B%7Ba(%C2%95%2Cg%C3%8Cx%C3%BB%C3%AB%C2%AF%C2%88%C2%A2%08%C2%B5Z%0DJJ(%C2%99%1C%04%1AJ%C2%A1%C2%BA%C2%BF%C2%8F%C2%9D%C2%9D%1D%C3%94%C3%AB%C3%89qm%C3%A6%3B%C2%95S%C3%93%607%C2%88%08%C3%84%0Cb%C2%86h%C2%B3%C2%80l%C3%9E%16%3B%C3%A9%C3%9A%C2%92%C2%BD%C3%89%C3%8C%C2%A7%C3%92%C2%80%C2%B27%06fH)%C3%A18N%23%60d%C3%8BF%C3%92%C3%9F%C2%B6%C3%ADd%C3%96B%22c%20%C2%99(%C3%9A%0E%C2%A4%C2%9D%C2%81uBD0-%2B%C2%BDg%23%C2%90%C3%8C%C3%87%C3%99%C3%83%C2%9A%C3%BA%5B%C2%B6%C2%9D%C3%B7k%C3%B1%0B%01%C3%8B%C2%B2Z%C3%AE%C3%B3%C3%89%C3%B5%C2%9F%C3%84%C3%91%18%C3%ACg%C2%96VK%1C%C3%87%C2%88%7F%C3%A6I\'%C3%B7%3F%C3%96\'km%C3%B1%C2%9F%C3%86%C2%A79%23%C2%9C%C3%8A%C3%AA%2C%C3%92%C2%BA0%C3%B8%C2%9FI%C3%AB%C2%9C%C3%91%22-%C2%ADuKc\'%C2%A1%C2%B9%C3%BA5%C2%B2%C3%9A%C2%A7%C2%93%03I%C3%86%08%11%C2%90%C2%96%10%C2%9Dv%C3%92%C2%98%C2%81%C2%B4%C2%86%C2%A1%C2%89%C2%A0%3A%3C%23%3A%1B%C3%AC%C3%BF%17%C3%92%0A%C2%82%20%C3%8E%02q%1C%C2%A7c%C3%A4%C3%85%C3%8C%08%C3%83%10%00%C2%A0%C2%94%C2%8A%C2%8D8%C2%8E%C2%B7%C2%89(%14B%C2%98%C2%96eu%C3%8C%C3%8FoD%C2%848%C2%8E%C2%A1%C2%B5%0E%0B%C2%85%C3%82%C2%B6!%C2%84X%22%C2%A2y%22%C3%BA6%C2%8A%C2%A2%C2%8E%C3%89H%C3%93%C2%B21ODKF%C2%BD%5E%C2%9F%C3%B5%3C%C3%AF%C2%A5m%C3%9B%C3%9F%C3%86q%C2%9CT%C2%AD%C3%86%C2%85%C3%B8%1F%C3%8D%C2%89%C3%90Z%C3%A3%C3%A8%C3%A8%08q%1C%23%08%C2%82%C2%97%C3%85bqV%C3%8D%C3%8D%C3%8D%C2%B9SSS%C3%82%C3%B3%C2%BC!%C3%9F%C3%B7%C2%AFk%C2%ADa%18%C3%86%C2%85%C3%BC%C3%A1\'%3B%C3%90%C2%A8%C3%95j%C3%B8%C3%B8%C3%B1%23%3C%C3%8F%C2%9BQJ%C3%BD%C3%B4%C3%A8%C3%91%C2%A3%C3%97%C3%99%2FV3D%C3%B4%C2%97%C2%A3%C2%A3%23%C3%94%C3%AB%C3%B5%C3%A9%0F%1F%3E%C3%80q%1C8%C2%8E%03%C3%8B%C2%B2.D%40A%10%20%08%02%C2%B8%C2%AE%C2%8B8%C2%8Ea%C2%9A%C3%A6%C2%8Ca%18%3F%03%C2%98%01%C2%9A%0E%17%C2%A7%C2%BF%C3%BF%C2%BE%C2%A0%C2%89%C2%A6%C2%B5%C3%96%3FH)%C3%AF%0A%60JJi%C3%8Alst%C2%8E%C3%88%17%05%C3%A6%C2%90%C2%99%C3%A7%C2%95a%C2%BCTJ%C3%BD%22%C2%A5%C2%9Cy%C3%B6%C3%ACY%C3%B27%C2%A7%C3%A3%17%C3%9D%C2%BBwoX%08q\'%0C%C3%83%C2%9BQ%14%0DGQT%C3%B83I%C2%9F%04%C3%8B%C2%B2%22%C3%934wL%C3%93%5C%C2%92R%C3%8E%3E%7F%C3%BE%7C%07h%C3%AC%C2%83%C3%BE%0Bv%12%19%C2%88%C2%BC%C3%92%C3%A3%C3%A5%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var on_disabled_LS = onGrp1.add(
+    "image",
+    undefined,
+    File.decode(on_disabled_LS_imgString),
+    { name: "image3" },
+  );
+  on_disabled_LS.alignment = ["left", "center"];
+  on_disabled_LS.visible = false;
+  var offGrp1 = btnsGrp.add("group", undefined, { name: "offGrp1" });
+  offGrp1.orientation = "stack";
+  offGrp1.alignChildren = ["left", "center"];
+  offGrp1.spacing = 0;
+  offGrp1.margins = 0;
+  var off_disabled_LS_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%003%00%00%003%08%06%00%00%00%3A%C2%A10*%00%00%07ZIDATh%C2%81%C3%9DZ%5Bo%14%C3%89%15%C3%BENuuO%7Bg%C3%863%1E%3C%C2%B6%C3%A3%0BY%C3%A3%C2%80%C3%A4u0%C2%96%C2%88%02(%0F%C2%88%17%5E%C3%B6e%1F%C3%98%C3%B7%3C%C3%A4o%C3%B0%1B%10%0F%C2%BC%C3%B0%03%22%C2%B1RV%C2%8B%60%C2%A5%C3%B8%05%04B%C3%9AU%16%2C%C3%99%C3%82%C3%92%C3%84%04acg%23%06%C2%8F3%C3%8C%C2%A5o%C3%95%5D%C2%95%C2%87%C2%BEL%C2%8F%2Fc%C2%B3%C2%91%C3%96%1E%C2%BEQ%C3%89%C2%AD%C3%A9S%C3%9D%C3%9F%C2%A9%3A%C3%B5%C2%9DS%C3%A5%C2%A1%C2%99%C2%99%19%C2%8C%C2%8E%C2%8E%C3%A2%C3%94%C2%A9S%18%1A%1A%C3%82%C3%8D%C2%9B7%C2%8B%C2%8C%C2%B1%C2%8B%C2%8C%C2%B1sD4%09%20%03%40%C3%A1%C3%B8AD%C3%A4%02%C3%98%C2%92R%C2%AE%01xq%C3%AB%C3%96%C2%AD%C3%BA%C3%AD%C3%9B%C2%B7%3B%06%0B%0B%0B(%14%0A%C2%B8%7B%C3%B7.%C2%93R%5Eul%C3%BB%C3%8B%C3%B7%C3%9B%C3%9BWd%20%C3%A7%C2%A5%0CrDtl%C3%ACc(%00%04%C2%801%06%C3%8EyK%C3%A3%7Cexx%C3%B8%C2%87L%26%C3%B3%3Dc%C3%AC%C3%89%C2%993g%24%00%C3%90%C3%99%C2%B3gq%C3%AF%C3%9E%3Df%18%C3%86%C2%8Dj%C2%B5%C3%BAu%C2%B3%C3%91%C3%B8%C3%8A%0F%02n%C3%9B6%1C%C3%9B%C2%86%10%C3%A2x%3DI%C3%814M%0C%0C%0C%20%C2%9B%C3%8DB%C3%97u%3F%3F8%C3%B8%5D%C2%B9%5C%C3%BE%C3%86%C3%B7%C3%BD%C2%BF%C3%8D%C3%8E%C3%8EJ%C3%9En%C2%B7%01%C3%A0%C3%AA%C3%86%C3%86%C3%86%C3%97%3B%C2%B5%C2%9D%1BJ)4%C2%9BM%C2%B4%C3%9Bm%04Ap%C3%9C%C3%BCw%C3%A1%038%C3%A7%C3%88%0F%C3%A6Q(%14%C2%B8e%C3%997%5C%C3%97%C3%85%C3%88%C3%88%C3%886%C2%80%C3%87%C3%9A%C2%A3G%C2%8F%C2%8A%C2%AE%C3%AB%C3%BE%C2%A5R%C2%A9%C3%BC%C3%99ql%C3%96h4%C3%A08%0E%00%05%22%3AqM)%05%C3%97q%60Y%16%14%00%C3%9B%C2%B2%C3%8F%0D%C2%95%C2%86vj%C2%B5%C3%9A%3F%C2%B8%10%C3%A2%0F%C2%AF_%C2%BF%C2%BE%C3%AC%0B%C3%81%19c%08%C2%82%00\'a%C2%9D%1C%06%C3%9F%C3%B7!%3C%0F%04%C3%B0%C2%B7%1B%1BW~%C3%BB%C3%B9%C3%A7%179%C2%80%C2%B3%C3%BF%C3%9D%C3%99%C2%B9%00%05%08O%C2%80%11%3Bn%C2%9EG%C2%86m%C3%99%C3%90%C2%98%C2%86F%C2%A31OD%C3%A7x%C2%BB%C3%9D%C2%9Et%5D7g%18%06%14%14%C2%88%C2%9D%C3%BCY%C2%89!%C2%95%C2%84%1F%C3%B8P%C2%AE%C3%8A%09!%26y%C2%ADV3%1C%C3%87%01%11A%C3%93%C2%B4%C3%A3%C3%A6%C3%B7%C3%91p%5D%17%C2%9A%C2%A6%C3%81%C2%B6%C3%AD%0C%C2%97R%C2%82%C2%88%25%C2%AD%C3%9F%10r%26(%C2%A5%14%07%00b%04%16%C2%B5~C%C2%9A7S%C3%AA%24T*%C3%BF%3F%C2%94R%C3%A0J)%10%C2%90%C3%A8x%C2%BF!%C2%9D%7Fx%C3%BA%C2%8B%C2%BEwF)%C2%85t%C3%AB7%C2%A4%C2%B9%C2%87j%C2%96%C3%BA%C3%B4%1Bb%C3%9E%C3%89%C3%8C%C2%80Q%C2%A7%C3%B5%1B%22%C3%9E%1Dg%14%3A%C2%AD%C3%9F%10%C3%B1%C3%AE%C2%84%19!i%C3%BD%C2%86%C2%98%C2%B7%C2%942T%C2%B3%C2%8F%C2%81R%0ARJ%C2%94J%25%C2%98%C2%A6%09%3F%08%60%5B%16%C2%9A%C3%8Df%C3%B4%C3%B0%C2%8E2%0E%0D%0D%C3%B5%14%C2%96%C2%9D%C2%9D%1D%10%11J%C2%A5RO%C3%B1%C2%A9%C3%97%C3%AB%C2%87*m23G%C2%8E2%05LNNa%C3%AA%C3%B4%14t%5D%C3%AF%C2%BAeY%16%C3%96%C3%BE%C2%B9%C2%86%C3%AD%C3%AD%C3%AD%C3%B0%1E%01%C2%BF%3F%7F%C2%BE%C3%A7%C3%A3%16%C3%BF%C2%BE%08%C3%8E9%C3%8E%C3%8F%C3%8F%C3%B7%C2%B4%7B%C3%BC%C3%A8qX7%C3%AE%C3%A3O%C3%8C%5BJ%19%25M%C2%85%C2%A4%1D%C3%A8%C2%87R%C2%98%C3%B9%C3%9D%0C~3%3E%0ED%C2%9D%C3%930M%13%C3%B3%17%C3%A6%C2%B1%C3%BAr%15%C3%AF%C2%ABUp%C3%8E%C3%B7%C3%98%C3%AC%C2%86c%C3%9B%C3%88d2%C2%87%C3%9A%C3%B9B%C2%80%11%C2%81%C2%B1%C2%BD%C2%B5c%C3%8C%3B53%C2%9D%C3%8FA%18%C2%9F%18%C3%87%C3%A8%C3%98X%C3%B2%C3%A2J%C2%A5%C2%82j%C2%B5%0A%C3%830pfz%1A%23%C2%A3%C2%A3%00%C2%80%C3%99%2FfQ%C3%BFP%C2%87%C3%A7%C2%BA%5D%24%C2%9F%3E%7D%0AF%C2%84l6%1B%C2%92%22B~0%C2%BFg%60%C2%9E%3D%7B%C2%86%C3%ACg%C2%9F%256%04%407%C3%82%C2%99%C3%9E%C2%8F_%C3%8C%5BJ%19%3As%14%05%18%C2%9F%C2%98H%5E%C2%BA%C2%B4%C2%B4%C2%84%C2%AD%C2%AD-p%C3%8EAD%C2%A8%C3%95j%C2%98%C2%9B%C2%9B%C3%83%C3%A9%C3%93%C2%A7%01%00SSSx%C3%B9%C3%B2e%17%C3%89w%C3%AF%C3%9EA%C3%934%0C%C3%B9%3E(%1Aeb%2CY%C2%831%C3%9E%C2%BF%7F%0FQ%2CvlR%7F%C3%B7E%C3%84%C2%BB%23%00Ju%C3%9A%3E%18%2C%14%C3%80%18%C2%83%C2%94%12%C3%B5z%1D%C3%ABo%C3%9E%20%C2%9B%C3%8D%C3%824Mh%C2%9CCI%C2%89%7Fomarr%12%00066%C2%86%C3%A7%3F%C3%BD%C3%94Ertd%04%C2%8C1d%C2%B3YH%C2%A5%60%5BVX%C2%86%C3%AC%C2%9A%C2%99%C3%B2%C3%B0p8%7B%C2%9A%06%19%04%C2%B0%2C%2B%5C*%07%09D%C3%84%5B)%05%1E%04A%C3%8FrF)%C3%95%15%C3%97%C2%8E%C3%A3%00%C3%91hi%C2%9A%06%C2%8D1%C2%801%C3%88%5D%23%1C%3B%1F%C3%A3%C3%B2%C2%95%2B%C3%89%C3%B5%C3%B6%C3%B66%5E%3C%7F%C2%8Eb%C2%B1%C2%B8gf%C3%BEx%C3%A9Rr%5D%C2%AB%C3%95%C3%B0%C2%AFW%C2%AF%C3%B6%5D%2Bi~J)%04A%10%25%C3%8DC%C3%82%C3%8CM%C3%85%7F%C3%A2t4%C2%AAq%1FB%C3%B7%08%0B%C3%9F%3FpaK)C%C3%A7%C2%A3%C3%81%3B%C3%8C%C2%8E%C3%B5%C2%92%C3%A5%C2%88wG%00%0E)4%5D%C3%97M%C3%8E%C3%90%C3%B2%C3%B9%7C%C2%97Sq%C2%9F%5C.%C2%97%C3%98%C3%98%C2%B6%0D%00%5D%C3%A7n%0F%1F%3E%C2%84R%0A%C2%9A%C2%A6%C2%81%C2%88%C2%A0%C3%ABz%C3%927m%C3%B7%C3%A0%C3%81%C2%83.%C2%9BB%C2%A1%C3%903%07%C3%85%1C%12i%C2%8E%C2%BE%3D0.m%C3%8B%C2%82%C3%A380%0C%03%C2%9A%C2%A6ann%0E%C3%AB%C3%AB%C3%AB%08%7C%3F%C3%9C%0B1%C2%86%C2%B1%C2%94%C3%92%C3%BD%C3%A7%C3%A7%C2%9FQ(%14%C2%BAF%C2%9C%C2%88%C2%A01%C2%86b%C2%B1%08%C3%86X%18%C2%A6%C3%BB%08%C2%80%C3%8E9%0A%C3%91%1A%C2%8Dm%0E%5C%2F)%C3%9E%1D5%C3%83%C3%A1Isss%13%C3%93%C3%93%C3%93%00%C2%80%C2%89%C2%89%09%C2%94J%25%7C%C3%B8%10%C2%9E0%16%C2%8B%C3%85%24%C2%AF%08!%C3%B0f%7D%1D%C2%B9%5Cno%C3%B8%10%C2%81%18%03%C3%93%C2%B4Dz%C2%A5%C2%94%5Dv*%1A%C2%9C%C2%B4M%2F%5E%5DI%C3%B3(a%06%C2%84%C2%A5%C2%87%10%02333%00%00%C3%830P.%C2%97%C2%93%C3%BBA%10%40%08%C2%81%C2%A5%C2%A5%C2%A5%24l%C3%92%C3%A1%13%3F%C2%9BR%C3%89o%C2%BF0%3B%C3%88%C3%A6%40g%C3%92av%C2%98%C2%9A%C3%85%C3%90%18C%C2%AB%C3%99D%C2%A5RA%C2%B9%5CF.%C2%97%03%C3%A7%C2%A1%C2%B2%C3%9B%C2%B6%C2%8Dj%C2%B5%C2%8A%C3%8D%C3%8DM%C3%A8%C2%9C%23%C2%9F%C3%8BA%C2%8BNG%C3%93%C3%BD%C3%A3%C2%90%C3%A9zO%C2%A4Di%C2%BB%3D6Gp%26%08%C2%82%C2%8F(4%C2%A3%10q%5D%17o%C3%9F%C2%BE%C2%85%C3%A7y%C3%B0S%C2%8AED%C3%A0%C2%9C%C3%83%C3%88d%C3%804%0D%20%C3%82%C3%AA%C3%AA*%C2%A4%C2%94%C2%B0%2C%0B%C3%A6%C3%80%40%126%C2%BB%C2%9F%C2%BB%C2%B2%C2%B2%C2%92%C2%88F%C3%864%7Fq%C3%B9~%C3%A40%C3%AB%C2%BC%3B%0C%01%C3%830%C3%B6%14%C2%9B%00%C2%92l%C2%9D%0E%2B%C3%934%C2%93%C3%AB%C3%B4%C2%BDt%C2%9F%C3%83l%0EBW%C2%98I)%C2%A1%C3%A2%C3%B6%11%23%C3%82z%C2%95%3F%C2%BB%06FK\'%C2%BD%03%06%C3%AD(6%C3%BB%C2%BE%0A)%01%08%C2%82%C3%A0S%C3%98hv*%C2%80O%C3%A1t%26%15f*l%C2%BD64\'%14%7B%C2%B7%00%C2%A9%2F%C3%BB%0D%C3%BB%3A%13%1El%C3%B4%C3%A1%C2%89F%C2%84%20%08BgXT%23%7D%12k%26%C3%96%C3%B5~u%06HIs%C2%BF%3B%13%25~%C3%A2%C2%AE%C3%ABz%C2%9E%C3%ABA%06%12%C3%99l%C2%B6%C2%AF%C3%96%C2%8DR%0A%C2%AE%C3%AF%02%004%C2%AE%C2%B9%C3%9C%C3%B7%C3%BD-)e%C2%8B%18%C3%A52f%C2%A6%C2%AF%C3%BE%C2%AF)%C2%A5%C2%84%C3%B0%05%C2%A4%C2%94-%03%C3%86%16g%C2%8C%C2%BDr%1CgY)%C3%B5\'%C3%86%18%06%07%07%C2%8F%C2%9B%C3%A3%C2%91%C3%A18N%C2%BC%C3%B5X%C3%A1%C2%9C%C2%AF%C3%B1V%C2%AB%C3%B5%C3%9Cu%C3%9D%1F%7D%C3%9F%C2%BFDD%C3%9C4%C3%8D%7D%0B%C3%88%C2%93%C2%86x%C3%BF%C3%A4y%C2%9E%C3%AFy%C3%9E%0F%00%5Eh%C3%8B%C3%8B%C3%8B%C3%8E%C3%82%C3%82%C2%82%10B%C3%A4%5B%C2%AD%C3%96%17%C2%96e%C2%85%C3%8A%10%C2%9D%C2%89%C3%AD.w%C2%8E%C2%BB%C3%B9%C2%BE%C2%8Ff%C2%B3%C2%89Z%C2%AD%C2%86v%C2%BB%0D%C2%A5%C3%94%C2%B7%C2%BA%C2%AE%C3%BF%C3%B5%C3%8E%C2%9D%3B%15%0E%00B%C2%88\'%C2%8E%C3%A3%C2%94%C2%A3%C2%BD%C3%87W%C2%8DF%C2%83%C3%A7r9%0C%0C%0C%C3%804%C3%8D%13!%0AJ)x%C2%9E%07%C3%87q%C3%A2%1F)%C3%B9%C2%86a%7C%C3%A7%C3%BB%C3%BE7D%C3%B4%04H%1DE_%C2%BF~%C2%9D%C3%A9%C2%BA~5%08%C2%82%2F%C2%95R%C2%97%7D%C3%9F%C2%BF%C3%80%18%C3%8B%C3%B5%3CM%C3%BC%15%C2%A1%C2%94%C2%8A%23%C2%A5%C2%A5%C3%AB%C3%BA2%C3%A7%C3%BCGM%C3%93%C2%BE%17B%3C%C2%B9%7F%C3%BF~%C3%B8%7B%C2%B3%C3%9D%C2%9D%C2%AE%5D%C2%BBV%24%C2%A2%C2%8B%C2%9E%C3%A7%C2%9D%13BL%0A!%C2%8C_%C2%9F%C3%BA%5E%10%11%0C%C3%83%C3%B02%C2%99%C3%8C%C2%96%C2%AE%C3%ABk%C2%8C%C2%B1%17%C2%8B%C2%8B%C2%8B%C3%B5tn%C3%BC%1Fu%C2%90%5D%C2%A4%C3%B9%C3%AA%C3%BD%C3%B5%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var off_disabled_LS = offGrp1.add(
+    "image",
+    undefined,
+    File.decode(off_disabled_LS_imgString),
+    { name: "image3" },
+  );
+  off_disabled_LS.alignment = ["left", "center"];
+  var off_Enabled_LS_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%002%00%00%002%08%06%00%00%00%1E%3F%C2%88%C2%B1%00%00%0D%0AIDATh%C2%81%C2%BD%C2%9AK%C2%AC%25%C3%97U%C2%86%C2%BF%C2%B5%C3%B7%C2%AE%C2%AA%C3%B3%C2%BC%C2%8F~%C3%9D%C2%BEt%23%C2%B7%C3%85C%0E%C2%86%C3%90!%C2%B6%C2%80Dr%22%01C%C2%92%08%C2%90%40%C2%88%20%181%C3%80%C2%83x%C3%8C%C2%80F%0Ab%C3%82%C3%80%11%12B%C3%A2%C2%91%C2%9E0cbP%C3%84%08d%5B%C3%8A%03%C2%BB%23w%C3%BB%C2%91%C2%8EI%C3%A4n%07%C2%B7%C3%9B%C3%BD%C2%B8%C3%AE%C3%AB%C3%9B%C2%8Fs%C3%8F9U%7B1X%7B%C3%97%C2%A9sow%C2%A7m%C3%87.%C3%A9%C3%9C%3A%C3%B7%C2%9C%5DU%C3%AB%C3%9F%C3%AB_%C3%BFZ%7B%C3%AD%23%C3%AC9%C3%B4%C3%AC%C3%A6!%C3%A0%13%C2%93%C2%A9%7C%C2%BA%C2%89%3C%C2%ACQ%C3%86%C3%B9%3B%C2%91%C2%BD%C2%A3%3F%C3%BAC5%3D%C3%9B%C3%A9M%C3%AF%C2%B8%C3%90%C2%AF%C3%B4%C2%BB%C3%80y9y%C3%B9zw%5Ch%2F8%C2%BBY%C3%8Ck%C2%9Ex%C3%A1%15%7F%C3%AA%C3%8A%5B%C2%93%C3%87%C2%AF%5D%C2%99W%C2%B3Y%C3%84%09xgc%C2%BC70%02%C2%88%03%C2%97%C2%80%09%0B%C2%90%0F%0A6%1B%08%10u%C3%8F9%02%0Auc%C2%9F%C2%A9%C3%9A9%14%C3%82%C2%91%C2%A3%C3%A5%C3%B4%C3%A8%C3%B1%C3%BE%C2%8B%C2%B33%C2%9B%C2%A7%C2%8A%C3%80sr%C3%B2r%C2%9Dm%40%C3%8Fn%16%C3%9B%3B%C3%AE%0F_x%C2%A9~%C3%BA%C3%B5%C3%B3%C2%B7%C3%97%C3%9E%C2%BD%C3%9E%C3%A0%1C%C2%94N(K%08%1E%C2%9C%C2%87%22%C2%9D%C3%81%40%C2%88%18%20%00%078%11%7B%C3%B3%20G%C2%84%C2%98%C3%90%C3%84%08%C3%9A%01%17%15b%03%C3%B3%C3%86%C3%8Eu%03%C2%B3%19%C3%AC%C3%8E%15U8x%C3%84%C3%B3%C3%B3%C2%8F%0C%C2%B7%7F%C3%B5W%C3%82W%C3%96V%C3%A2%C2%BF%C3%8A%C3%89%C3%8Bu%00%C2%98%C3%97%3Cq%C3%A6%5C%C3%BD%C3%B4%C2%AB%2F%C3%9FZ%C2%BB%C3%B9%5Ed4%14%C2%AA%02%C3%8A%00U%05!%08A%20%14%10%C2%9CY%C3%ADE%0C%C2%8C%03%C3%97%C3%B1%C3%8E%C3%BB%3B%C3%84%C2%8C%C2%8E%C2%A0%C3%91%004%C2%AAh%C2%84%26%1A%C2%80%C2%BA%C2%81%C2%BAV%C2%A6S%C2%98%C3%8C%C2%84y%0D7%C2%AE7%C2%BCz%C3%AE%C3%96%C2%9A%C3%B3%C2%A3%C2%A7%3F%C3%BF%C3%AB%C3%AE-%C3%A0%C2%BF%C2%82%C2%9E%C3%9D%3Ct%C3%A6%C2%B5%C3%A2%C2%AF.%C3%BE%C3%B0%C3%86%C3%9A%C2%9D%5B%C2%91%C3%91HX%1D%08E%01%C2%BDJ%18T%C3%89%1B%01%C3%8A%C3%92%00%C2%88%18%C3%8D%C2%BC%C3%8F%C3%A6t%3C%C2%93%C2%A8w%C2%AF%233*%C3%93H%C3%A3%C3%A23%C2%8D0%C2%AF%05M%C2%80%C3%AA9L%C3%A7%10%1Ba2%C2%87j%C2%A2%C3%8C%C3%A7f%C3%8B%C3%8D%C3%9B%C2%91%C2%8B%3F%C2%B8%C2%B3v%C3%AE%C3%80%C3%BA)%3D%C2%BBy.%00%C2%9F%C2%B8%7Ci%C3%B2%C3%98%C2%B5%C2%AD%C2%86%C2%AA%12%C2%AA%12z%7D%C2%A8%0A%C2%A1%C2%AA%C2%A0_%19(%2FPV%16%2F%5E%C2%8C%C2%AF%60%C3%AFE%C2%96c%C2%A3%0B%C2%AA%7BD5c%5BP%C2%BA87%C3%A9%7D%3DW%1A%C2%85%26%0A%C3%B3%60%2Ch%1A%C2%90%C2%A9%22%08%C3%93%C2%A0D%C2%84Y%0D%C3%97%C2%AE7%C2%BC%C3%B3%C3%B6%C3%A4q%1E%0D%C2%8F%C2%84%C3%89T%3E%7D%C3%B5%C3%BA%C2%B4%0AA%18%C3%B4%60P%C3%81h(%C3%B4J%C2%8B%C2%8F%5E)%14%25%C2%94%C2%AE%03%C3%84Y%3C%C3%B8%C3%90%09%C3%BC%0C%C2%A2c%7C%C2%8E%C2%A7%16H%C2%B3%1FD%C3%8C%5EQ%C3%B3L%5D%1B%C2%AD%C2%9A%08%C3%B39Lk%C2%885%C2%B8%00!%401%03D%C2%99G%C3%A1%C3%8E.l%5D%C2%9FV%C2%93i%C3%B1X%C2%88%C2%91%C2%87%C3%A73%C2%A5%2C%16%C3%9E%C3%A8%C3%B7%C2%842S%C2%ABg%C3%9E)%0A(J%C2%8B%15%1Fl%C2%B6%C2%BD%00)%3E%5C\'%C3%88%7F%C2%9CriW%C2%9D%C2%92%C2%A7%C2%88%C3%A6%C2%95%C2%A8BSC%C2%AD0%C2%9F)emA%C3%AF%02xQ%C3%84%09Q%C2%85%C2%BAQT%40%2C%C3%86%1E%0EQe%C2%8CBQ%40Y%C3%98%C3%AC%C2%87B(%2B%C3%B3%40%C3%B6H%11%C3%8CC%C3%9E%C2%81sbJ%26%1D%0Au%C2%8C%C3%B7%3FF%C2%B9%C2%9A%0E%C2%BD%C3%90e%C3%B9%C2%AD%1B%C3%B0%5E%C3%B1%11D%04%C3%A7%1577%C3%90M%25D%C2%81Y%C2%A3T%C2%95PG%C3%859%C2%88*%C3%A3%00%20N%08%C2%85%C2%9A%C3%81%C3%893e!%C2%94%01%C2%8A%C3%8A%C2%80T%05%04o%C2%9F%C2%81%05%C2%9C%C3%8D%C2%BC%2Cy%C2%A3%05v%C2%9F%C3%83%C3%AB%C3%B2%C3%BF%0Ah4i%0D%11b%14%C2%9A%06%C2%9CS%C3%A6%C3%9E%C3%94Q%11%1AU%10%C3%B3%C3%90%C2%AC%C2%81%3ABY%C2%9A%C3%B8%C2%84l%C2%94S%C3%A3%7C%11%C2%A0(%1Cee%C3%92%C3%9BK4%C3%B3%5E%12%18%C2%8B%09%2F%0F%C2%9E%C3%BC%C3%B6%01%C2%B9%C3%AB%C2%87%C2%A6V%3E%C3%89q%1D%C3%81yA%C2%9C%C3%A2%C2%9D%3D3b%C3%A7y%03%C2%B3Zi%1A(J%23C%00%C3%A3wV%C2%A2%22%C2%83%09%C2%92%24%C3%96h%14%C2%82%C3%89%C2%ADK3%C2%B4%C2%A4R%1F%C2%B2ti%C3%8B%10%01%C2%A7%C2%80X%C2%BE%C2%8AQ%09%C3%81f%7C%1E%C3%81%17%10T%09%C2%85%C2%85B%C2%A8%C2%A5M%01%06%24%C2%80G%C3%8C%C3%A8Bp%C2%A5%05t(%C2%92%C3%B1%09T%C2%BE%C3%A9%5E%C2%B9%C3%BD%C2%B0%C3%87%C3%92%C2%BD%C3%94%3C%26%C3%91%C2%8C%C3%85%25%60%C2%8DRFPM%C3%82S%08%C2%A1VBh%C2%81%08%C3%8E%09%C3%8E%C2%A9%C2%A1s%C3%89%0BA%12%18I%C2%9E0%C2%B7v%C3%8B%C2%92%C2%8F%C3%A2%10L%C2%8E%C2%9D%C2%87%20BD%111!%C2%98%C3%97b%12%5C%C2%82%C2%9F*UA%1B%C2%90%0Bj%C2%B9dxH%C3%8A%C3%A4M%C2%9Dr%C2%95(%5E%3ER%00K%60%C2%9C%C3%91M%C2%92%1D1%C3%91%C3%8D%17%C3%A0T-FC%C3%BE%5E%10A%C2%83%60%1E%C3%B0%5ESp%C2%99%C2%87%C3%84%C2%91%C3%A8d%C3%94%23I%C3%AC%C3%87U%C3%8A%C2%8B%00%0A%C2%A2I%C2%82%C2%83%C3%A0%1Bm%C3%A3%C3%96w%C3%80%40%C3%87%23%C3%A2%2CF%C2%8A%20H%C2%8A%09%C2%91%0C%C3%8C%3C%26w%C2%95%C2%9B%C2%8F%C3%B0H*%26%C2%922%7DK%7B%C2%B5%C3%80%C2%AF!%C2%B2%C2%87Z%C2%B9%C2%8A%C2%95D%C2%A9%C3%AC6R%5Cd%C2%8F%7C%C2%9C%C2%87%C2%A4%C3%8CM%14%24yER%C3%BC8%C2%AF%C2%9D5%C2%91%18%10I(%25-%C2%9C%16%C3%B1aw%C2%93%C3%A4%C2%B14I%C3%A0Va%C3%B8%C3%8B%C3%B6%C2%B4%C2%9D%C3%A7%C3%B7%3D%C2%BC%7Bh%C3%BB%C3%A7%5E%C3%96%C3%9E%C3%BF%7B%C3%ADL%C2%A28m%C3%A3%C3%86%C3%BB%04.%C2%8Dk%3D%C3%A2%7C%C2%8E%0DAr%C2%80%C3%A7%C3%AC-%C2%82%3A%C2%88k%C2%BF%C2%8D%1C%7D%12%C3%89%20%00%C2%AD%C2%B7%C2%99_%C3%BBwv%2F~%15i%C2%B6%C3%A9UY%05A%3E%C3%B5%C3%8E%7D%C2%9Dx%C3%AB%5B%1B%C2%8C%3Es%C3%A5%3E%23%60%C3%B7%C2%9B%1B%14%C3%81%C3%AE%22.%2B%C2%A7%C3%99%17%C2%BCC%C3%93%2C8S%C2%A4%C3%8E%C2%A0%C2%B4p%C2%A2%05%24%C2%A8%08%C3%B2%C3%90%C3%9F%C3%A2~%C3%A6%1F%C2%97%40%00HX%C2%A3%C3%9C%C3%BCcF%C2%8F%C2%BD%C3%80%C3%84%7F%C2%92%C3%9D%C2%B9ee%7D%00%1E%C3%9E%C3%99%C2%BD%C2%9F%C2%AB%C3%AC%C2%98%C3%8C%C2%AC%C2%80D%C3%8C%1E%C2%97b5%C2%A7%C2%83%C3%BC%C2%98%C2%90%C2%91%C2%BA.%C2%98%C2%ACN%C3%A9%C3%A56%C2%9F%C3%84%1D%C3%BA%C2%A3%C3%B6%C3%A6%C2%97%C3%8E%C2%9Ff%C3%A7%C3%9D%0B%C2%A8%C3%82C%C2%BF%C3%B4%C2%A7%0CWO%C3%A0%C2%8A5%C3%86%C2%8F%C3%BE%13W%C2%BE%C3%BD%C2%9B%C2%8C%C3%8A%1D%C3%86%23G%C3%951%C3%A8%7F%C2%9E%C3%B9%22E%12%C2%93%C3%A0%C2%A1%0C%C3%82%C3%B4F%C3%83%C2%91%3Dc%C2%AA%22%25f%07U)%C3%84%5B%0D!x%C2%BC%17%C2%ABv%C3%9D%C3%B22%C3%9Bi%07%C2%88%C3%8F%C3%8A%C3%A4%C3%85(%C2%96dX%C2%92g%C3%BC%C3%91\'%C3%9B%C2%87%C2%BD%C3%BE%C3%8D%C2%A78%C3%B7%C3%AD%7F6%15%13%C2%B8%C3%B0%C3%8Ai%3E%C3%B3%3B%C3%8F%C2%B0%C2%BEq%C2%92%C3%BE%C3%8A%09%C3%A2%C3%81%2Fs%C3%B9%C3%8D%C2%BFc%1E%C2%85%C3%8D%C2%8E%C2%91%C2%97%C3%9Ex%C2%96%C2%83%C2%AB%C2%8E%C2%B5%15Oo%20%04%15%C3%BAk%C3%8B2x%C3%A9%C2%8Dg9z%C3%90%C2%B32rV%C3%A3%C2%89P%C2%ADx%C2%AA%C3%92AJ%C2%8A%5D%C3%A6%C2%88%C3%83%C3%A2%2B%17%C2%8D%C3%A2%C3%ADE%0Aji%C3%AB%10%C3%B0%C2%ABO%20a%15%C2%80%5B%5Bg%C3%B9%C3%9F%C2%97%C2%BE%C3%8E%C2%BC%C2%86%C3%9EP%C2%AC%C3%AC%0F%3B%C2%BC%C3%B9%C3%B2%C3%97X%C3%BF%C2%AD%C2%AF%030%C3%9E%C3%B8%1C%C2%97%5E%C3%BB%1A%3E%2C%039%C3%B4%C3%93%C2%9Fg%7D%C3%85%C2%B12%C3%B2%C2%8C%C2%AB%1D%C3%B4%C3%8E%C3%8B%26(%7B%C3%86%1C8%C3%A0%19%0D%1C%C2%83b%07%C3%99%7D%C2%85%C3%82%C2%83%0Fbk%C2%976%C3%A8%3B%40R%C2%8C%2C%C3%A4W%16%C2%89%C2%90N%C2%AC%C3%88%C3%A0%C2%93%C3%AD%C2%83%C2%AE%C3%BE%C3%A8Yv%C2%A7JQ%08%C3%876%02%C2%ABC%C3%87%C2%A0%2FLv%C2%BF%C3%91%C2%8EY%3D%7C%C2%92%C3%AB7%1A%C2%A63%C3%A5%17%3AF%3E%C3%B1%7B%C3%8F%C2%B4%C3%AF%C3%A7%C3%9B%C3%8F3%7D%C3%BD%C3%B7%C3%B1~%19%C3%88%C3%9E1%C3%B3%1F%C3%BCA%C3%AA%C3%9C%08Zk%0B%22%C2%A7%04%C3%A7%C2%AC%C3%A47%20r%C3%B7%18%C3%89%C3%A8%C3%AB%C3%B96e%C2%BAy%C2%9D%3A%1DE!%C2%8C%C2%87%C2%8E%C3%95%15%C2%A3%C3%81%5CW%16%06L%C2%B7Q%11%26%C2%B3%7B%07%C3%B2d%C2%AA%C3%9C%C3%98%C2%89%C2%8C%C2%87%C2%8E%C3%BE%7D%C3%86%C3%9C%C2%BE%13%19%0F%1C%7Do%09%C3%85y%C3%A3%C2%97t%04*%3B5%089o%C3%A4%C2%BA%25%C3%87%C2%87Q%C2%AB%C2%BE%C3%B5J%7B%C3%B3c%3F%C3%BB%25%5Ez%C3%B6%2F%C3%9Bd%19%C3%92%C3%B2%C3%97%C2%AF~%C2%A1%1D%C3%B3%C3%9E%C2%B5%C2%B3%C2%AD%C2%87%C2%BB%C3%87%C2%BF%7CuLU%0AU%C3%A5%C3%98X%C3%B7l%1E%0ED%C3%987%C2%A6%C3%9Fs%0Cz%C3%82%C2%81%15%C3%8F%C2%89cE%5Bg!bR%C2%9BX%C3%93%16%C2%AF1%C3%8B%2F)%C2%93%5B%C3%B1e%C2%AB%C2%BD%C2%8Er%C3%89%C3%ACe%C3%A2%C3%B4M%00%C2%86%C2%AB\'x%C3%B4%C3%97%C2%9Eju%C3%9C%C2%96fk%C3%B8%23%7F%C3%9E%1As%C3%BD%C3%92s%14%C2%A5%C3%90%C3%AB%C3%AD%C2%A90%5B7%C3%83%C2%A2J%C2%90%C3%BDc%C2%A4%7BfaH%C2%92%C3%9A%7C%C2%9BE%C2%9CtJ%C2%94%C2%8CN%3C%C2%90j%C2%AC%C2%8C%3C%04a%C3%B6%C3%B6%C3%9F%C3%90%7B%C3%B8%1F%00%C3%B8%C3%85%C3%8F%C2%9E%C3%A2%C3%98%C3%8F%7D%C2%89%C3%89%C2%B5%C3%BF%20%C2%AC%C2%9D%406%C2%BE%C3%90%C2%8A%C3%81%C3%8D%C2%ADs%5C%7C%C3%AD4%C2%ABc%C3%87%C2%A1%C3%B5eE%1A%C3%B6%C2%85C%C3%AB%C2%81%03k%C2%8E%C2%8D%C2%83%C2%81A%C3%9FQ%04%C3%B6%C2%8D%C3%B9%C2%A9%C2%8D%C2%82%C3%B5%15%C3%87%C2%81U%C3%8Fx%C3%A8%C2%A8%C3%8A%14%C2%B7*-%10%C3%A9d%C3%B9%3C%1D%01%C2%A4m%C3%B1%C2%88%08B%C2%AE%C2%AFd%C2%91%C3%95w%C2%BE%C3%81%C2%AD%C2%8B%7F%C3%8D%C3%A8%C3%84_%00%C2%B0~%C3%A4%24%C3%ABGN.%19qs%C3%AB%1C%C3%9F%C3%B9%C3%8F%3F%C3%81%07%C2%A3%C3%8Fp%C2%B0%0C%C3%84%17%C2%8E%C3%BE%C3%80%C2%B1%3A%0E%C2%8CG%C2%9E%C2%A2%C2%90%7D)%C3%93%17%C2%8EA%C3%9F1%1Az%C3%86%23OU%0A%C2%BES%1A%C2%89K%7D1%C2%A7m1%C2%AB%5D%C3%95%C2%B2%C3%80Y%C3%94T%C3%92qe~%C3%AD%C2%BE%C3%B3%C3%B7%C2%BC%C3%BD%C3%96K%C2%AC%1D%C3%BF2GN%7C%C2%B1%7D%C3%B8%C3%AD%C2%9D%C2%8B%C2%BC%C3%B1%C3%AAi~x%C3%AE4%C2%B7o%C3%9Fhg%7B4%5C%C2%A6V%C3%B0%C3%96%C3%AC%1B%0E%C2%84%C3%A1%C3%90!%C3%98Rv%C3%AF%C2%98A_%18%C2%8F%5C%3BFX%C2%ACG%C2%A4C%C2%B7L-%C3%95.%C2%B5%C3%9C%22%C3%80s%3EAh%C3%B3%C2%8A%C3%B30%1Ax%C3%98%C3%BD%0E%C2%93%1F%7D%C2%8B%C3%AF%C2%9D%C3%BF3%C2%AE%C2%BE%5B%C2%B3%C2%BB%C2%AB%C3%AC%C3%8E%C2%AC%C2%B3%16%3C%1C%3E%10x%C3%A8X%C3%89%C3%8A%C3%98fu%C3%AB%C3%85%C3%A3%5C%C3%9D%C2%AA%C2%B9%C2%BA%C3%95%C2%B0%C2%BE%1A%C3%A8%C3%B7%1DE%C3%A9%16B%C3%A0%C2%84%C2%AD%17%C2%8F%C3%B3%7F%C2%97%C3%A7%C2%BCw3%C2%A61%3E-%C2%A9%C2%8D%11%1A%3B%C2%85%C2%A3%C3%93%C3%96.%044%C3%B5%C2%B9Z%20%C2%B9%2F%C3%95Jo%C2%A2%17%C2%9Ah%C2%86-b%C2%86%03%C2%A1(%1C%C2%A1%10%14%C3%98%C2%9D*%C2%B3%C3%9Af%C3%95%3Bk!%C2%AD%C2%AE8%C3%BA%3DG(%C2%A0l%C2%84%C3%91%C3%90%C2%B5%7D%C2%AC%C3%B1%C3%90Q%C2%96%C2%B2%14%C3%B3e)%C2%AC%C2%8E%1D!%15%C2%86%C3%BD%C2%9EP%14%C2%B2%C3%84%06%C2%A3%C2%93%C3%B5%C2%80%C3%B3%C2%B5*qA%C2%B5%5C%C3%86%C2%BB4%C3%AB%C3%8E%C2%B1P%C2%88%C2%84C%C2%92%1B%C2%9D%C2%B3.cYA%C2%BF%C2%AF%C3%B4%7B%C2%8E%C2%BAV%C3%AA%C3%94%06%C3%8D%25%C3%8E%C2%A8%C3%AFlU%C3%A9%C2%84%C2%AAR%C3%96%C3%97%C2%84%C3%81%C3%80%C3%80V%C2%A5U%03y%16Q%C2%A8*%C3%87%C3%81%03%05%2BiB%C2%AC%C3%97%C2%9C%C3%86h%C2%B2%C3%81%C2%A9%C2%ADIra%25%C3%96%C2%B2%15%C3%91v%C2%B1g%40R%C2%8C%C2%A8%C3%8B%20%C2%92%C3%8B%C2%92%0CF%C3%B2%C2%85%C2%8BN%C3%A3J%C3%A1%C3%ACA%1D%C2%8Eg%C2%B5%24%C2%9D%C2%8B%C3%94j%1D%C3%B4%17%C2%9F%C2%B5%03%3BcBA%7B%C2%A3%C2%BDc%00%C2%9A%C2%A8%C3%893%C2%82%C2%BA%C2%88%C2%8A%26%C2%BA%19%C2%98%C2%B6%C3%96%C3%8A%25I%C3%9B%C2%AFr%C2%82b%C3%A5%7B%C2%A3%C2%82%C2%97%C3%B4%C2%9Cl%40%C2%A7X%C3%9B%C2%AB%3Cw%C3%ADw%C3%AD5r%C3%AF%C3%B8%C2%9C%C3%B4%C3%B6%5C%C2%A3%24U%C2%92%C2%B4%C2%8F%22%16%C3%9Cf%C3%8B%22%5ET%C2%91%14%C3%AC%C2%BAX%C2%87%C3%A4%20%C3%8B%C2%8B%C2%AB%C3%B4%C2%B2Yp%C3%AF%7B%C2%8B%C3%ADA%C3%86%C3%9E%C3%B5%7B%C3%89%C2%9B%3F6%0B%C2%9A%0D%C3%8F%C3%AB%C3%9F%C3%94%C3%8D%C2%93D%C3%AD%C2%B6%C2%8C%C3%AF*%C2%97%C2%8A%2C6_0%00%C2%BA%3Cq%C3%BB%5D%C3%B1%C2%93%3CZo%C3%98%02-f%3BP%2Bk%C3%B2%24%3Bi%C3%9B%C2%94!_(Y%C3%9A%C3%84%22%C3%8C.%12%C3%ABR%C2%A4%C2%BBJ%07%C3%8AR%C2%96%C3%B8I%C2%80%C3%92%C3%85)%C2%BF%1A%C2%B5M%1FEiT%C3%92%C3%BBH%C3%8C%C2%B0%3A%3B%C2%AA%01%C2%A4%C2%AD%24mY%0BQr%07%3C5%C2%8EQ%22%C3%8E%3A%1AI%C3%89%22%7C%20%C2%9A%C3%9D%0F%C3%87b%C3%B3G%C2%93b%09%10m%C2%A7%2B!U%24%C2%B1%04%2B%C2%A3%C2%BA%C2%99%C3%9D%3B%C2%BBh%C2%B1%C3%845%C2%8Bc%7Bav%C2%AD%05%C2%9D%23y%C3%8F%C2%96%C3%BCf%C3%80%07%05%C3%93%C3%99%1B%C2%B1%7Fcg%C2%9BZ%C2%89j%5DzU%25%C2%AAvl%C3%92%C2%96z%C2%9A%C2%81%C2%B4%C3%B2%C2%93%C2%BC%11%C3%93%C3%A6%C2%8B%C2%A0%26%7D%C2%80%C2%9A%C3%B9yc%25%C2%AD%C2%97%17%C2%AE%5D%C3%B2%C3%8A%C3%BD%40u%C3%B4%C2%BA%C2%BB%C3%97%C2%9E%C2%BF%C2%8A1%19%C2%A9%C3%90%C2%A8%10%C2%A3%01%C2%9BG%C2%B5%C3%B5P4%40%19%C2%98%C3%8B%1EqNoz%2F4%C3%89%13-R%C2%81%C2%A8.%C2%B9%C3%99%19%1FU%C3%90%08%22%C2%8AS%C3%9A%C3%B5%C2%84%7B%C2%BF%C3%AE%C3%98%0B%C2%A0K%1D%5D%C3%BCH%40Ui%10%C2%A2%C3%86%C2%94%0Eb%C3%B2%C2%88M8N%C2%ADa\'%C3%9C%0CN%C3%B4B%C3%A1%C2%A1%C2%91%C2%B4%C2%B2oA%18%C3%BF%C2%A2%C2%BAV%00D59%C3%8E%C3%9C%C2%9D%C2%AB%C2%88%26u%C3%8C%C3%AFe%C3%A8%3D%C3%B1twx%C3%B3%2B%01%C3%88%C2%80%C2%A2%1A%C2%BD%C2%A2F%3B%C3%AF%09v%2F%C3%A0D%2F%C2%84%C2%AAh%C2%BE%5B%C2%84%C3%A1t%C2%AA%C2%B7%C2%ABL\'%2B%3B2%07%15%17%C2%8DRM%2B%C3%A5%C2%A9k%C3%A5%16%C2%A5x%06%C3%B5%C3%80%C3%8E%C3%A9Hl%C3%B6%04%C2%AA%1D0%09HT%C3%BB!A%C2%A3%C2%B6%C3%9B%C3%9B%18%C3%9Dc%C2%9A%C2%85%C3%82%0D%C2%A7U19%13%C2%80%C3%B3%C2%95_%3F%C3%93%C2%B8%C3%9B%C2%9F%C2%9D%C2%A6zY%C3%93%C2%BE%04%C3%A2%105%C2%85%C2%881m%C3%80%C2%B4%05%C2%9F%20%C2%B1%C3%93%C2%86%C3%8BB%C3%B1%C2%A0%C3%9E%C3%A8%C2%8E%C3%93%C2%8E7%C2%B2be%20)%5E%C2%A2%C2%98v%C2%AAHJ%C3%8E%C3%82%C3%80%2B%C2%A5%C2%AC%C2%9F%C2%81%C3%89%C3%B7%05%C2%A0y%C3%A9%C3%B8o%5C%C2%BA%C2%BD%C3%B2o%13%C3%B7%C3%AEZ%0D%C2%84%C3%A0%C3%92%C3%8F2%24%C3%AD%C3%9FYF_l%C2%B9I%07%C3%90%C2%87%C2%97%C3%9F%C2%BC%C3%87%C2%BE%00%C2%B8%C2%A0%C2%96e%C3%B7HLY%C3%9E%C2%BC%12%09%C2%8D%C3%92%C3%A3%C3%A0%C3%B6%C3%B1%C3%A1%C3%8E%C3%AF%C3%BAO%C2%BD%C3%B5%C3%9F%C2%A9%C2%8Co%C2%9E%3B%5C%C3%8D%C2%BErmv%C3%A0%C3%A9%C2%B9l%C2%AD%C3%8DbL%C2%B3%C3%A0%C2%8CN%C2%B1%C2%B1%C2%B2%C2%A6%C3%9D%C3%A9%C3%91%C3%BD9%C3%A4%C2%83%C2%80%C2%B9%C2%8B%C2%82%C2%B5gbK1%054F%5B%0E(TQ)%C3%B4%C3%A0%C3%B6%C3%A1j%C3%BE%C2%94%C2%93%C3%A6%C3%B9%C2%A5%C3%87%C3%AB%C3%99%C3%8D%10%C3%95%7F%C3%AE%C3%8A%C2%9D%C2%A3%C2%A7%1A%C2%BF%C3%BDxt7%C2%AB(n%C2%B90%5C2~%C2%BFV%C2%BD%1F%2C%7B%19%C2%B8%C3%B8%3F.h%C2%97%3D%C2%95%C3%BEw1%C3%A2%C3%A2h%C3%AA%C3%A3%C3%BA%C2%8B%1B%C2%83wN9i%C2%96%7F%C3%A6%C2%B4tC%C3%BB%C3%A1%C3%99%23%C3%93%3A%3C%C2%A6%C3%8A%C2%89%18%C2%A5mZ%7D%5C%C2%BBU%C2%AD-%1D%C2%B4%C3%8E%C3%A9%C2%8E%08%17%C2%ABP%C2%9F%01%C2%BE%C2%BF%C3%B7%C2%87g%C3%BF%0F%C3%AE%3CH%C2%91k%7Dt%19%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var off_Enabled_LS = offGrp1.add(
+    "image",
+    undefined,
+    File.decode(off_Enabled_LS_imgString),
+    { name: "image5" },
+  );
+  off_Enabled_LS.alignment = ["left", "center"];
+  off_Enabled_LS.visible = false;
+  var divider1 = MSPalette.add("group", undefined, undefined, {
+    name: "divider1",
+  });
+  divider1.orientation = "column";
+  var dividerinside1 = divider1.add("panel", undefined, undefined, {
+    name: "dividerinside1",
+  });
+  dividerinside1.alignment = ["fill", "center"];
+  var EffectsGrp = MSPalette.add("group", undefined, { name: "EffectsGrp" });
+  EffectsGrp.preferredSize.width = 261;
+  EffectsGrp.preferredSize.height = 85;
+  EffectsGrp.orientation = "row";
+  EffectsGrp.spacing = 0;
+  EffectsGrp.margins = 0;
+  var image4_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%5C%00%00%00%0F%08%06%00%00%00i%C3%B5%C2%A8%01%00%00%03%C2%93IDATX%C2%85%C3%AD%C2%98%C3%91q%C3%9BH%0C%C2%86%C2%BFd%C3%B2~%C3%AC%20L%05%C3%A1%03%C3%9E%C2%AD%C2%AB%20L%05b*%C2%B0%C2%AE%02%C3%93%15%C2%98%C2%AE%20%C2%BC%0ADW%10%C3%BA%1D3Q*8%C2%BA%C2%82%C2%93%2B%C3%88%3D%C3%AC%C2%BF%C3%92%C2%86%C2%A2(y%C3%8E%C3%89%C3%9C%C3%9C%183%1C%C2%91%C3%8B%C3%9D%1F%C3%B8%C2%B1%00%16%C3%94%2B%C3%BE%C3%A7%C3%A2%C3%AE%25%C2%B0%026f%C2%B6r%C3%B7%02%C2%A8%C2%81%C3%8C%C3%8C%16%C2%BF%C3%9A%C2%9E%C3%97%C3%AE%5E%C2%BB%C3%BBww%C3%BF%C3%A5%C3%8A%7F%C2%B6%C3%88%C2%B9k%20%036%1A%C3%AE%C2%80E%C3%B2%C3%BC%1Czzw%C2%AF%C3%8E%C2%99%C3%BB%C3%BA%C2%B9%C2%94%C3%BEG%25%C3%93%C3%AF%C3%8A%C3%8CZ%C3%9D%C2%BF%05%1A3%5B%3D%C2%A3%C2%9E%0B%20%3Fg%C3%A2%C2%9B%C2%B9%C2%97I%3A%5E%00%0F%40%0B%0C%40%C2%A5%C3%B1%06h%132(Sj%C2%A06%C2%B3%C2%B8%C3%B3%2B%C3%A0%7D%C2%82%C3%91%C2%98%C3%99V%C3%AF*%C3%A1%C3%94%C2%84%C3%A8kt-%08%C3%8E%C2%B9%13%C3%96AD%C2%BA%7B%26%C3%ACR%C3%B8%C3%9F%C2%80%C3%8E%C3%8CjEw%C2%A3%C2%A9%C2%8D%C2%BB%C3%B7%40%C2%A1%C3%A7%C3%8A%C3%9D%17%C2%B1%C2%A4%C2%B8%7B%3D%C2%851%C3%A2%C2%B4%02%3E%00%C2%8F%40O%C3%98%C3%84A%C2%B8%3BL%C3%B1%C2%8B%3C%0E8%1C%C2%8Dp9%7BM%C3%98%C2%B9k%C2%81D\'_%C3%88%01%C2%B9%1C%C2%95J%25b%1Bwo%C2%80%C3%8F%C3%80V%18%3Dp%25%2C%C2%B4%C3%BEBz%C2%B6%C2%84%C3%8Dl%C2%80%C2%A5%C3%9E_%C3%8B%C3%A8Hj%2C%C2%AD%C3%B06%C2%9A%3B%00W%C3%92%C2%BBe_66%C2%BA%22%C3%8E%10%C3%AF%C3%9D%7D%0E%23%3A%C3%BB%C2%8B8%5DK%C3%A7B%C3%BC%C2%B2%09%C3%8CY%0Es%11%C3%9E%10v%C2%B30%C2%B3mb%C3%9C%C3%971aw%2F%C3%8C%2C%1AP%C2%B2w%C3%A8%25pgfe%5C%C3%A0%C3%AE%1B%C3%A0F%11%18%C3%A5%0F3%C2%8B%04%C2%ABT%C2%AF%C3%A6%C2%AF%C2%A2%C2%8E%04%C2%A7%20D%C3%9C%C3%B5(%1A%3B%C3%A9%C2%ADe%C3%9F%C2%92%C2%90%C2%85%C2%BD%C3%9E_%01%7D%C2%92%05%C3%8B%09%C2%8C%16%C2%B8%C2%94%C3%93%C2%A7%C3%BC%C3%90%13%C2%82%C2%A4%12%C3%8E%0ES%C3%AFkB6%1Fp%C2%98s%C3%B8%5B%C3%A06*%01%C2%90S%C3%AFDt%C3%A7pB%C3%A4Wr%C3%B6o2r%C3%A7P%19%10%25%C3%97o%C2%99%C2%8Cu%C3%89%7DO%C2%88%C3%BA%C2%8D%C2%88wG%C2%BA%C2%89%C2%B8%3E%1F%C3%A1G%7B%0BNK%C3%84%1Dc%C2%A4%C2%B6%C2%BE%C3%A7%C3%90%0F%1D%C3%B0j%06%C2%B7GY%C2%A3M%C3%AB%23%C2%87S%C2%87%C3%A6vn%C3%8C%C3%8C%06B%7D*%C2%93zz%3F%C2%AA%C2%B79%C2%81X%C2%BCr%C3%A0%C2%9E%C2%90z)N%C2%BC%C2%AF%C2%81%C3%9F%09)%C2%BE%02%C2%BE%C3%8A%C3%B1%C3%87%C3%A4%18%C3%BE%C2%94%C3%ADc%C2%89%C2%87jq%02%C3%A3%1C%C2%AC%C2%9D%C2%88%C3%83G%02%C2%87%C2%9A%C2%84%C3%83%C2%9C%C3%83%1F%C3%B91%0A%C3%A3!%C2%B5%18%C3%8Dk%09Q%1D%0F%C3%86V%C3%A3%C2%83~%3B3%5B%C3%84K%06%C3%B4%1C%C2%A9%C3%8B%C2%8A%C2%B4%C3%9C%C3%8CJ3%C3%8B%085p9%C3%91%C2%B6%C3%86MmF%C3%B81%C2%A2%C3%8Ei%C3%BB%C2%A2%0D%C2%93%18%C3%A2%C3%B0%C3%80%C2%A1%1Fr%C2%B5%C3%93c%C2%9BR%0E%C3%99%14%C2%87%C2%B4%C2%A4%14%C3%AE%1E%C3%AF%07)%C2%BDRM%C2%8C%C2%A7%7DM(5%3B1%C2%B3%C3%8E%C3%9D%1F%08)%C3%B4%18%3B%16%C2%9D%C3%A0%C3%B7%C2%84%C3%9A%C2%B5e%7F%C3%98%C2%B4%C2%91%C3%A4%11\'%14%C3%89%C2%9A%C2%9E%7D%09%C3%BA!%C3%8A%12%C2%BD%C2%AD%C2%BBWz%C2%AE%C2%84%7BV%C2%8F%C2%AD.%C3%AA%1B%C2%A1%C2%8B%C3%81%C3%8C%C3%9A%04cP%7Dn%C3%A5%C2%87V%C3%BC3qH%C2%83%0B%C3%99%1C%0F%C3%A7%C2%92P%C2%A6%0E8%C2%A4%11~C8%C2%8D%C2%BF%C2%A0%C3%83%00%C2%B8%25%C3%94%C3%AB8%C2%9Eil%2C%C3%91y%C3%ADh%C2%BC%C2%94%017%C3%80%C3%9F%C3%AC%C2%BB%C2%91EZ%13GRk%C3%8EZk%C2%96%C3%80%C2%9FG%22%C2%B6%24%04%C3%87%C3%9A%C3%9D%C2%BF%13%3A%C2%A2H%C3%B8%5C%C2%A9%C2%B4%C3%A6s%C2%821h%C2%9C%C3%84%0FK%C3%A0%2FB%C3%93%C2%90%03%C2%9F%C2%92RxK%C3%88%C3%B2%C2%B5%C3%96U%13%1Cn%C3%8Dl3W%C3%B8%C2%81%C2%90%3ER%C2%B0%3D%C2%96%C2%A6%3A%18.%C2%81wi%3D~%0A%C3%86%C3%84%C2%9A%C2%82%C2%B0%C3%81%C3%83%14%C3%A6%C2%91%C2%B9g%C3%A3%3F%15C%C3%A5%C2%B4%C2%80%C2%90%19O%C3%84%3C%C3%89%C3%A1%C2%A9%C3%86n%C2%93%0F%C2%80%17%C2%99%C2%91%7F%C3%BDi%C2%AF%C2%9A%17%5B%C3%81%179!%C3%8F%C3%B1_JN%C3%B8%C2%B8%C3%A9NM%7C%11%C3%B8%07%C2%9B%C3%89%25%C3%92%C3%BA%7C%C2%96%C2%8F%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var image4 = EffectsGrp.add(
+    "image",
+    undefined,
+    File.decode(image4_imgString),
+    { name: "image4" },
+  );
+  var sprateGrp2 = EffectsGrp.add("group", undefined, { name: "sprateGrp2" });
+  sprateGrp2.preferredSize.width = 40;
+  sprateGrp2.alignment = ["left", "center"];
+  var btnsGrp2 = EffectsGrp.add("group", undefined, { name: "btnsGrp2" });
+  btnsGrp2.orientation = "row";
+  btnsGrp2.alignment = ["right", "center"];
+  btnsGrp2.spacing = 5;
+  btnsGrp2.margins = 0;
+  var group1 = btnsGrp2.add("group", undefined, { name: "group1" });
+  group1.orientation = "stack";
+  group1.alignChildren = ["left", "center"];
+  group1.spacing = 10;
+  group1.margins = 0;
+  var on_Enabled_FX = group1.add(
+    "image",
+    undefined,
+    File.decode(on_Enabled_LS_imgString),
+    { name: "image5" },
+  );
+  on_Enabled_FX.alignment = ["left", "center"];
+  var on_disabled_FX = group1.add(
+    "image",
+    undefined,
+    File.decode(on_disabled_LS_imgString),
+    { name: "image5" },
+  );
+  on_disabled_FX.alignment = ["left", "center"];
+  on_disabled_FX.visible = false;
+  var group2 = btnsGrp2.add("group", undefined, { name: "group2" });
+  group2.orientation = "stack";
+  group2.alignChildren = ["left", "center"];
+  group2.spacing = 10;
+  group2.margins = 0;
+  var off_Enabled_FX = group2.add(
+    "image",
+    undefined,
+    File.decode(off_Enabled_LS_imgString),
+    { name: "image6" },
+  );
+  off_Enabled_FX.alignment = ["left", "center"];
+  off_Enabled_FX.visible = false;
+  var off_disabled_FX = group2.add(
+    "image",
+    undefined,
+    File.decode(off_disabled_LS_imgString),
+    { name: "image6" },
+  );
+  off_disabled_FX.alignment = ["left", "center"];
+  var divider2 = MSPalette.add("group", undefined, undefined, {
+    name: "divider2",
+  });
+  divider2.orientation = "column";
+  var dividerinside2 = divider2.add("panel", undefined, undefined, {
+    name: "dividerinside2",
+  });
+  dividerinside2.alignment = ["fill", "center"];
+  var AjastmentGrp = MSPalette.add("group", undefined, {
+    name: "AjastmentGrp",
+  });
+  AjastmentGrp.preferredSize.width = 261;
+  AjastmentGrp.preferredSize.height = 85;
+  AjastmentGrp.orientation = "row";
+  AjastmentGrp.alignChildren = ["left", "center"];
+  AjastmentGrp.spacing = 0;
+  AjastmentGrp.margins = 0;
+  var image7_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00z%00%00%00%0F%08%06%00%00%00%2B%C2%B6%C3%9B%C2%96%00%00%04%C2%8EIDATX%C2%85%C3%AD%C2%98%C3%AFQ%C3%B3F%10%C3%86%7Fa%C3%B8%C3%BE%C2%BA%03%C2%94%0APf%C3%B6%3BN%05%C3%A8%C2%AD%C3%80J%058%15%20*%40T%C2%80%C2%A8%00SA%C3%84%C3%B7%C2%9D%C3%81T%C3%B0%C2%9A%0A0%15%24%1F%C3%AE9%C3%AB%10%C3%BE%C2%8B!!%C2%93%3C3%1AI%C3%AB%C2%BB%C2%BDgwo%C3%B7V%C2%86%3D%C3%A0%C3%AE%C2%99%C2%BBW%C3%AE%C2%9E%C3%A9%C2%BDv%C3%B7%7C%1F%C2%9D%C3%BFV%C2%B8%7B%C3%A9%C3%AE%C3%A5%3F%C3%8Dc%15%0E%C3%93%17w%C2%AF%C2%80!P%C2%9B%C3%99d%C2%8B%C3%B9%19p%0E%C2%B4%C3%AE%0EPJ%3E%C3%9E%C2%97%C2%98%C2%BB%C3%97%00f%C2%B6%C2%B7%C2%AE%C2%8F%C3%80%16%7CJ%C3%9D%C2%9B%C2%BF%C2%83%C3%8F%C2%AE8%C3%AC%C2%BD%C2%8F%C2%81o%C3%80%1C%C3%98%26%C3%90%0B%C2%98%C3%99%C3%8C%C3%9Ds3%C2%9B%7D%10%C2%B7%C2%AFV%19%C2%BE%1A%C2%9F%C2%9D%C2%B0%08%C2%B4%C2%BB%17%C2%84%20%3F%02%C2%A7%C3%AE%C2%9E%C2%A5As%C3%B7%01P%03%C2%85D-o7C%C3%A3%C3%AE%C2%8D%C2%995%C3%AE%C3%9E%02%C2%8D%C2%995%C2%89%C2%8E%5C%3A%C3%86f6%C3%95%C2%9A%15p%C2%ACuk%C3%8D%C2%AD%C2%91c%C2%A5gJ%C3%88%C2%94Z%C3%AB%16%C3%89%C2%9CJ%C2%B2%3E%C2%B7%C3%92%C3%8C%C3%A6%3D%C3%AEC%C3%A0%08%C2%B8\'%C2%A9ZZo%C2%A0%C2%B9%C3%91%0Fw%40%25%C2%9Eo%C3%B8l%C2%AA4%3D%C3%9B%C2%9E%C3%84%7F%20%3D%C2%95%C2%AEW%C2%95%C3%93%C3%9D%C2%87%C3%B173kUaS%5B\'fVilI%C2%A8%22%C2%8D%C3%A6D%C3%BFD%3F%C2%BC%C2%B2%C3%A1%20%C3%A1V%02%2Ft%25(%3A-%3Aj%0A%C2%8C%08%C3%81%C2%8D%C2%8E%C2%B9%C3%AE%C3%99wB(%C3%A7%C3%BD%C3%A7%C2%88%C2%81%C3%A4%03%19u%2B%23%C2%AE%08U%C3%A4Z%C3%B2%C2%A9%C3%9E%C3%A7%C2%84%C2%A0M%C2%93%C2%B9%C3%A7%C2%92%5DHv%C2%AB%C3%B7%C2%A1x5%C3%80%C2%A9d%C2%91%7B%2B%7B%26%C2%9A%07p%C2%AB%60%40p%C3%BE(%C3%91q%25%1D1%08%C3%8B%C3%B8%C2%AC%C2%84%C2%82p%2B~%17%C3%923%06%C3%8E%C2%80%133k%C3%A9%02%C2%9Eb%0C%C3%A4%0Ar-%5Bg%C3%921%05%C3%8E%C3%9D%C2%BD%C3%91%C3%98L%C3%BE%C2%B8%C3%96%C2%98%C2%99%C2%B8%C2%8F%C3%84%C3%B3B%C3%B6L%40%19-g%C2%9C%027%C3%9A%C3%81O%C2%84%C2%80%C3%97RZ%122%C3%A1w3%C2%8B%C2%B2%C2%B8%C2%BBO%C3%96%19%C2%BD%06C%C3%9D%C2%BF%C2%9B%C3%99D%1C%26%40%C2%A6%C2%AC.%01%C2%92%1D%1C%C3%87_%24%C2%B2%1Ax%C2%96%C3%91Y%C2%92%C3%81s9%25%C3%97%3A%C3%87q%C2%9D%C2%84%C3%BBT%C3%B6%C2%A5U)Ot%C3%8C%C2%80Kw%1F.%C3%A3%C2%B3%01%15!%C2%8BS%7D%0D%C3%B0%C2%90%C2%8Ci%C2%80%C2%B3X9%C2%93%18%5C%C2%A9%C2%B9%3D%03%C3%AE%C3%8C%2CM%C2%B8%C2%99%C3%AC%C2%AA%13%3D%C2%8B%C2%98%C2%88%C3%A3b%5D%C2%8D%2F%C3%9D%3D%C2%8B%C2%A5%3B*kt%C2%AFednfS9%C3%AB%25%0Dr2%C3%AE%C2%BD%C2%81n%08%3B%C2%B8%C2%91%13Z3%1Bn1%C2%AF%C2%8D%0F2%C3%A6%3E%3E%C3%B7%C3%86%C2%9C%C3%93%C2%95J%C2%80%C2%BC%C3%B7E0\'l%C2%80%C2%88%C3%BB%C2%9E%C2%8E%C2%B5Y%C2%BB%0A%0A%C3%92%11aC.%C3%B4)%C2%81%C3%AE%C3%A9%C3%BCU%13%C2%829%C3%96U%26%C3%B2%2CrT%C3%B9%C2%8E%C2%88%C3%B2A%22k%C2%92%C3%A7%C2%96%C2%AE9n%08%C2%A5%C2%BE%01%C2%88%C2%A5%7BL(%C3%9B1s%22%C3%81%C2%B8%C3%B8%20%C2%91%C2%A5X%26%C3%9B%0A%3A%C3%BFs%11-%08%C2%A5t%16%3F%C3%95%3E%10Q%C3%9F%C2%B0wA8%C2%AB%3F%1A%C2%83%C3%8DC%16%C3%B6%C3%9F%C3%B3%C3%BAK%C3%A5%C2%AE%C3%97%C3%8C%C3%86%C2%8A%14%C2%AFLs%C3%92%0D%C2%94%3EW%C3%80o%C2%842%5E%01%3Fb%C2%A9%3F%C2%90c%C2%8F%09%C2%87%C3%B7%1F%C2%BA%C3%A2%C3%99%1B3%7D%0A%1C-%C3%B9F%1E%C2%AE%C2%B1%C3%A5)%C2%99%1F%C2%91%C2%96%C2%A1!%C2%A1a%1A%C2%9BY%06%C3%BCJ%C3%88%C2%84r%C2%8D%C3%8E%C3%B7%C2%A0%C3%95%C2%BD4%C2%B3a%C2%BC%08%1B%C2%AC%5D1%C3%A7%C3%9DP%05%7C%C2%A1%C3%A7%1B%C2%95%C3%A6%C2%BE%C3%BF%1A%C3%A0%C2%9B%C2%B2%C3%B6%C2%88.%3Bc%C3%B0%C3%AA%1E%C3%A7J%C2%9C%C2%97%26%C2%98%C3%B4%C3%8C%C3%8D%C2%AC0%C2%B3%C3%98%1F%C2%8C%C3%9C%3D%3F%C2%A4s%C3%AC%2F%22%19\'%C2%95%C2%84%C3%A6%C2%A8%C2%A0%2B3%13w%1F%13vLA(%13%C2%AB%C3%90j%C2%91H.%C3%A3u%10s%C3%82y%03%5Ds%C3%97%C3%87%C2%89%C3%96k%C3%97%C2%AC%C2%B3%09%0D!%5B%26%09%C2%97%12%C2%B8%244%5D%C2%BB%60%C3%81\'%C3%B5%C3%95%C2%8A5%C3%8F%C2%94M%C3%91%C2%B6%C2%9A%C2%90L%0B%C3%A8%C3%AC%C2%AF%08~%7C%C2%8A%3DDR%C3%A6k%C3%B9gB%C3%988%0D!%C2%90%C2%95%C3%A4%7D%14%C3%80X%C2%B1kI%C2%9A%C3%A1%03%C2%82%C3%91%C2%8FK%C2%88%C3%87%26%C2%A5P9%C3%B9N%C3%97%C3%A5%3E%10%C2%9Cw%C2%B3%C3%86%C3%981%C2%A1%C3%8C%C2%9C%C3%93U%C2%89%C2%B6%C3%A7%C2%8C%3B%C3%BD%C3%BE%2C%C2%BD%C2%8Ft%0D%60%C2%A3%C3%BBe%22%C3%9B%19%C3%A2%5E%24%C3%9C%C2%9F%C2%A5%C3%B3%C2%8E%C2%B7%5D%C3%AF%3Al%C3%8DG%C2%9F%5E7%C2%84%0E%C3%B8%C2%81%60%C3%BF%C2%9C%60%C3%9F*%C2%BDMO%5E%10*%C3%A95%C2%9D%7F%C3%A6%C2%BC%C2%AD%C2%92)J%C2%8D%C2%89v%C2%8E%C2%80%2B3%C2%9B%C3%BE%C2%B4%C2%8E%C3%B02%24%C3%9D%C3%AF%C2%B4%C3%97%C2%BC%C3%A0%C3%AE%7F%C2%92t%C3%85%C2%92%C3%A5%04\'%C2%BF%19%C2%AF%C3%9F3%C3%82%C3%8E%C2%9Bo%C3%88%C2%92%C2%BD%C2%91p%C2%9F%7D%C3%A0%1F%3B%C3%AB%C3%96%C3%8B%C3%98%60%C2%9B%C2%B2~%04%C3%BC%C2%BC%C2%8C%C3%93%7B%C3%BC%C2%B3%C3%8C%C3%8E%C2%9D%03%C2%BDFy%06%C3%BC%C2%A0%17%C3%A8%C3%BF%C2%B1%1A%3A%C2%B7g%C2%84%C3%AE%C2%B8%C3%BC%C3%8C%C2%B5%0E6%0F%C3%99%C2%8C%C3%A4O%0E%C3%98%C2%A3%13%C3%BF%0F%C2%A2%20%C2%9C%C3%9B%C3%8Dg%2F%C3%94%C3%BF%C2%AF%C3%BB%C2%BD%C3%88%08%C2%81%C2%9E%C3%B1E%C3%BF%C3%94%C3%BF%C2%A2%C3%88%09%C2%9FT%C3%ADg%2F%C3%B4%17%22%C2%90n%7C%C2%B7%C3%A0%C3%B5%2F%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var image7 = AjastmentGrp.add(
+    "image",
+    undefined,
+    File.decode(image7_imgString),
+    { name: "image7" },
+  );
+  var sprateGrp3 = AjastmentGrp.add("group", undefined, { name: "sprateGrp3" });
+  sprateGrp3.preferredSize.width = 10;
+  sprateGrp3.alignment = ["left", "center"];
+  var btnsGrp1 = AjastmentGrp.add("group", undefined, { name: "btnsGrp1" });
+  btnsGrp1.orientation = "row";
+  btnsGrp1.alignment = ["right", "center"];
+  btnsGrp1.spacing = 5;
+  btnsGrp1.margins = 0;
+  var group3 = btnsGrp1.add("group", undefined, { name: "group3" });
+  group3.orientation = "stack";
+  group3.alignChildren = ["left", "center"];
+  group3.spacing = 10;
+  group3.margins = 0;
+  var on_Enabled_AJAS = group3.add(
+    "image",
+    undefined,
+    File.decode(on_Enabled_LS_imgString),
+    { name: "image8" },
+  );
+  on_Enabled_AJAS.alignment = ["left", "center"];
+  var on_disabled_AJAS = group3.add(
+    "image",
+    undefined,
+    File.decode(on_disabled_LS_imgString),
+    { name: "image8" },
+  );
+  on_disabled_AJAS.alignment = ["left", "center"];
+  on_disabled_AJAS.visible = false;
+  var group4 = btnsGrp1.add("group", undefined, { name: "group4" });
+  group4.orientation = "stack";
+  group4.alignChildren = ["left", "center"];
+  group4.spacing = 10;
+  group4.margins = 0;
+  var off_Enabled_AJAS = group4.add(
+    "image",
+    undefined,
+    File.decode(off_Enabled_LS_imgString),
+    { name: "image9" },
+  );
+  off_Enabled_AJAS.alignment = ["left", "center"];
+  off_Enabled_AJAS.visible = false;
+  var off_disabled_AJAS = group4.add(
+    "image",
+    undefined,
+    File.decode(off_disabled_LS_imgString),
+    { name: "image9" },
+  );
+  off_disabled_AJAS.alignment = ["left", "center"];
+  var divider3 = MSPalette.add("group", undefined, undefined, {
+    name: "divider3",
+  });
+  divider3.orientation = "column";
+  var dividerinside3 = divider3.add("panel", undefined, undefined, {
+    name: "dividerinside3",
+  });
+  dividerinside3.alignment = ["fill", "top"];
+  var AjastmentGrp1 = MSPalette.add("group", undefined, {
+    name: "AjastmentGrp1",
+  });
+  AjastmentGrp1.orientation = "row";
+  AjastmentGrp1.align = ["left", "bottom"];
+  AjastmentGrp1.spacing = 0;
+  AjastmentGrp1.margins = 0;
+  var image10_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%C2%98%00%00%00%0C%08%06%00%00%00%C2%9E5tt%00%00%07%1CIDATX%C2%85%C3%AD%C2%99%7F%C2%90%C2%96U%15%C3%87%3F%C3%9Fu%C2%B1-e%06%1B%C3%83V%19BY%C3%94%22%C3%A3%C2%9D%C2%A1%26%C3%8C%14%0C%0D%C2%A8%C3%BC%C2%91%C2%83i%19%C2%B2%C2%A0%C2%96NA%C3%94%C2%8C%C2%96%C2%96%C2%BA2%C2%99%C2%A4%18L%C2%92c%16M%5BZ%C2%8DI%22%C2%A0%14%C2%96a2%06F%C3%B1%C2%92%C2%A4%10%1A%10%3F%5E%07%C3%91%16%C2%96De%C2%97o%7F%C3%9C%C3%B3%C2%B0%0F%0F%C3%AF%C2%BE%C2%BB%C2%A5%C3%BD%C3%A3%C3%B0%C2%9Dyg%C2%9F%C3%A7%C3%9Cs%C3%8E%3D%C3%8F%C2%BD%C3%A7%C2%9E%1FwE%15%C2%B8%C3%9CX%0F%C2%9C%0F%C2%8C%07N%05%06%C3%86P%3B%C3%B0W%C3%A0%C3%97%40%C2%ABJ%C2%95%C3%8D%C3%95%C3%A4%0F%C3%A1%102%C2%A8Hp%C2%B9q%2Cp%07%C3%90%C3%94%C2%83%C3%AC%5E%60%0Ep%C2%BDJ%C2%95%7F%C3%BF%1Fl%3B%C2%847%01%0Ep0%C2%97%1B%C2%A7%03%C3%97%C3%BF%C2%97%3A%C3%BE%06%C2%8CU%C2%A9%C2%B2%C3%A5%0D%C2%B3%C3%AA%10%C3%9E4%C3%98%C3%AF%60.7%C3%9E%04%C3%9C%C3%B0%3F%C3%AAy%0E%C3%B8%C2%A0J%C2%95%17%C2%AB%0D%C3%9A%1E%05%C2%8C%02%C3%8A%C2%92%C3%A6%07%C3%ADp%60%020%1Ah%00%C3%8A%C3%80%C3%9D%C2%92%C2%9E%C2%8F%C3%B1%C3%A3%C2%80%C2%AB%C2%81%C2%97%24M%2F%C3%A8%7B%2B0%198%03%C2%A8%03%C3%BE%0C%C3%9C%25%C2%A9%C2%AD%C3%807%14%C2%98D%C2%8A%C3%86%2F%02%C3%B3%24%3D%5C%C3%ABCl7%C2%85%C2%AD%06%C2%9E%C2%90%C3%B4L%C3%90%C3%9F%06%7C%14x%0D%C3%98%02%3C%25%C3%89%C2%B6%C3%AB%C2%81%0F%17%C3%94%C2%943%5Bl%1F%09%0C%C2%95%C2%B4%22%C3%9E%3F%0E%C3%B4%C3%89%C3%B1V%C2%80%C2%AD%40%07p%3C%C3%B0%C2%A4%C2%A4%C3%8E%C2%82M%C3%83Ik%5C*%C3%8C%C2%B3R%C3%92%C3%AE%02%C3%AF%C3%BBc%C3%BE%C2%8Exo%00%C2%9A%24%C2%AD%C3%89%C3%B14%00g%C3%87%7C%C2%9B%C2%81%C3%9FJj%C3%8F%C2%8D%C2%BF%17%C3%98%C2%98%C3%97m%7B%C2%84%C2%A4%C3%A5%C3%B1%2C%60%2CpR%C3%98%C3%BBD%C3%90%C3%BB%15m%14%C3%ACO%C2%8B%C2%8By%7DX%C2%A4R%C3%A5%C2%9Cj%03%C2%B6%5B%C2%80%1B%C2%81VI%C3%8D%C2%B6%C2%8F%02%1E%01%C2%86%17X%C3%9B%C2%801%C2%92%C2%9E%C2%B4%5D%02V%01%C2%9B%24%0D%C3%8A%C3%A9%3A%16x4%3E.%C2%8F%0Ap%C2%96%C2%A4%C2%A7%C2%83o2p7pX%C2%81%C3%AF%1E%60%C2%A2%C2%A4%7D%05%1B%C3%AB%C2%80%C3%AF%C2%90%C2%9C%C3%ABW%40\'p%0E%C2%B0%1E%C2%B8%02x\'%C2%B0%2C%C3%86%06%03%C3%BD%C2%81s%C2%81%3D%C3%81soN%C3%9D%1CI%C3%8F%C2%86%C3%9Ei%C3%80%C2%AD%C3%80%10I%C2%9Bl%7F%0D%C3%A8%074%03w%01kCw%1B0%06%C2%B8G%C3%92C9%C2%BB%C3%BA%01%2BI%C3%8E%C3%BD%07%C3%A0%C3%BE%C3%9C%3C%C2%B7I%C3%9AZ%C3%B8%C2%8E20*%C3%A7%C3%A0%C2%83%C2%80%C3%99%C2%92%C3%8E%C2%8F%C3%B7%0F%C3%84%1A%2C%03%C2%9E%02%C2%86%C2%90%C2%9C%C3%A5*IK%C2%82g%3E%C3%90%22%C2%A9%C2%9C%C3%93%C2%BB1%C3%9B%07%C3%9B7%C2%93%C3%96%7F%09%C3%A9%C2%A0%C3%8F%C2%94t%7F%04%C2%92Y%C3%80c%C2%99%5C%7D%14%C3%B4w%C3%90%3D%C3%BEH*%C3%AA%C3%B7%00%C3%AF%01.%04%C2%8E%C2%A8%C3%82%C3%B7%09%C2%97%1B%C3%8FS%C2%A9%C3%B2%60%0D%5D%19%C3%A6%C2%90%C2%9C%C2%AB%0D%C3%B8%1E%C2%B0%1B%C2%B8%C2%8A%C3%94L%C3%8C%C2%B3%3D%C2%A4%C2%86lk%7C%C3%9C%0E%C3%A0N%C3%A0%15%C3%A0%C3%8A%C2%90%C2%BD%C3%8F%C3%B6%C2%B0%18%C3%BF%3E%C3%89%C2%B9~%0F%2C%00%C3%9E%0D%5C%0E%7C%16%C3%B8%13%C3%B0%C3%9D%C2%82%C3%9El%C3%A3%C2%87g%11%C3%84%C3%B6%C2%B7%C2%80%19%C3%80m%C3%80%C3%AD%C3%80%C2%B3%C2%92%C2%A6%C3%86%C3%98%04%C3%A0f%C3%A0%2B%C3%80VI%C3%93%C2%8A%C2%86%C3%86I%C2%9FL%C3%8A%0C%C2%93H%C2%9B6%23%C2%9Cf%C2%AC%C2%A4%C2%96%C3%A0%C3%8Bd%C3%A7%C3%86%3A%3C%C2%94Ss1p%1F%C2%B0%2F%C3%A6%3Fh%C2%9E%C3%9E%C3%82%C3%B6%C3%91%C2%A4%C2%83p%C2%A1%C2%A4%C3%959%C3%BA%20%60%C2%89%C3%ADq%C2%92%C2%9E%C3%AB%C2%85%C2%AAO%02%C3%83%24%C3%AD%C2%B5%C3%BD8%C3%B0m%C2%BA%1C%C3%BF%C2%B1%C2%BC%C2%8D%C3%B5%C3%80yT%2F%C3%A8w%01%C2%97%16%1D%C3%86%C3%A5%C3%86%C2%AF%02%3F%07%3ERE%C3%A6%C3%8B%40M%07%C2%8B%C3%85%C2%BD8%5E%C3%87%C3%A5%C3%82%C3%AE%C3%8F%C2%80%0B%C2%82~t7%C2%B2%C2%83%C2%81%C2%B3H%C2%8B%7Df%16%C3%B6m%C2%B7%02%C3%AB%C2%80%C2%A1%C3%80%C3%A9%C2%A4%C3%88SOr%C2%AE%C3%91%C2%92%1C%7C%1B%C2%80%5B%C2%80%C3%8F%C2%91s0%C3%9B%7DHQ%C3%AA%C2%94%7Cz%C2%8A%14x-)%C2%85%C3%B7%2F%C2%98%C3%B3%20%C3%89%C2%B9ja%24%C2%B0%C2%86t%C2%88V%C3%98%C2%9E%5E%C2%8C%C2%9C%05%3C%0A%C3%9Ci%C2%BB%C2%BF%C2%A4%C3%ADA%C2%9B%18%C2%BF7%02%C2%97%01s%C3%B3%C3%8E%05%20i%C2%A3%C3%ADo%02_%24%C3%ADaO%C3%98B%C2%BAe%C3%B8%25)%02%7F%C2%A6%3B%C3%86%3A%C3%92UD5L%C2%A8%16%C2%8DT%C2%AAl\'m%C3%A0%C3%93UdF%C2%BA%C3%9CxL%0F%C3%86%1D%1F%C3%B3%C2%BE%20i%C2%B9%C3%ADK%22%C2%AC%2F%20%C2%A5%C2%8Df%C3%92%C3%86TCv%106%C3%A5k%0AI%C3%9BHu%18%C2%A4%C2%90%7Fb%3C%2F%C3%8C%C2%9C%2B%7B%C2%8F%C2%BF%C3%85%C3%B4z%02%C2%B0%C2%AEX%C3%8F%C2%84%C3%AE%7D%C2%92%5E%C2%AEb%C3%8B%40R%5D%07%C3%90d%7Bi%C3%B6%C3%8B%C3%B1%5CI%C2%AA%2B%C3%9B%C2%81%C3%A5%C2%A44%C3%97-%C3%82%C3%B9%C3%AE%25%C3%95%C2%A6%C3%98%3E1%C3%A8%7F%0F%C2%96Rn%C2%9EE5T-%C3%8A%C3%99%C3%B2%C2%8B%1C%C2%BD%04%2C%C2%AD*%C2%91%C3%92%C3%AF%C3%BBj%C3%99%C2%97%C3%83D%C3%A0%02%C3%9B%C2%AB%C2%81%C2%AFs%60%192%3Eg%C3%A3%C3%ACz%C3%92%3DW%11%C3%8BT%C2%AA%2C%C3%A8N%C2%BBJ%C2%95%C2%97%5Dnl!%C2%85%C3%AE%22FP%3B%C2%8A%C2%BD%14%7F%C3%9F%1E%C3%91%C3%ACUR%C2%AA%C3%AC%03%7C(%C3%86%1A%C2%BA%C2%91%C3%8D6%C2%B4%C3%91v%C3%9F%C2%AC0%C2%8DB%7Bp%C2%8EgG%3C%C2%9F%5C%C2%90%C3%8F%1Ck%7B%C2%81%C3%9E%0E%1CU%C3%83%C3%A6%0C%0D%C3%91%04%C2%9C%04L\'%C3%95%C2%95%00%1BH\'z%3Fl%C3%B7\'E%C3%94%C2%AC%1E%C3%B9%110%C2%8DTn%C3%94%C3%82%C2%8FI)%C3%B2v%C3%92ak%C3%8D%C2%8D%C2%AD%C3%89%C3%8Dc%C2%BA%C3%87%25%C3%80%C3%8Ex%1E%18%C2%B6B%C3%AD%C3%AF%C3%AC%07%C3%B4%C3%AA%C2%BAIR%05%C3%B8%C2%B4%C3%AD%C2%BE%C3%80%C3%A7I%C3%B5%7B%C2%B6w%0B%C2%81k%C3%A3%C2%B9%C2%A3%C2%8E%C2%AEK%C3%94%3C~%C3%93%C2%8By%C2%BA%5B%C2%A8w%C3%B5%60%C3%9C%26R%C3%B1~%18)%C3%95%C2%96Iu%C3%91%C3%9A%60%C3%99%0B%C3%A4%3B%C2%BDz%C3%9B%C2%83%C2%A2NX%0F%C3%BC%C2%93%C3%A4%C2%80%C3%B3l%C2%97l%C2%9F%0C%C3%BC%14%18%40Z%C3%94%C3%9F%01%0F%C2%84%C3%ACe%C2%B6%C2%A7%C2%85%C3%BC8%C2%BA%C3%92%C3%A2%C3%BC%C2%82M%C3%9B%00Ecq%00l%0F%C2%B0%3D%3A%5E%C2%9B%C2%80%C2%99%C3%80u%C3%80RIY%14%C3%A9%C2%94%C3%94%C2%96%C3%BD%C2%82%C3%96L%C2%8A%C2%AA%23%C2%A3%C3%B8%C2%AD%07N%0D%C3%87%C3%ABi%7D*%C2%B6O%23%C3%95%C2%BB%C3%B9%08%C3%94%C2%91%C2%9Bggu%0D%00%C3%AC%C3%8C%C3%99%C2%B2%2BG_H*%05%C2%AA%C3%A1%0A%C2%BA%22%C3%BCv%C3%A0%C3%98l%20%0EpVf%C2%9Cf%7Bj%C3%98%C3%9A.i%26pD%04%0B%C2%80Ws6%C3%AE%C2%AE%C2%A3%C3%8Ae%2B%C2%A9%23%C2%AB%09%C2%95*%C3%ADT%C3%B7%C3%B8%C2%BA%C2%9EdI%C2%A9c%0F%C2%A9%7BYOj%C2%95\'%C3%87%C3%98%C3%95qB2%1CG%C2%8A%10%1BH%C3%85%C3%A5%C3%A5%24\'%3C%C2%9B%C3%A4%C2%A8%C3%8F%C3%90U%C3%93M%C2%8D%C2%85_%08%C3%8C%239%C3%B1%C2%AC%C2%90%7D8t%C3%BD%03h%C2%A9b%C3%93%14R%C2%93pFF%C2%88%C3%AB%C2%81%C3%85tE%C3%945%C3%91%C2%8D%7D%0C8%C2%B7%3Bg%C2%89%C2%8E%C2%B4%19%C3%98D%C3%AAJ%C2%B3%C3%9F%0A%22%C3%BD%C3%B5%C2%80%C2%B9%C2%A4%0ExU%C3%B1%C3%AA%C3%A5ub%11%C3%90%C3%87%C3%B6%C2%AC%C2%88%3E%C3%98n%C2%B0%7D%030%C2%8C%14%3D3%C2%BE)%C2%B6%C3%9F%12%C3%AF_%22%C3%95%C2%87%C2%90%C3%96r%C2%AA%C3%ADw%C2%84%C3%BC)%C3%80%C2%91%C2%A4%C3%A8x%10%C3%AA%C2%81%C3%95U%C3%A8%2F%C3%B4%C3%92%C3%A0U%40%C3%9F%5E%C3%88%C2%B6%C2%91%16%7B%07%40%5CC%C2%8C%20%15%C3%9Cg%02%C2%87%C2%87%1D%C2%B7H%C3%8A%C2%BA%C2%91%C3%97B%26%C2%8F%C3%9D%C2%92%1E%C2%B1%7D%3A%C2%A9%C2%83%C3%8B%C3%AE%C3%81V%027IZ%1C%C3%BAm%C3%BB%22%C3%A0%1A%C2%92C%C2%9E%00%C3%BC%C2%8Bt%C3%85p%C2%9D%C2%A4%C2%83l%C2%94%C2%B4%C3%82%C3%B6%C2%A7%C2%80%19%C2%B6%7FB%C2%BA%C2%97%C3%9A%0CL%C2%91%C2%B4%C3%94%C3%B6%00%C3%A0%C3%B9%C3%A0%C3%9Di%C3%BBV%C3%A0%0B%C2%A4T%C3%967%C3%AA%C3%88%0C%C2%B3I%C3%9D%C3%94%C2%8D%C3%B99l%1FCr%C2%9E%1F%00%C3%9BrC%C2%BBH%C2%9Dt%C2%86%07%C2%80o%00%3F%C3%8C%C3%91%3A%C2%80%01%C2%85y.%C2%92%C2%B4%C2%AE%C3%B0)%C3%9BHMP%5En%7Bn%5D%C3%86%C2%93R%C3%98_%C2%A2%C3%8B%15)%C2%A2%C2%8F%C2%91%C2%B47%C3%B8%16D7%C2%BE%C3%96v\'%C3%A9%C3%9F%C2%83%C2%93bl%C2%9B%C3%ADk%C2%80%C3%87m%C2%9B%14d.%C2%95%C3%94i%C3%BB%15%60%5CDl%00%C3%BE%03%C2%AD%0E%24%22%09%C2%AE%04%C3%AA%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var igloo_btn = AjastmentGrp1.add(
+    "image",
+    undefined,
+    File.decode(image10_imgString),
+    { name: "image10" },
+  );
+  igloo_btn.alignment = ["left", "canter"];
+  igloo_btn.helpTip = 'Check "Igloo Creative" video work';
+  var sprateGrp4 = AjastmentGrp1.add("group", undefined, {
+    name: "sprateGrp4",
+  });
+  sprateGrp4.alignment = ["left", "center"];
+  var image11_imgString =
+    "%C2%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%06%00%00%00%1F%C3%B3%C3%BFa%00%00%01-IDAT8%C2%8D%C2%9D%C3%931J%03A%14%C3%86%C3%B1%C3%9Fn%C2%8AD%C2%B00%C2%A8!%07%C2%88%C2%8A%C3%9AIDo%10A%10%1B%C3%93%C3%98x8%2Bm%C2%B4%10%C3%A2%0D%14%C2%B3%C2%B6%C2%A2%C2%88%07%C3%90HRXD%24%C2%AC%C3%85Nd%C2%8D%26b%C3%BE%C3%B0%18%C2%98y%C3%AFc%C3%A6%C3%8D%C3%B7%C2%A24M%C2%8D%C2%B0%C2%88%0D%2Ca.%C3%ACu%C3%B1%C2%88%5B%C2%BC%C3%A4%C2%93%C2%A3%C2%9C%40%01%0D%C2%AC%C3%A3%0A%0Fx%0Dg%C3%B3X%C3%866%C3%AEp%C2%89%C2%8F%C2%BC%40%01%C2%87x%C3%879%C3%BA%C2%A3%C3%97%0A%C2%94%C2%B0%C2%87%19%1Cc%10%C2%87%C2%83%C2%9DP%7C2%2C%C2%8E%C2%A2H%C2%92%24%C3%95%24I%C2%AA9%C2%81%3EN%C3%83%C3%9A%C2%80%18%15%C2%AC%C3%A2%0C_%C3%AFi%C2%B7%C3%9B%25%1C%C2%85%C3%88%C2%93%C2%86%C3%9C5TbY%C3%83n%C3%82%0D%C2%BE%C2%A8%C3%97%C3%AB%7D%C2%B4B%C2%8C%C3%B2%C2%8Ekl%C3%84%C2%A8%C3%A1~%C3%8C%C2%9B%C3%B7C%C3%BC%C3%86%03j1%C3%8A%C3%A8%C2%8CI%C2%9AD%07%C3%A5%C3%B8%C3%8F%C2%B4%C3%B1%14%C2%84_%C3%A8ba%0A%C2%812z%C2%B1%C3%8Ca%2BS%08%2C%C3%A3)%C2%96%C3%99s%13%C3%85%7F%14%17%C2%B1%C2%85%C3%9B%C2%A1%13w1%2B3%C3%92%C2%8F%C3%A1%18!B%13o%C2%B8%186%C2%B1%15T%C2%9B2%C2%BB%C2%8E%C2%A3%C2%84%C2%83%C2%B0%C2%B6%C2%98%3CL%C3%B7%C2%BE%0F%C3%93%C2%8A%09%C3%83%C2%94%C2%A7%22sgM%C3%96%C3%A9%01zx%C2%92%C3%B5%C3%AB9%C2%9F%C3%BC%09%C2%94%11V%C2%B6%2B%C3%AET%2F%00%00%00%00IEND%C2%AEB%60%C2%82";
+  var info_btn = AjastmentGrp1.add(
+    "image",
+    undefined,
+    File.decode(image11_imgString),
+    { name: "image11" },
+  );
+  info_btn.alignment = ["right", "canter"];
+  info_btn.helpTip = "Info";
+  off_disabled_LS.addEventListener("mousedown", function (event) {
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_LayerStyles_OFF| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_LayerStyles_ON| ", "");
+      comp.comment = comp.comment + " |MS_LayerStyles_OFF| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      if (
+        theLayer.property("Layer Styles").canSetEnabled == true &&
+        theLayer.property("Layer Styles").enabled == false
+      ) {
+        theLayer.comment = theLayer.comment + " |MS_LayerStyles_OFF| ";
+      }
+      if (
+        theLayer.property("Layer Styles").canSetEnabled == true &&
+        theLayer.property("Layer Styles").enabled == true
+      ) {
+        theLayer.property("Layer Styles").enabled = false;
+      }
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_LS_OFF = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_LS_OFF == false) {
+      return;
+    }
+    this.visible = false;
+    off_Enabled_LS.visible = true;
+    on_Enabled_LS.visible = false;
+    on_disabled_LS.visible = true;
+  });
+  on_disabled_LS.addEventListener("mousedown", function (event) {
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_LayerStyles_ON| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_LayerStyles_OFF| ", "");
+      comp.comment = comp.comment + " |MS_LayerStyles_ON| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      var StayOff = theLayer.comment.search("MS_LayerStyles_OFF");
+      if (
+        theLayer.property("Layer Styles").canSetEnabled == true &&
+        theLayer.property("Layer Styles").enabled == false &&
+        StayOff == -1
+      ) {
+        theLayer.property("Layer Styles").enabled = true;
+      }
+      if (
+        theLayer.property("Layer Styles").canSetEnabled == true &&
+        theLayer.property("Layer Styles").enabled == false &&
+        StayOff != -1
+      ) {
+        theLayer.comment = theLayer.comment.replace(
+          " |MS_LayerStyles_OFF| ",
+          "",
+        );
+      }
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_LS_ON = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_LS_ON == false) {
+      return;
+    }
+    this.visible = false;
+    on_Enabled_LS.visible = true;
+    off_disabled_LS.visible = true;
+    off_Enabled_LS.visible = false;
+  });
+  off_disabled_FX.addEventListener("mousedown", function (event) {
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_FX_OFF| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_FX_ON| ", "");
+      comp.comment = comp.comment + " |MS_FX_OFF| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      var fxDisabled = "";
+      var numEffects = theLayer.effect.numProperties;
+      if (numEffects < 1) {
+        return true;
+      }
+      for (var i = 1; i <= numEffects; i += 1) {
+        var currentEffect = theLayer.effect.property(i);
+        if (currentEffect.enabled == true) {
+          currentEffect.enabled = false;
+        } else {
+          fxDisabled += i + " ";
+        }
+      }
+      theLayer.comment += " |MS_FX_START " + fxDisabled + "MS_FX_END| ";
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_FX_OFF = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_FX_OFF == false) {
+      return;
+    }
+    this.visible = false;
+    off_Enabled_FX.visible = true;
+    on_Enabled_FX.visible = false;
+    on_disabled_FX.visible = true;
+  });
+  on_disabled_FX.addEventListener("mousedown", function (event) {
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_FX_ON| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_FX_OFF| ", "");
+      comp.comment = comp.comment + " |MS_FX_ON| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      var L_C = "";
+      L_C = theLayer.comment;
+      var FX_Comnt_Strart = L_C.indexOf(" |MS_FX_START ");
+      var FX_Comnt_End = L_C.indexOf(" MS_FX_END| ");
+      var fxToDisabled = L_C.slice(FX_Comnt_Strart + 14, FX_Comnt_End).split(
+        " ",
+      );
+      var fxToReplace = L_C.slice(FX_Comnt_Strart, FX_Comnt_End + 12);
+      theLayer.comment = theLayer.comment.replace(fxToReplace, "");
+      var numEffects = theLayer.effect.numProperties;
+      var btrakLoop = 0;
+      for (var i = 1; i <= numEffects; i += 1) {
+        for (var L = 0; L < fxToDisabled.length; L += 1) {
+          if (i == fxToDisabled[L]) {
+            btrakLoop = fxToDisabled[L];
+            continue;
+          }
+        }
+        if (i == btrakLoop) {
+          continue;
+        }
+        var currentEffect = theLayer.effect.property(i);
+        currentEffect.enabled = true;
+      }
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_FX_ON = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_FX_ON == false) {
+      return;
+    }
+    this.visible = false;
+    on_Enabled_FX.visible = true;
+    off_disabled_FX.visible = true;
+    off_Enabled_FX.visible = false;
+  });
+  off_disabled_AJAS.addEventListener("mousedown", function (event) {
+    function theLayerType(thisLayer) {
+      var layerInf = new Object();
+      layerInf.type = "null";
+      if (thisLayer instanceof TextLayer) {
+        layerInf.type = "Text";
+      } else if (thisLayer instanceof LightLayer) {
+        layerInf.type = "Light";
+        layerInf.lightType = thisLayer.lightType;
+      } else if (thisLayer instanceof ShapeLayer) {
+        layerInf.type = "Shape";
+      } else if (thisLayer instanceof AVLayer) {
+        if (
+          thisLayer.source.mainSource instanceof SolidSource &&
+          thisLayer.adjustmentLayer == false &&
+          thisLayer.nullLayer != true &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.type = "Solid";
+          layerInf.solidColor = thisLayer.source.mainSource.color;
+        } else if (
+          thisLayer.source.mainSource instanceof SolidSource &&
+          thisLayer.adjustmentLayer == true &&
+          thisLayer.nullLayer != true &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.type = "Adjustment";
+        } else if (
+          thisLayer.source.mainSource instanceof FileSource &&
+          thisLayer.nullLayer != null &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.sound = thisLayer.hasAudio;
+          if (layerInf.sound) {
+            layerInf.type = "VideoWithSound";
+          } else {
+            layerInf.type = "VideoWithoutSound";
+          }
+        } else {
+          if (thisLayer.source instanceof CompItem) {
+            layerInf.type = "Comp";
+          }
+        }
+      } else if (thisLayer instanceof AVLayer) {
+        if (thisLayer.nullLayer) {
+          layerInf.type = "Null";
+        }
+      } else {
+        if (thisLayer instanceof CameraLayer) {
+          layerInf.type = "Camera";
+        }
+      }
+      return layerInf.type;
+    }
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_LayerAdjustment_OFF| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_LayerAdjustment_ON| ", "");
+      comp.comment = comp.comment + " |MS_LayerAdjustment_OFF| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      if (theLayerType(theLayer) == "Adjustment" && theLayer.enabled == false) {
+        theLayer.comment = theLayer.comment + " |MS_LayerAdjustment_OFF| ";
+      }
+      if (theLayerType(theLayer) == "Adjustment") {
+        theLayer.enabled = false;
+      }
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_AJAS_OFF = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_AJAS_OFF == false) {
+      return;
+    }
+    this.visible = false;
+    off_Enabled_AJAS.visible = true;
+    on_Enabled_AJAS.visible = false;
+    on_disabled_AJAS.visible = true;
+  });
+  on_disabled_AJAS.addEventListener("mousedown", function (event) {
+    function theLayerType(thisLayer) {
+      var layerInf = new Object();
+      layerInf.type = "null";
+      if (thisLayer instanceof TextLayer) {
+        layerInf.type = "Text";
+      } else if (thisLayer instanceof LightLayer) {
+        layerInf.type = "Light";
+        layerInf.lightType = thisLayer.lightType;
+      } else if (thisLayer instanceof ShapeLayer) {
+        layerInf.type = "Shape";
+      } else if (thisLayer instanceof AVLayer) {
+        if (
+          thisLayer.source.mainSource instanceof SolidSource &&
+          thisLayer.adjustmentLayer == false &&
+          thisLayer.nullLayer != true &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.type = "Solid";
+          layerInf.solidColor = thisLayer.source.mainSource.color;
+        } else if (
+          thisLayer.source.mainSource instanceof SolidSource &&
+          thisLayer.adjustmentLayer == true &&
+          thisLayer.nullLayer != true &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.type = "Adjustment";
+        } else if (
+          thisLayer.source.mainSource instanceof FileSource &&
+          thisLayer.nullLayer != null &&
+          !(thisLayer.source instanceof CompItem)
+        ) {
+          layerInf.sound = thisLayer.hasAudio;
+          if (layerInf.sound) {
+            layerInf.type = "VideoWithSound";
+          } else {
+            layerInf.type = "VideoWithoutSound";
+          }
+        } else {
+          if (thisLayer.source instanceof CompItem) {
+            layerInf.type = "Comp";
+          }
+        }
+      } else if (thisLayer instanceof AVLayer) {
+        if (thisLayer.nullLayer) {
+          layerInf.type = "Null";
+        }
+      } else {
+        if (thisLayer instanceof CameraLayer) {
+          layerInf.type = "Camera";
+        }
+      }
+      return layerInf.type;
+    }
+    function RunAndLoop(comp) {
+      if (comp == null) {
+        alert("Please select a compostion");
+        return false;
+      }
+      if (comp.numLayers < 1) {
+        return false;
+      }
+      if (comp.comment.indexOf(" |MS_LayerAdjustment_ON| ") != -1) {
+        return true;
+      }
+      var MS_lockedLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_lockedLayer"),
+      );
+      var MS_shyLayer_value = eval(
+        app.settings.getSetting(script_name, "MS_shyLayer"),
+      );
+      var MS_selected_layers_value = eval(
+        app.settings.getSetting(script_name, "MS_selected_layers"),
+      );
+      if (comp.selectedLayers.length > 0 && MS_selected_layers_value == true) {
+        for (var i = 0; i < comp.selectedLayers.length; i += 1) {
+          lyr = comp.selectedLayers[i];
+          if (lyr.shy == true && MS_shyLayer_value == true) {
+            return true;
+          }
+          LayerStyleFunction(lyr);
+        }
+      } else {
+        for (var c = 1; c <= comp.numLayers; c += 1) {
+          var lyr = comp.layer(c);
+          if (lyr.locked == false && lyr.shy == false) {
+            LayerStyleFunction(lyr);
+          } else {
+            if (
+              lyr.locked == true &&
+              lyr.shy == false &&
+              MS_lockedLayer_value == false
+            ) {
+              lyr.locked = false;
+              LayerStyleFunction(lyr);
+              lyr.locked = true;
+            }
+            if (
+              lyr.locked == false &&
+              lyr.shy == true &&
+              MS_shyLayer_value == false
+            ) {
+              LayerStyleFunction(lyr);
+            }
+          }
+        }
+      }
+      comp.comment = comp.comment.replace(" |MS_LayerAdjustment_OFF| ", "");
+      comp.comment = comp.comment + " |MS_LayerAdjustment_ON| ";
+      return true;
+    }
+    function LayerStyleFunction(theLayer) {
+      var StayOff = theLayer.comment.search(" |MS_LayerAdjustment_OFF| ");
+      if (theLayerType(theLayer) == "Adjustment" && StayOff == -1) {
+        theLayer.enabled = true;
+      }
+      if (theLayerType(theLayer) == "Adjustment" && StayOff != -1) {
+        theLayer.comment = theLayer.comment.replace(
+          " |MS_LayerAdjustment_OFF| ",
+          "",
+        );
+      }
+    }
+    var activeComp = app.project.activeItem;
+    app.beginUndoGroup("Megic Switcher");
+    var MS_ProcessON_AJAS_ON = RunAndLoop(activeComp);
+    app.endUndoGroup();
+    if (MS_ProcessON_AJAS_ON == false) {
+      return;
+    }
+    this.visible = false;
+    on_Enabled_AJAS.visible = true;
+    off_disabled_AJAS.visible = true;
+    off_Enabled_AJAS.visible = false;
+  });
+  igloo_btn.addEventListener("mousedown", function (event) {
+    SF_OpenTheWebLink("https://www.igloocreative.co.il/en/");
+  });
+  info_btn.addEventListener("mousedown", function (event) {
+    MS_Settings();
+  });
+  MSPalette.layout.layout(true);
+  MSPalette.layout.resize();
+  MSPalette.onResizing =
+    MSPalette.onResize =
+    MSPalette.onShow =
+      function () {
+        this.layout.resize();
+      };
+  if (MSPalette instanceof Window) {
+    MSPalette.show();
+  }
+  return MSPalette;
+})();

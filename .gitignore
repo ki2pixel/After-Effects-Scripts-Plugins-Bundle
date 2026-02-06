@@ -33,5 +33,19 @@ blob_manifest.json
 blob_manifest_fresh.json
 regenerated_manifests/
 
+# Oversized tutorial media (keep locally only)
+Aescripts-Isomatic FX 1.6 for After Effects/isoMatic FX Overview.mp4
+Aescripts-Crazy Shapes 1.1.1/Crazy Shapes Tutorial.mp4
+Aescripts-Social Importer 1.0.3 for After Effects/Social Importer for After Effects Tutorial.mp4
+Scripts_AE/Aescripts-Isomatic FX 1.6 for After Effects/isoMatic FX Overview.mp4
+Scripts_AE/Aescripts-Crazy Shapes 1.1.1/Crazy Shapes Tutorial.mp4
+Scripts_AE/Aescripts-Social Importer 1.0.3 for After Effects/Social Importer for After Effects Tutorial.mp4
+
 # Misc
 *.swp
+
+# PyShiftAE
+PyShiftAE
+
+# AETK
+AETK-main

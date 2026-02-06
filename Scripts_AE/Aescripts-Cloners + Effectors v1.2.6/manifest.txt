@@ -1,0 +1,6 @@
+{
+	"Cloners+Effectors.jsxbin" : "ADOBE_AE_SCRIPT_UI",
+	"ClonersShapeSplit.jsxbin" : "ADOBE_AE_SCRIPT_UI",
+	"ClonersTextSplit.jsxbin" : "ADOBE_AE_SCRIPT_UI",
+	"clonerspluseffectors" : "ADOBE_AE_SCRIPT_UI"
+}

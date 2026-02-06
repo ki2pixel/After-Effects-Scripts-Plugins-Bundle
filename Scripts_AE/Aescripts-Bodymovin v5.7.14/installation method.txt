@@ -1,0 +1,7 @@
+1. copy bodymovin paste
+
+Win : C:\Program Files (x86)\Common Files\Adobe\CEP\extensions\
+Mac : /Library/Application Support/Adobe/CEP/extensions
+
+2. Merge Add Keys
+

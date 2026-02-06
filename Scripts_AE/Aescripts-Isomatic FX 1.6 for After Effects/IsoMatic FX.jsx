@@ -1,0 +1,4219 @@
+/*
+ * Decompiled with Jsxer
+ * Version: 1.7.4
+ * JSXBIN 2.0
+ */
+
+function IsoMatic_FX_Main(thisObj) {
+  function IsoMatic_FX(thisObj) {
+    function detect() {
+      var touches = "";
+      var keyState = ScriptUI.environment.keyboardState;
+      if (keyState.shiftKey) {
+        touches += "shift";
+      }
+      if (keyState.altKey) {
+        touches += "alt";
+      }
+      if (keyState.ctrlKey) {
+        touches += "ctrl";
+      }
+      return touches;
+    }
+    var myComp = app.project.activeItem;
+    function restraintPosition(myLayer) {
+      var myExpr =
+        "// Script by Matthieu Fremeaux aka FREMOX from Motion Cafe and expression by Alejandro Sanclemente aka ALEJOST848 \npos = transform.position; \nx = effect(\'X Movement\')(1); \ny = effect(\'Y Movement\')(1); \nz = effect(\'Z Movement\')(1); \n[x*Math.sqrt(3) + z*Math.sqrt(3) + pos[0], -x + z + y + pos[1]];";
+      var controlX = myLayer.Effects.addProperty("ADBE Slider Control");
+      controlX.name = "X Movement";
+      controlX.property(1).setValue(0);
+      var controlY = myLayer.Effects.addProperty("ADBE Slider Control");
+      controlY.name = "Y Movement";
+      controlY.property(1).setValue(0);
+      var controlZ = myLayer.Effects.addProperty("ADBE Slider Control");
+      controlZ.name = "Z Movement";
+      controlZ.property(1).setValue(0);
+      myLayer
+        .property("ADBE Transform Group")
+        .property("ADBE Position").expression = myExpr;
+    }
+    function isoL() {
+      var myComp = app.project.activeItem;
+      var compLayers = myComp.selectedLayers;
+      for (var i = 0; i <= compLayers.length; i += 1) {
+        myLayer = compLayers[i];
+        if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("LEFT isometry") === null &&
+          myLayer.property("Contents").property(1).matchName ==
+            "ADBE Vector Group"
+        ) {
+          var myContents = myLayer.property("Contents");
+          if (myContents.numProperties > 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(-30);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(30);
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "LEFT isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("LEFT isometry") === null &&
+          myLayer.property("Contents").property(1).matchName !=
+            "ADBE Vector Group"
+        ) {
+          var myContents = myLayer.property("Contents");
+          if (compLayers.length == 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          } else {
+            alert(
+              "Please group all the contents inside each Shape layer first (with CTRL or CMD + G) or select each Shape layer and click the button one by one",
+            );
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(-30);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(30);
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "LEFT isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("LEFT isometry") !== null
+        ) {
+          myLayer.property("Contents").property("LEFT isometry").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          var myContents = myLayer.property("Contents");
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 100]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(0);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(0);
+          }
+          compLayers[i].selected = true;
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("LEFT isometry") === null
+        ) {
+          var myAnim = compLayers[i]
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .addProperty("ADBE Text Animator");
+          myAnim.name = "LEFT isometry";
+          myAnim
+            .property("ADBE Text Selectors")
+            .addProperty("ADBE Text Selector");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Scale 3D");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Scale 3D")
+            .setValue([100, 86.602]);
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Skew")
+            .setValue(-30);
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew Axis");
+          compLayers[i].transform.rotation.setValue(30);
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("LEFT isometry") !== null
+        ) {
+          compLayers[i]
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("LEFT isometry")
+            .remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].transform.rotation.setValue(0);
+          compLayers[i].selected = true;
+        } else if (compLayers[i].effect.property("ADBE Geometry2") === null) {
+          compLayers[i].Effects.addProperty("ADBE Geometry2");
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0011")
+            .setValue(0);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0003")
+            .setValue(86.602);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0005")
+            .setValue(-30);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0006")
+            .setValue(90);
+          compLayers[i].property("rotation").setValue(30);
+          restraintPosition(myLayer);
+        } else {
+          compLayers[i].effect.property("ADBE Geometry2").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].property("rotation").setValue(0);
+          compLayers[i].selected = true;
+        }
+      }
+    }
+    function isoR() {
+      var myComp = app.project.activeItem;
+      var compLayers = myComp.selectedLayers;
+      for (var i = 0; i <= compLayers.length; i += 1) {
+        myLayer = compLayers[i];
+        if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("RIGHT isometry") === null &&
+          myLayer.property("Contents").property(1).matchName ==
+            "ADBE Vector Group"
+        ) {
+          var myContents = myLayer.property("Contents");
+          if (myContents.numProperties > 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(30);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(-30);
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "RIGHT isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("RIGHT isometry") === null &&
+          myLayer.property("Contents").property(1).matchName !=
+            "ADBE Vector Group"
+        ) {
+          var myContents = myLayer.property("Contents");
+          if (compLayers.length == 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          } else {
+            alert(
+              "Please group all the contents inside each Shape layer first (with CTRL or CMD + G) or select each Shape layer and click the button one by one",
+            );
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(30);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(-30);
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "RIGHT isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("RIGHT isometry") !== null
+        ) {
+          myLayer.property("Contents").property("RIGHT isometry").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          var myContents = myLayer.property("Contents");
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 100]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(0);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(0);
+          }
+          compLayers[i].selected = true;
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("RIGHT isometry") === null
+        ) {
+          var myAnim =
+            compLayers[i].Text.Animators.addProperty("ADBE Text Animator");
+          myAnim.name = "RIGHT isometry";
+          myAnim
+            .property("ADBE Text Selectors")
+            .addProperty("ADBE Text Selector");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Scale 3D");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Scale 3D")
+            .setValue([100, 86.602]);
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Skew")
+            .setValue(30);
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew Axis");
+          compLayers[i].transform.rotation.setValue(-30);
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("RIGHT isometry") !== null
+        ) {
+          compLayers[i].Text.Animators.property("RIGHT isometry").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].transform.rotation.setValue(0);
+          compLayers[i].selected = true;
+        } else if (compLayers[i].effect.property("ADBE Geometry2") === null) {
+          compLayers[i].Effects.addProperty("ADBE Geometry2");
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0011")
+            .setValue(0);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0003")
+            .setValue(86.602);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0005")
+            .setValue(30);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0006")
+            .setValue(90);
+          compLayers[i].transform.rotation.setValue(-30);
+          restraintPosition(myLayer);
+        } else {
+          compLayers[i].effect.property("ADBE Geometry2").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].transform.rotation.setValue(0);
+          compLayers[i].selected = true;
+        }
+      }
+    }
+    function isoT() {
+      var myComp = app.project.activeItem;
+      var compLayers = myComp.selectedLayers;
+      var touches = detect();
+      for (var i = 0; i <= compLayers.length; i += 1) {
+        myLayer = compLayers[i];
+        var myContents = myLayer.property("Contents");
+        if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("TOP isometry") === null &&
+          myLayer.property("Contents").property(1).matchName ==
+            "ADBE Vector Group"
+        ) {
+          var FlipCtrl = compLayers[i].Effects.addProperty(
+            "ADBE Checkbox Control",
+          );
+          FlipCtrl.name = "flip direction";
+          if (touches.indexOf("alt") != -1) {
+            FlipCtrl.property(1).setValue(1);
+          }
+          var myContents = myLayer.property("Contents");
+          if (myContents.numProperties > 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew").expression =
+              "(1-(effect(\'flip direction\')(1)*2))*30";
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation").expression =
+              "(1-(effect(\'flip direction\')(1)*2))*30";
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "TOP isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("TOP isometry") === null &&
+          myLayer.property("Contents").property(1).matchName !=
+            "ADBE Vector Group"
+        ) {
+          var FlipCtrl = compLayers[i].Effects.addProperty(
+            "ADBE Checkbox Control",
+          );
+          FlipCtrl.name = "flip direction";
+          if (touches.indexOf("alt") != -1) {
+            FlipCtrl.property(1).setValue(1);
+          }
+          var myContents = myLayer.property("Contents");
+          if (compLayers.length == 1) {
+            for (var n = 1; n <= myContents.numProperties; n += 1) {
+              myContents.property(n).selected = false;
+              myContents.property(n).selected = true;
+            }
+            app.executeCommand(3741);
+          } else {
+            alert(
+              "Please group all the contents inside each Shape layer first (with CTRL or CMD + G) or select each Shape layer and click the button one by one",
+            );
+          }
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 86.602]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew").expression =
+              "(1-(effect(\'flip direction\')(1)*2))*30";
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation").expression =
+              "(1-(effect(\'flip direction\')(1)*2))*30";
+          }
+          var shapeGroup = myLayer
+            .property("Contents")
+            .addProperty("ADBE Vector Group");
+          shapeGroup.name = "TOP isometry";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof ShapeLayer &&
+          myLayer.property("Contents").property("TOP isometry") !== null
+        ) {
+          for (var j = 1; j <= myContents.numProperties; j += 1) {
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew").expression = "";
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation").expression = "";
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Scale")
+              .setValue([100, 100]);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Skew")
+              .setValue(0);
+            myContents
+              .property(j)
+              .property("ADBE Vector Transform Group")
+              .property("ADBE Vector Rotation")
+              .setValue(0);
+            continue;
+          }
+          myLayer.property("Contents").property("TOP isometry").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].effect.property("flip direction").remove();
+          compLayers[i].selected = true;
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("TOP isometry") === null
+        ) {
+          var myAnim =
+            compLayers[i].Text.Animators.addProperty("ADBE Text Animator");
+          myAnim.name = "TOP isometry";
+          var FlipCtrl = compLayers[i].Effects.addProperty(
+            "ADBE Checkbox Control",
+          );
+          FlipCtrl.name = "flip direction";
+          if (touches.indexOf("alt") != -1) {
+            FlipCtrl.property(1).setValue(1);
+          }
+          myAnim
+            .property("ADBE Text Selectors")
+            .addProperty("ADBE Text Selector");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Scale 3D");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Scale 3D")
+            .setValue([100, 86.602]);
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew");
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .property("ADBE Text Skew").expression =
+            "(1-(effect(\'flip direction\')(1)*2))*30";
+          myAnim
+            .property("ADBE Text Animator Properties")
+            .addProperty("ADBE Text Skew Axis");
+          compLayers[i].transform.rotation.expression =
+            "(1-(effect(\'flip direction\')(1)*2))*30";
+          restraintPosition(myLayer);
+        } else if (
+          myLayer instanceof TextLayer &&
+          myLayer
+            .property("ADBE Text Properties")
+            .property("ADBE Text Animators")
+            .property("TOP isometry") !== null
+        ) {
+          compLayers[i].Text.Animators.property("TOP isometry").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].transform.rotation.expression = "";
+          compLayers[i].effect.property("flip direction").remove();
+          compLayers[i].transform.rotation.setValue(0);
+          compLayers[i].selected = true;
+        } else if (compLayers[i].effect.property("ADBE Geometry2") === null) {
+          var FlipCtrl = compLayers[i].Effects.addProperty(
+            "ADBE Checkbox Control",
+          );
+          FlipCtrl.name = "flip direction";
+          if (touches.indexOf("alt") != -1) {
+            FlipCtrl.property(1).setValue(1);
+          }
+          compLayers[i].Effects.addProperty("ADBE Geometry2");
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0011")
+            .setValue(0);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0003")
+            .setValue(86.602);
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0005").expression =
+            "(1-(effect(\'flip direction\')(1)*2))*30";
+          compLayers[i].effect
+            .property("ADBE Geometry2")
+            .property("ADBE Geometry2-0006")
+            .setValue(90);
+          compLayers[i].transform.rotation.expression =
+            "(1-(effect(\'flip direction\')(1)*2))*30";
+          restraintPosition(myLayer);
+        } else {
+          compLayers[i].effect.property("ADBE Geometry2").remove();
+          compLayers[i]
+            .property("ADBE Transform Group")
+            .property("ADBE Position").expression = "";
+          compLayers[i].effect.property("X Movement").remove();
+          compLayers[i].effect.property("Y Movement").remove();
+          compLayers[i].effect.property("Z Movement").remove();
+          compLayers[i].transform.rotation.expression = "";
+          compLayers[i].effect.property("flip direction").remove();
+          continue;
+          compLayers[i].transform.rotation.setValue(0);
+          compLayers[i].selected = true;
+        }
+      }
+    }
+    function isogrid() {
+      var myComp = app.project.activeItem;
+      if (myComp.layer("Isometric grid") === null) {
+        var shapeLayer = myComp.layers.addShape();
+        shapeLayer.name = "Isometric grid";
+        shapeLayer
+          .property("ADBE Transform Group")
+          .property("ADBE Position")
+          .setValue([0, 0]);
+        shapeLayer.guideLayer = true;
+        var s = app.project.activeItem.width;
+        var size = [myComp.width, myComp.height];
+        var center = size * 0.5;
+        var W = size[0] / 2;
+        var H = size[1] / 2;
+        var l1Path = new Shape();
+        var l2Path = new Shape();
+        var l3Path = new Shape();
+        var a = Math.tan(Math.PI / 6) * W;
+        l1Path.vertices = [
+          [0, center[1] + a],
+          [size[0] * myComp.pixelAspect, center[1] - a],
+        ];
+        l1Path.closed = false;
+        l2Path.vertices = [
+          [0, center[1] - a],
+          [size[0] * myComp.pixelAspect, center[1] + a],
+        ];
+        l2Path.closed = false;
+        var gridSize = shapeLayer.Effects.addProperty("ADBE Slider Control");
+        gridSize.name = "Grid Size";
+        gridSize.property(1).setValue(310);
+        gridSize.property(1).expression = "clamp(value,50,thisComp.width/2)";
+        var subdivisions = shapeLayer.Effects.addProperty(
+          "ADBE Slider Control",
+        );
+        subdivisions.name = "Subdivisions";
+        subdivisions.property(1).setValue(2);
+        subdivisions.property(1).expression = "clamp(value,0,5)";
+        var contents = shapeLayer.property("ADBE Root Vectors Group");
+        var g = contents.addProperty("ADBE Vector Group");
+        var g1 = g.property("ADBE Vectors Group");
+        g.name = shapeLayer.name;
+        var g = g1.addProperty("ADBE Vector Group");
+        var g0 = g.property("ADBE Vectors Group");
+        g.name = "Main Isometric grid";
+        var l1 = g0.addProperty("ADBE Vector Shape - Group");
+        l1.name = "diagonal 1";
+        l1.property("ADBE Vector Shape").setValue(l1Path);
+        var l2 = g0.addProperty("ADBE Vector Shape - Group");
+        l2.name = "diagonal 2";
+        l2.property("ADBE Vector Shape").setValue(l2Path);
+        var myRepeater = g0.addProperty("ADBE Vector Filter - Repeater");
+        myRepeater.name = "Pattern repeater";
+        myRepeater.property("ADBE Vector Repeater Copies").expression =
+          "Math.floor(thisComp.width/effect(\'Grid Size\')(1))*2";
+        myRepeater.property("ADBE Vector Repeater Offset").expression =
+          "-Math.floor(thisComp.width/effect(\'Grid Size\')(1))";
+        myRepeater
+          .property("ADBE Vector Repeater Transform")
+          .property("ADBE Vector Repeater Position").expression =
+          "[effect(\'Grid Size\')(1),0]";
+        var myStroke = g0.addProperty("ADBE Vector Graphic - Stroke");
+        myStroke.name = "Main lines stroke";
+        myStroke.property("ADBE Vector Stroke Width").setValue(1.5);
+        var g = g1.addProperty("ADBE Vector Group");
+        var g3 = g.property("ADBE Vectors Group");
+        g.name = "Subdivided grid";
+        var l1 = g3.addProperty("ADBE Vector Shape - Group");
+        l1.name = "diagonal 1";
+        l1.property("ADBE Vector Shape").setValue(l1Path);
+        var l2 = g3.addProperty("ADBE Vector Shape - Group");
+        l2.name = "diagonal 2";
+        l2.property("ADBE Vector Shape").setValue(l2Path);
+        var myRepeater2 = g3.addProperty("ADBE Vector Filter - Repeater");
+        myRepeater2.name = "Pattern repeater";
+        myRepeater2.property("ADBE Vector Repeater Copies").expression =
+          "content(\'Isometric grid\').content(\'Main Isometric grid\').content(\'Pattern repeater\').copies*(effect(\'Subdivisions\')(1)*2)";
+        myRepeater2.property("ADBE Vector Repeater Offset").expression =
+          "-content(\'Isometric grid\').content(\'Subdivided grid\').content(\'Pattern repeater\').copies/2";
+        myRepeater2
+          .property("ADBE Vector Repeater Transform")
+          .property("ADBE Vector Repeater Position").expression =
+          "[effect(\'Grid Size\')(1)/(0.0001+effect(\'Subdivisions\')(1)*2),0]";
+        var myStroke2 = g3.addProperty("ADBE Vector Graphic - Stroke");
+        myStroke2.name = "Subdivisions stroke";
+        myStroke2
+          .property("ADBE Vector Stroke Color")
+          .setValue([0, 0.7254901960784313, 1]);
+        myStroke2.property("ADBE Vector Stroke Width").expression =
+          "content(\'Isometric grid\').content(\'Main Isometric grid\').content(\'Main lines stroke\').strokeWidth/2";
+        myStroke.property("ADBE Vector Stroke Color").expression =
+          "content(\'Isometric grid\').content(\'Subdivided grid\').content(\'Subdivisions stroke\').color*255";
+        shapeLayer.moveToEnd();
+      } else {
+        alert(
+          "You have already created an Isometric grid in this composition !",
+        );
+      }
+    }
+    function isocam3D() {
+      var myComp = app.project.activeItem;
+      if (myComp.layer("Isocam") === null) {
+        var myNull = myComp.layers.addNull();
+        myNull.source.name = "Isocam CTRL";
+        myNull.threeDLayer = true;
+        myNull.enabled = false;
+        var compLayers = myComp.layers;
+        for (var i = 1; i <= myComp.numLayers; i += 1) {
+          myLayer = compLayers[i];
+          var effectsGroup = myLayer("Effects");
+          var selectedEffects = new Array();
+          for (var j = 1; j <= effectsGroup.numProperties; j += 1) {
+            if (effectsGroup.property(j).matchName == "VIDEOCOPILOT 3DArray") {
+              effectsGroup
+                .property("VIDEOCOPILOT 3DArray")
+                .property("VIDEOCOPILOT 3DArray-1457")
+                .setValue(100000);
+              effectsGroup
+                .property("VIDEOCOPILOT 3DArray")
+                .property("VIDEOCOPILOT 3DArray-1458")
+                .setValue(2000000);
+            }
+          }
+        }
+        var ZoomCtrl = myNull.Effects.addProperty("ADBE Slider Control");
+        ZoomCtrl.name = "Zoom multiplier";
+        var w = myComp.width / 2;
+        var h = myComp.height / 2;
+        newCamera = myComp.layers.addCamera("Isocam", [w, h]);
+        newCamera.parent = myNull;
+        newCamera.position.setValue([0, 0, 1000000]);
+        newCamera.position.expression =
+          "[transform.pointOfInterest[0],transform.pointOfInterest[1],value[2]+10000*-thisComp.layer(\'Isocam CTRL\').effect(\'Zoom multiplier\')(1)]";
+        newCamera.cameraOption.zoom.setValue(500000);
+        myNull.transform.xRotation.setValue(-45);
+        myNull.transform.yRotation.setValue(-215.25);
+        myNull.transform.zRotation.setValue(30);
+        newCamera.selected = false;
+        myNull.moveToBeginning();
+        myNull.selected = true;
+      } else {
+        alert(
+          "You have already created an Isometric camera in this composition !",
+        );
+      }
+    }
+    function turnLaterally() {
+      incrementL++;
+      var myComp = app.project.activeItem;
+      var compLayers = myComp.selectedLayers;
+      var touches = detect();
+      for (var i = 0; i <= compLayers.length; i += 1) {
+        myLayer = compLayers[i];
+        var myXrot = compLayers[i].transform.orientation.value[0];
+        var myZrot = compLayers[i].transform.orientation.value[2];
+        if (touches.indexOf("alt") != -1) {
+          var myRotation = incrementL * 90;
+        } else {
+          var myRotation = 360 - incrementL * 90;
+        }
+        compLayers[i].transform.orientation.setValue([
+          myXrot,
+          myRotation,
+          myZrot,
+        ]);
+      }
+    }
+    function turnVertically() {
+      incrementV++;
+      var myComp = app.project.activeItem;
+      var compLayers = myComp.selectedLayers;
+      var touches = detect();
+      for (var i = 0; i <= compLayers.length; i += 1) {
+        myLayer = compLayers[i];
+        var myXrot2 = compLayers[i].transform.orientation.value[0];
+        var myYrot = compLayers[i].transform.orientation.value[1];
+        var myZrot2 = compLayers[i].transform.orientation.value[2];
+        if (touches.indexOf("alt") != -1) {
+          var myRotation2 = incrementV * 90;
+        } else {
+          var myRotation2 = 360 - incrementV * 90;
+        }
+        if (touches.indexOf("shift") != -1) {
+          compLayers[i].transform.orientation.setValue([
+            myXrot2,
+            myYrot,
+            myRotation2,
+          ]);
+        } else {
+          compLayers[i].transform.orientation.setValue([
+            myRotation2,
+            myYrot,
+            myZrot2,
+          ]);
+        }
+      }
+    }
+    function groundGrid3D() {
+      var myComp = app.project.activeItem;
+      if (myComp.layer("3D Ground Grid") === null) {
+        var myGrid = myComp.layers.addSolid(
+          [1, 1, 1],
+          "3D Ground Grid",
+          5000,
+          5000,
+          1,
+        );
+        myGrid.threeDLayer = true;
+        myGrid.quality = LayerQuality.DRAFT;
+        var Grid = myGrid.Effects.addProperty("ADBE Grid");
+        Grid.name = "Ground grid";
+        myGrid.effect.property("ADBE Grid").property(1).setValue([2500, 2500]);
+        myGrid.effect.property("ADBE Grid").property(2).setValue(2);
+        myGrid.effect.property("ADBE Grid").property(4).setValue(250);
+        myGrid.transform.xRotation.setValue(-90);
+        myGrid.guideLayer = true;
+        myGrid.moveToEnd();
+      } else {
+        alert(
+          "You have already created a 3D Ground Grid layer in this composition !",
+        );
+      }
+    }
+    function infos() {
+      qsl9.helpUI();
+    }
+    var incrementL = 0;
+    var incrementV = 0;
+    var myBinary = [
+      __BLOB__BLOB_000249__,
+      __BLOB__BLOB_000250__,
+      __BLOB__BLOB_000251__,
+      __BLOB__BLOB_000252__,
+      __BLOB__BLOB_000253__,
+      __BLOB__BLOB_000254__,
+      __BLOB__BLOB_000255__,
+      __BLOB__BLOB_000256__,
+      __BLOB__BLOB_000257__,
+      __BLOB__BLOB_000258__,
+      __BLOB__BLOB_000259__,
+    ];
+    var myFile = [];
+    var chemin = Folder.userData.fsName + "/" + scriptName;
+    var dossier = new Folder(chemin);
+    if (!dossier.exists) {
+      dossier.create();
+    }
+    for (var i = 0; i < myBinary.length; i += 1) {
+      myFile[i] = new File(chemin + "/" + "btn_" + i + ".png");
+      myFile[i].encoding = "BINARY";
+      myFile[i].open("w");
+      myFile[i].write(myBinary[i]);
+      myFile[i].close();
+    }
+    var mainPalette =
+      thisObj instanceof Panel
+        ? thisObj
+        : new Window("palette", scriptName, undefined, { resizeable: true });
+    if (mainPalette === null) {
+      return;
+    }
+    mainPalette.alignChildren = ["fill", "top"];
+    mainPalette.margins = 4;
+    mainPalette.spacing = 4;
+    var menu = mainPalette.add("group");
+    menu.orientation = "row";
+    menu.alignChildren = ["fill", "fill"];
+    var content = menu.add("group");
+    content.alignChildren = ["fill", "top"];
+    content.preferredSize = [100, 30];
+    var stickyInfo = menu.add("group");
+    stickyInfo.preferredSize = [30, 30];
+    mySwitchTo2Dbutton = content.add("iconbutton", undefined, myFile[8], {
+      style: "toolbutton",
+      toggle: true,
+    });
+    mySwitchTo2Dbutton.value = true;
+    mySwitchTo3Dbutton = content.add("iconbutton", undefined, myFile[9], {
+      style: "toolbutton",
+      toggle: true,
+    });
+    mySwitchTo3Dbutton.value = false;
+    var stickyInfo = menu.add("group");
+    myInfobutton = stickyInfo.add("iconbutton", undefined, myFile[10], {
+      style: "toolbutton",
+    });
+    content.margins = 8;
+    content.spacing = 2;
+    stickyInfo.margins = 8;
+    stickyInfo.spacing = 8;
+    content.alignChildren = ["center", "top"];
+    stickyInfo.alignChildren = ["center", "top"];
+    var iconsGroup = mainPalette.add("group");
+    iconsGroup.alignChildren = ["fill", "top"];
+    iconsGroup.orientation = "stack";
+    var icons2D = iconsGroup.add("group");
+    icons2D.alignChildren = ["fill", "top"];
+    icons2D.orientation = "row";
+    icons2D.margins = 0;
+    icons2D.spacing = 2;
+    var btn = [];
+    for (var j = 0; j < 4; j += 1) {
+      btn[j] = icons2D.add("iconbutton", undefined, myFile[j]);
+    }
+    var icons3D = iconsGroup.add("group");
+    icons3D.alignChildren = ["fill", "top"];
+    icons3D.orientation = "row";
+    icons3D.margins = 0;
+    icons3D.spacing = 2;
+    icons3D.visible = false;
+    var btn3D = [];
+    for (var j = 4; j < 8; j += 1) {
+      btn3D[j] = icons3D.add("iconbutton", undefined, myFile[j]);
+    }
+    for (var h = 0; h < myFile.length; h += 1) {
+      myFile[h].remove();
+    }
+    btn[0].helpTip = "Fakes 2D Left Isometry";
+    btn[1].helpTip = "Fakes 2D Right Isometry";
+    btn[2].helpTip = "Fakes 2D Top Isometry";
+    btn[3].helpTip = "Creates Isometric grid";
+    btn3D[4].helpTip = "Creates Isometric 3D camera";
+    btn3D[5].helpTip = "Rotates laterally";
+    btn3D[6].helpTip = "Rotates vertically";
+    btn3D[7].helpTip = "Creates 3D ground grid";
+    myInfobutton.helpTip = "Show informations";
+    btn[0].onClick = function () {
+      app.beginUndoGroup("Left Isometry");
+      isoL();
+      app.endUndoGroup();
+    };
+    btn[1].onClick = function () {
+      app.beginUndoGroup("Right Isometry");
+      isoR();
+      app.endUndoGroup();
+    };
+    btn[2].onClick = function () {
+      app.beginUndoGroup("Top Isometry");
+      isoT();
+      app.endUndoGroup();
+    };
+    btn[3].onClick = function () {
+      app.beginUndoGroup("Isometric grid creation");
+      isogrid();
+      app.endUndoGroup();
+    };
+    btn3D[4].onClick = function () {
+      app.beginUndoGroup("Isometric 3D camera creation");
+      isocam3D();
+      app.endUndoGroup();
+    };
+    btn3D[5].onClick = function () {
+      app.beginUndoGroup("3D Lateral rotation");
+      turnLaterally();
+      app.endUndoGroup();
+    };
+    btn3D[6].onClick = function () {
+      app.beginUndoGroup("3D Vertical rotation");
+      turnVertically();
+      app.endUndoGroup();
+    };
+    btn3D[7].onClick = function () {
+      app.beginUndoGroup("3D Ground Grid creation");
+      groundGrid3D();
+      app.endUndoGroup();
+    };
+    myInfobutton.onClick = function () {
+      infos();
+    };
+    mySwitchTo2Dbutton.onClick = function () {
+      if (mySwitchTo2Dbutton.value == false) {
+        icons2D.visible = false;
+        icons3D.visible = true;
+        mySwitchTo3Dbutton.value = true;
+      } else {
+        icons2D.visible = true;
+        icons3D.visible = false;
+        mySwitchTo3Dbutton.value = false;
+      }
+    };
+    mySwitchTo3Dbutton.onClick = function () {
+      if (mySwitchTo3Dbutton.value == false) {
+        icons3D.visible = false;
+        icons2D.visible = true;
+        mySwitchTo2Dbutton.value = true;
+      } else {
+        icons3D.visible = true;
+        icons2D.visible = false;
+      }
+      mySwitchTo2Dbutton.value = false;
+    };
+    mainPalette.layout.layout(true);
+    mainPalette.layout.resize();
+    mainPalette.onResizing = mainPalette.onResize = function () {
+      mainPalette.layout.resize();
+    };
+    if (!(mainPalette instanceof Panel)) {
+      mainPalette.show();
+    }
+  }
+  var version = "1.6";
+  var scriptName = "IsoMatic FX";
+  var qsl9_settings = {
+    betaExpirationDate: new Date("Dec 1, 2017"),
+    betaStartDate: new Date("Nov 1, 2017"),
+    betaSupportEmail: "http://aescripts.com/contact",
+    helpButtons: [
+      { name: "Isomatic FX", url: "http://aescripts.com/isomatic-fx" },
+      {
+        name: "Fremox Products",
+        url: "https://aescripts.com/authors/f-l/fremox/",
+      },
+    ],
+    helpText:
+      "Help and informations\n ____________________________ \n\nNew in V1.5 :\nYou can now restrain the position of your faked isometric 2D layers with some useful \'Movement\' sliders (for each axis) which make animating 2D isometry much easier.\nThanks to Alejandro Sanclemente (aka ALEJOST848) for this wonderful idea and expression !\n ____________________________ \n\nFor any information (video tutorials, help...),\nplease visit the product\'s dedicated webpage :\nhttp://aescripts.com/isomatic-fx\n\nTool created by Matthieu Fremeaux\n(aka FREMOX) - Copyright (c) 2017\nDo not redistribute without permission.",
+    offerBeta: false,
+    offerTrial: false,
+    privateNumber: 6442053493776341,
+    productSKU: "FXIM-SUL",
+    scriptAuthor: "Matthieu Fremeaux (aka Fremox)",
+    scriptName: "IsoMatic FX",
+    scriptURL: "http://aescripts.com/isomatic-fx/",
+    scriptVersion: "1.6",
+  };
+  function a(vars) {
+    function licUI() {
+      var e = new Window(
+        "dialog",
+        strTrialWelcomeHeader + " - " + strVersion + " " + strScriptVersion,
+        void 0,
+        { resizeable: true },
+      );
+      if (null != e) {
+        var i =
+          "group { \t\t\t\torientation: \'column\', \t\t\t\talignment: [\'fill\',\'fill\'], \t\t\t\talignChildren: [\'fill\',\'fill\'], \t\t\t\t\tinfoGrp: Group { \t\t\t\t\talignment: [\'fill\',\'top\'], \t\t\t\t\talignChildren: [\'fill\',\'fill\'], \t\t\t\t\torientation: \'column\', \t\t\t\t\t\thdrGrp: Group {\t\t\t\t\t\t\ttxt: StaticText {}, \t\t\t\t\t\t\tpaste: StaticText {}, \t\t\t\t\t\t}\t\t\t\t\t\ttrial: StaticText {}, \t\t\t\t\t} \t\t\t\t\tlicGrp: Group { \t\t\t\t\t\ttxt: EditText {alignment: [\'fill\',\'fill\'], properties:{multiline:false}}, \t\t\t\t\t} \t\t\t\t\tokGrp: Group { \t\t\t\t\talignment: [\'fill\',\'bottom\'], \t\t\t\t\talignChildren: [\'fill\',\'fill\'],                             buyGrp: Group {                             alignment: [\'left\',\'fill\'],                             alignChildren: [\'left\',\'fill\'],                             orientation: \'column\',                             spacing:1,                                  retrieveReg: Button {text:\'" +
+          strRetrieveLic.replace(/%t/, strLicense) +
+          "\', name:\'retrieve\',preferredSize:[130,25]}                                   buyLic: Button {text:\'" +
+          strBuyLic.replace(/%t/, strLicense) +
+          "\', name:\'buy\',preferredSize:[130,25]}                                   }\t\t\t\t\t\tcancelBtn: Button {text:\'" +
+          strCancel +
+          "\', preferredSize:[150,50], alignment: [\'right\',\'center\']} \t\t\t\t\t\tokBtn: Button {text:\'" +
+          strOK +
+          "\', preferredSize:[150,50], alignment: [\'right\',\'center\']} \t\t\t\t\t} \t\t\t\t}";
+        e.grp = e.add(i);
+        var t = ScriptUI.newFont(
+          "dialog || palette",
+          ScriptUI.FontStyle.BOLD,
+          12,
+        );
+        var n = ScriptUI.newFont(
+          "dialog || palette",
+          ScriptUI.FontStyle.REGULAR,
+          9,
+        );
+        return (
+          (e.grp.licGrp.txt.preferredSize = [600, 30]),
+          (e.grp.infoGrp.hdrGrp.txt.text = strEnterLicenseCode),
+          (e.grp.infoGrp.hdrGrp.txt.graphics.font = t),
+          (e.grp.infoGrp.hdrGrp.paste.text = ""),
+          (e.grp.infoGrp.hdrGrp.paste.graphics.font = n),
+          (e.grp.infoGrp.trial.text =
+            betaMode || !offerTrial ? "" : strTrialInstructMsg),
+          isServerConfigured(licenseValidity) &&
+            (isServerRunning(licenseValidity)
+              ? (e.grp.infoGrp.hdrGrp.txt.text = strServerInstructMsg)
+              : (e.grp.infoGrp.hdrGrp.txt.text =
+                  strEnterLicenseCode + " " + strServerNotRunning),
+            (e.grp.infoGrp.trial.text = strTrialInstructMsg)),
+          (e.grp.licGrp.txt.text = betaMode || !offerTrial ? "" : "trial"),
+          isServerConfigured(licenseValidity) &&
+            isServerRunning(licenseValidity) &&
+            (e.grp.licGrp.txt.text = "@REMOTE"),
+          (e.grp.okGrp.buyGrp.retrieveReg.visible =
+            e.grp.okGrp.buyGrp.buyLic.visible =
+              !betaMode),
+          (e.grp.okGrp.buyGrp.buyLic.onClick = function () {
+            openURL(strTrialUrl);
+            e.close(false);
+          }),
+          (e.grp.okGrp.buyGrp.retrieveReg.onClick = function () {
+            retrieveLicenseUI(strLicense);
+            e.close(false);
+          }),
+          (e.grp.okGrp.cancelBtn.onClick = function () {
+            e.close(false);
+          }),
+          (e.grp.okGrp.okBtn.onClick = function () {
+            license = e.grp.licGrp.txt.text
+              .replace(/^\s\s*/, "")
+              .replace(/\s\s*$/, "");
+            e.close(true);
+          }),
+          e.layout.layout(true),
+          e.layout.resize(),
+          (e.onResizing = e.onResize =
+            function () {
+              this.layout.resize();
+            }),
+          e
+        );
+      }
+    }
+    function retrieveLicenseUI(e) {
+      var i = new Window("dialog", strRetrieveLic.replace(/%t/, e), void 0, {
+        resizeable: true,
+      });
+      if (null != i) {
+        var t =
+          "group { \t\t\t\torientation: \'column\', \t\t\t\talignment: [\'fill\',\'fill\'], \t\t\t\talignChildren: [\'fill\',\'fill\'],                     hdrGrp: Group {                         orientation: \'column\',                         alignment: [\'fill\',\'fill\'],                         alignChildren: [\'fill\',\'fill\'],                                 hdr: StaticText {text:\'" +
+          strLicenseDownloadOptions.replace(
+            /%t/,
+            e.toLowerCase() + "de" == locale ? "n" : "s",
+          ) +
+          "\', alignment: [\'fill\',\'top\'], properties:{multiline:true} },                                },                     buttonsGrp: Group {                         alignment: [\'fill\',\'bottom\'],                         alignChildren: [\'fill\',\'fill\'],                             myDownloadsBtn: Button {text:\'" +
+          strMyDownloads +
+          "\', preferredSize:[-1,30], alignment: [\'right\',\'center\']},                             downloadManagerBtn: Button {text:\'" +
+          strDownloadManager +
+          "\', preferredSize:[-1,30], alignment: [\'right\',\'center\']},                         }, \t\t\t\t}";
+        i.grp = i.add(t);
+        i.grp.buttonsGrp.myDownloadsBtn.onClick = function () {
+          openURL(retrieveUrl);
+          i.close(false);
+        };
+        i.grp.buttonsGrp.downloadManagerBtn.onClick = function () {
+          openURL(managerAppUrl);
+          i.close(false);
+        };
+        i.layout.layout(true);
+        i.layout.resize();
+        i.onResizing = i.onResize = function () {
+          this.layout.resize();
+        };
+        i.show();
+      }
+    }
+    function checkBeta(e, i) {
+      return new Date() < i || new Date() > e;
+    }
+    function helpUI() {
+      var e = new Window(
+        "dialog",
+        strScriptName + " - " + strVersion + " " + strScriptVersion,
+        void 0,
+        { resizeable: true },
+      );
+      if (null != e) {
+        for (
+          var i =
+              -1 != $.os.indexOf("Windows") &&
+              12 <= parseFloat(app.version) &&
+              parseFloat(app.version) < 14
+                ? ["left", "top"]
+                : ["fill", "fill"],
+            t =
+              "group { \t\torientation: \'column\', \t\talignment: [\'" +
+              i[0] +
+              "\',\'" +
+              i[1] +
+              "\'], \t\talignChildren: [\'fill\',\'fill\'],                    infoGrp: Group {                    alignment: [\'fill\',\'top\'],                    alignChildren: [\'fill\',\'top\'], \t\t\t\t\ttxt: StaticText {properties:{multiline:true}, preferredSize:[150,50]},                       hdr: StaticText {properties:{multiline:true}},                       removeLic: Button {text:\'" +
+              strDeactivate +
+              "\', preferredSize:[40,30]} \t\t\t\t} \t\t\t\thelpGrp: Group {                    alignment: [\'" +
+              i[0] +
+              "\',\'" +
+              i[1] +
+              "\'],                    alignChildren: [\'fill\',\'fill\'],                     txt: EditText {properties:{multiline:true, readonly:true}}, \t\t\t\t}                 prefsGrp: Group {                       alignment: [\'fill\',\'bottom\'],                        alignChildren: [\'left\',\'center\'],                        orientation: \'row\',                        checkNow: Button {text:\'" +
+              strCheckNow +
+              "\', preferredSize:[150,25]}                        doUpdateCheck: Checkbox {text:\'" +
+              strVersionCheck +
+              "\', preferredSize:[-1,25]}                        }\t\t\tokGrp: Group {                 alignment: [\'fill\',\'bottom\'],                 alignChildren: [\'fill\',\'center\'],                 supportBtn: Button {text:\'" +
+              strGetSupport +
+              "\', preferredSize:[150,30], alignment: [\'left\',\'center\']}                 ",
+            n = 0;
+          n < Math.min(maxUIButtons, vars.helpButtons.length);
+          n++
+        ) {
+          if (vars.helpButtons[n].hasOwnProperty("name")) {
+            t +=
+              "btn" + n + ": " + vars.helpButtons[n].hasOwnProperty("type") &&
+              validateButtonType(vars.helpButtons[n].type)
+                ? vars.helpButtons[n].type
+                : "Button" +
+                  " {id: \'" +
+                  n +
+                  "\', alignment: [\'left\',\'center\']}";
+          }
+        }
+        t +=
+          "\t\t\t\t\tokBtn: Button {text:\'" +
+          strOK +
+          "\', preferredSize:[150,30], alignment: [\'right\',\'center\']} \t\t\t\t} \t\t}";
+        e.grp = e.add(t);
+        e.grp.helpGrp.txt.preferredSize = [800, 500];
+        var r = "\xa9" + (new Date().getYear() + 1900).toString();
+        e.grp.infoGrp.txt.text =
+          strScriptName +
+          " - " +
+          strVersion +
+          " " +
+          strScriptVersion +
+          "\n" +
+          r +
+          " " +
+          vars.scriptAuthor +
+          "\n\n";
+        e.grp.infoGrp.hdr.text = getRegistration();
+        e.grp.helpGrp.txt.text = vars.helpText;
+        haveSettings(prefsSectionName, prefsDoUpdateCheck) &&
+          (doUpdateCheck = !(
+            "false" == getSettings(prefsSectionName, prefsDoUpdateCheck)
+          ));
+        e.grp.prefsGrp.doUpdateCheck.value = doUpdateCheck;
+        e.grp.prefsGrp.doUpdateCheck.onClick = function () {
+          setUpdateCheck(this.value);
+        };
+        e.grp.prefsGrp.checkNow.onClick = function () {
+          ScriptUI.environment.keyboardState.altKey
+            ? alert(
+                "aescripts licensing framework version\n" + licensingVersion,
+              )
+            : doUpdateCheckNow();
+        };
+        for (
+          var n = 0;
+          n < Math.min(maxUIButtons, vars.helpButtons.length);
+          n += 1
+        ) {
+          vars.helpButtons[n].hasOwnProperty("name") &&
+            ((e.grp.okGrp["btn" + n].text = vars.helpButtons[n].name),
+            vars.helpButtons[n].hasOwnProperty("url")
+              ? (e.grp.okGrp["btn" + n].onClick = function () {
+                  openURL(vars.helpButtons[this.id].url);
+                })
+              : vars.helpButtons[n].hasOwnProperty("onClickFunction") &&
+                (e.grp.okGrp["btn" + n].onClick =
+                  vars.helpButtons[n].onClickFunction),
+            vars.helpButtons[n].hasOwnProperty("btnValue") &&
+              (e.grp.okGrp["btn" + n].value = vars.helpButtons[n].btnValue));
+        }
+        e.grp.infoGrp.removeLic.visible = !isResultTrial(
+          licenseValidity.result,
+        );
+        e.grp.infoGrp.removeLic.onClick = function () {
+          removeLic() &&
+            ((e.grp.infoGrp.hdr.text = getRegistration()),
+            (this.visible = false));
+        };
+        e.grp.okGrp.supportBtn.onClick = function () {
+          openSupportTicket({});
+          e.close();
+        };
+        e.grp.okGrp.okBtn.onClick = function () {
+          e.close();
+        };
+        -1 != $.os.indexOf("Windows") &&
+          12 <= parseFloat(app.version) &&
+          parseFloat(app.version) < 14 &&
+          (e.maximumSize = [840, 670]);
+        e.layout.layout(true);
+        e.layout.resize();
+        e.onResizing = e.onResize = function () {
+          this.layout.resize();
+        };
+        e.show();
+      }
+    }
+    function validateButtonType(e) {
+      return "Button" === e || "Checkbox" === e;
+    }
+    function openSupportTicket(e) {
+      t = n = "";
+      i = "&subject=";
+      null != e &&
+        void 0 !== e &&
+        (e.hasOwnProperty("subject") && (i += File.encode(e.subject)),
+        e.hasOwnProperty("message") && (t = File.encode(e.message)),
+        e.hasOwnProperty("diagnostic") &&
+          (n = File.encode(e.diagnostic + "\n--\n")));
+      var r =
+        true === isAescriptsSupportUrl
+          ? strSKU + i + "&message="
+          : i.replace(/\&/, "?") + "&body=";
+      var a =
+        "" != r
+          ? t +
+            "%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A-------%0D%0A" +
+            n +
+            getDiagnosticData(true)
+          : "";
+      supportUrl.toString().match(/@/) &&
+        !supportUrl.toString().match(/^mailto:/) &&
+        (supportUrl = "mailto:" + supportUrl);
+      openURL(supportUrl + r + a);
+    }
+    function getDiagnosticData(e) {
+      var i = $.os.toString();
+      var t =
+        BridgeTalk.getDisplayName(BridgeTalk.appName) +
+        " (" +
+        app.version +
+        ") - " +
+        $.locale.toString();
+      var n =
+        strScriptName.replace(/&/, "and") +
+        " - " +
+        strVersion +
+        " " +
+        strScriptVersion;
+      var r = "Lic. fw v" + licensingVersion + isVT() ? " (Trial)" : "";
+      return e
+        ? File.encode(n) +
+            "%0D%0A" +
+            File.encode(i) +
+            "%0D%0A" +
+            File.encode(t) +
+            "%0D%0A" +
+            File.encode(r)
+        : n + "\n" + i + "\n" + t + "\n" + r;
+    }
+    function setUpdateCheck(e) {
+      saveSettings(prefsSectionName, prefsDoUpdateCheck, (doUpdateCheck = e));
+    }
+    function doUpdateCheckNow() {
+      checkForNewVersion((doUpdateCheck = true));
+    }
+    function newVersionUI(i) {
+      var t = new Window("dialog", strNewVersionAvailableHdr, void 0, {
+        resizeable: true,
+      });
+      if (null != t) {
+        var e =
+          "group { \t\t\t\torientation: \'column\', \t\t\t\talignment: [\'fill\',\'fill\'], \t\t\t\talignChildren: [\'fill\',\'fill\'], \t\t\t\t   hdrGrp: Group { \t\t\t\t   alignment: [\'fill\',\'fill\'], \t\t\t\t   alignChildren: [\'fill\',\'fill\'], \t\t\t\t   orientation: \'column\',                         hdr: StaticText {alignment: [\'fill\',\'top\'], properties:{multiline:true}}, ";
+        i.hasOwnProperty("header") &&
+          (e +=
+            "   infoGrp: Panel {                            alignment: [\'fill\',\'fill\'],                            alignChildren: [\'fill\',\'fill\'],                            orientation: \'column\',                               info: StaticText {properties:{multiline:true}},                               } ");
+        e +=
+          "} \t\t\t\t\tokGrp: Group { \t\t\t\t\talignment: [\'fill\',\'bottom\'], \t\t\t\t\talignChildren: [\'fill\',\'fill\'], \t\t\t\t\t\tskipVersionBtn: Button {text:\'" +
+          strSkipVersion +
+          "\', preferredSize:[-1,30], alignment: [\'right\',\'center\']}                            remindMeLaterBtn: Button {text:\'" +
+          strRemindMeLater +
+          "\', preferredSize:[-1,30], alignment: [\'right\',\'center\']} \t\t\t\t\t\tdownloadBtn: Button {text:\'" +
+          strDownload +
+          "\', preferredSize:[-1,30], alignment: [\'right\',\'center\']} \t\t\t\t\t} \t\t\t\t}";
+        t.grp = t.add(e);
+        var n = ScriptUI.newFont(
+          "dialog || palette",
+          ScriptUI.FontStyle.BOLD,
+          12,
+        );
+        ScriptUI.newFont("dialog || palette", ScriptUI.FontStyle.BOLD, 11);
+        ScriptUI.newFont("dialog || palette", ScriptUI.FontStyle.REGULAR, 9);
+        t.grp.hdrGrp.hdr.graphics.font = n;
+        t.grp.hdrGrp.hdr.text = strNewVersionAvailable.replace(
+          /%v/,
+          i.version + "\n" + strCurrentVersion.replace(/%v/, strScriptVersion),
+        );
+        i.hasOwnProperty("header") &&
+          (t.grp.hdrGrp.infoGrp.info.text = i.header + "\n\n" + i.detail);
+        t.grp.okGrp.skipVersionBtn.onClick = function () {
+          saveSettings(
+            prefsSectionName,
+            prefsLastVersionChecked,
+            strScriptVersion,
+          );
+          saveSettings(
+            prefsSectionName,
+            prefsLastTimeVersionChecked,
+            new Date().toString(),
+          );
+          saveSettings(
+            prefsSectionName,
+            prefsNextTimeVersionCheckedSkipVersion,
+            i.version,
+          );
+          saveSettings(
+            prefsSectionName,
+            prefsLastServerVersionChecked,
+            i.version,
+          );
+          t.close(false);
+        };
+        t.grp.okGrp.remindMeLaterBtn.onClick = function () {
+          try {
+            var e = new Date();
+            e = dateAddDays(remindMeLaterDays);
+            saveSettings(
+              prefsSectionName,
+              prefsLastVersionChecked,
+              strScriptVersion,
+            );
+            saveSettings(
+              prefsSectionName,
+              prefsLastTimeVersionChecked,
+              new Date().toString(),
+            );
+            saveSettings(
+              prefsSectionName,
+              prefsNextTimeVersionChecked,
+              e.toString(),
+            );
+            saveSettings(
+              prefsSectionName,
+              prefsLastServerVersionChecked,
+              i.version,
+            );
+            t.close(false);
+          } catch (e) {
+            alert(e.toString());
+          }
+        };
+        t.grp.okGrp.downloadBtn.onClick = function () {
+          retrieveLicenseUI(strDownload);
+          t.close(true);
+        };
+        t.layout.layout(true);
+        t.layout.resize();
+        t.onResizing = t.onResize = function () {
+          this.layout.resize();
+        };
+        i.hasOwnProperty("header") &&
+          ((t.grp.hdrGrp.infoGrp.size.height = Math.min(
+            t.grp.hdrGrp.infoGrp.size.height,
+            300,
+          )),
+          t.layout.layout(true),
+          t.layout.resize());
+        t.show();
+      }
+    }
+    function dateAddDays(e) {
+      var i = new Date().getTime() + 86400000 * e;
+      return new Date(i);
+    }
+    function checkForNewVersion(e) {
+      if ((null == e && (e = false), doUpdateCheck)) {
+        haveSettings(prefsSectionName, prefsLastVersionChecked) &&
+          (t = getSettings(prefsSectionName, prefsLastVersionChecked));
+        haveSettings(prefsSectionName, prefsLastServerVersionChecked) &&
+          (n = getSettings(prefsSectionName, prefsLastServerVersionChecked));
+        haveSettings(prefsSectionName, prefsLastTimeVersionChecked) &&
+          (r = new Date(
+            getSettings(prefsSectionName, prefsLastTimeVersionChecked),
+          ));
+        haveSettings(
+          prefsSectionName,
+          prefsNextTimeVersionCheckedSkipVersion,
+        ) &&
+          (s = getSettings(
+            prefsSectionName,
+            prefsNextTimeVersionCheckedSkipVersion,
+          ));
+        haveSettings(prefsSectionName, prefsNextTimeVersionChecked) &&
+          (a = new Date(
+            getSettings(prefsSectionName, prefsNextTimeVersionChecked),
+          ));
+        haveSettings(prefsSectionName, prefsVersionCheckInit) &&
+          (i = getSettings(prefsSectionName, prefsVersionCheckInit));
+        var o = new Date();
+        if (e || null == i || null == a || !(o < a)) {
+          var l = versionCheck(strSKU, true, e);
+          if (null != l) {
+            var c =
+              null != l && l.hasOwnProperty("version")
+                ? l.version
+                : strScriptVersion;
+            if ((e || null == n || n != c) && (e || null == s || s != n)) {
+              saveSettings(prefsSectionName, prefsVersionCheckInit, 1);
+              try {
+                var f = new Date();
+                f = dateAddDays(updateCheckInterval);
+                saveSettings(
+                  prefsSectionName,
+                  prefsLastVersionChecked,
+                  strScriptVersion,
+                );
+                saveSettings(
+                  prefsSectionName,
+                  prefsLastTimeVersionChecked,
+                  new Date().toString(),
+                );
+                saveSettings(
+                  prefsSectionName,
+                  prefsNextTimeVersionChecked,
+                  f.toString(),
+                );
+              } catch (e) {
+                alert(e.toString());
+              }
+              var d = compareVersions(c, strScriptVersion);
+              0 < d && (null == t || null == r || null == a || e || a <= o)
+                ? newVersionUI(l)
+                : d <= 0 && e && alert(strUpToDate);
+            }
+          } else {
+            saveSettings(
+              prefsSectionName,
+              prefsDoUpdateCheck,
+              (doUpdateCheck = false),
+            );
+          }
+        }
+      }
+    }
+    function versionCheck(e, i, t) {
+      var n = extComms(
+        "https://notify.aescripts.com/versioncheck2.php?json=1&plain=1&sku=" +
+          e +
+          i
+          ? "&latest=1"
+          : "" + parseFloat(app.version) < 12
+            ? "&clip_length=200"
+            : "&clip_length=300",
+        null,
+      );
+      if (null == n || "" == n || !validateJSON(n)) {
+        return (t && alert(strUpdateCheckError), null);
+      }
+      try {
+        if (null == (n = JSONify(n, "parse"))) {
+          return null;
+        }
+      } catch (e) {
+        return null;
+      }
+      return "ok" != n.status
+        ? null
+        : i
+          ? {
+              date: n.latest.release_date,
+              detail: n.latest.detail,
+              header: strVersionRev
+                .replace(/%a/, n.version)
+                .replace(/%b/, "")
+                .replace(/%c/, n.latest.release_date),
+              version: n.version,
+            }
+          : { version: n.version };
+    }
+    function extComms(e) {
+      try {
+        if (-1 != $.os.indexOf("Mac")) {
+          var i = system.callSystem('curl -s 2 "' + e + '"');
+        } else {
+          var t =
+            ((n = new File(
+              Folder.userData.fsName + "/Aescripts/aescripts_helper.vbs",
+            )).open("w"),
+            n.write(
+              'dim o: Set o = createobject("MSXML2.XMLHTTP.6.0")\no.Open "GET", WScript.Arguments(0), False\no.Send\nIf o.Status >= 200 And o.Status <= 202 Then\nWScript.Echo o.responseText\nElse\nWScript.Echo "Error"\nEnd If',
+            ),
+            n.close(),
+            n.exists ? n : null);
+          if (null == t) {
+            return null;
+          }
+          i = system.callSystem(
+            'cscript //nologo "' + t.fsName + '" "' + e + '"',
+          );
+        }
+        return i;
+      } catch (e) {
+        return (alert("extComms error\n" + e.toString()), null);
+      }
+    }
+    function socketConnect(e, i) {
+      var t = new Socket();
+      if (
+        ((t.encoding = "binary"), (t.timeout = 2), t.open(e + ":80", "UTF-8"))
+      ) {
+        t.write(
+          "GET /" + i + " HTTP/1.1\nHost: " + e + "\n\nConnection: close\n\n",
+        );
+        var n = t.read(2000);
+        return (t.close(), null != n ? (n = n.toString()) : null);
+      }
+      return null;
+    }
+    function formatHistory(e, i) {
+      var t = e.data;
+      var n = [];
+      for (var r in t) {
+        if (t.hasOwnProperty(r)) {
+          for (var a = t[r].history, s = a.length - 1; 0 <= s; s--) {
+            var o = a[s];
+            var l = "";
+            var c = o.detail;
+            s == a.length - 1 && (l = " (" + strNewestVersionAvailable + ")");
+            var f = strVersionRev
+              .replace(/%0/, o.version_number)
+              .replace(/%1/, l)
+              .replace(/%2/, o.release_date)
+              .replace(/%3/, c);
+            (!options.summaryOnlyNewChanges ||
+              compareVersions(i, o.version_number) < 0) &&
+              n.push(f);
+          }
+        }
+      }
+      return n.join("\n\n");
+    }
+    function getVerifCode(e) {
+      return "1";
+      "trial" == e.toLowerCase() && (e = "");
+      var t =
+        -1 != $.os.indexOf("Mac") &&
+        (Folder("/Volumes/Private").exists || Folder("/Volumes/private").exists)
+          ? Folder.userData.fsName
+          : Folder.temp.fsName +
+            "/" +
+            Math.round(Math.random() * 42132 * new Date().getTime());
+      if (-1 != $.os.indexOf("Win")) {
+        i = wx;
+        t += ".exe";
+      } else {
+        if (systemCall("arch").toLowerCase().match(/ppc/)) {
+          return (alert(strPpcNotSupported), false);
+        }
+        i = mx;
+      }
+      var n = createFile(File(t), i, "BINARY");
+      if (!n.exists) {
+        return ((licenseData = { result: -108 }), licenseData);
+      }
+      n.hidden = true;
+      -1 != $.os.indexOf("Mac") && systemCall('chmod 757 "' + n.fsName + '"');
+      var r = systemCall(
+        '"' + n.fsName + '" "' + strHeader + '" ' + privateNum + ' "' + e + '"',
+      );
+      return (n.remove(), parseResult(r));
+    }
+    function parseResult(i) {
+      try {
+        t = parseVerifCode(i.toString());
+      } catch (e) {
+        (t = { result: -101 }).e =
+          e.toString() + "\nresult:\n\n" + i.toString();
+      }
+      return t;
+    }
+    function parseVerifCode(e) {
+      for (var i = e.match(/[^\r\n]+/g), t = {}, n = 0; n < i.length; n++) {
+        var r = i[n].split(":");
+        if (2 <= r.length) {
+          var a = r[0].replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+          var s = trimQuotes(r[1]);
+          "LS" == a && "UP" == s && (a = "LSS");
+          isNaN(s) || (s = parseFloat(s));
+          t[a] = s;
+        }
+      }
+      return (
+        void 0 === t.result && ((t.result = -102), (t.e = e)),
+        checkTrialDetails(t),
+        checkBetaDetails(t),
+        (isTimeLimited = checkTimeLimited(t)),
+        t
+      );
+    }
+    function checkTimeLimited(e) {
+      var i = retProp("rt$", e);
+      var t = retProp("nd$", e);
+      if ("" == i || "" == t) {
+        return false;
+      }
+      switch (e.result) {
+        case -20:
+          e.e = i;
+          break;
+        case -21:
+          e.e = t;
+      }
+    }
+    function checkFloatingLicense(e) {
+      retProp("pe$", e) != bD("RkxU") ||
+        isServerRunning(e) ||
+        (e.result = -109);
+    }
+    function checkTrialDetails(e) {
+      if (-7 !== e.result) {
+      } else if (0 == trialLengthDays) {
+        e.result = -106;
+      } else {
+        var i = retProp("^d", e);
+        if (void 0 === i) {
+          return void (e.result = -103);
+        }
+        var t = trialLengthDays - i;
+        0 < t
+          ? ((e.result = 100), (e.tdl = t), (e.license = bD("VFJJQUw=")))
+          : ((e.result = -100), (e.tdl = 0));
+      }
+    }
+    function checkBetaDetails(e) {
+      var i = e.result;
+      var t = retProp("pe$", e).match(/^B/);
+      betaMode && (isResultTrial(i) || -106 == i || -7 == i)
+        ? (e.result = -107)
+        : !betaMode && t && (e.result = -105);
+    }
+    function isResultValidLicense(e) {
+      return true;
+    }
+    function isResultTrial(e) {
+      return false;
+    }
+    function isServerConfigured(e) {
+      try {
+        return retProp("^L", e).match(/^O/);
+      } catch (e) {}
+    }
+    function isServerRunning(e) {
+      try {
+        return retProp("SS$", e).match(/^U/);
+      } catch (e) {}
+    }
+    function trimQuotes(e) {
+      return (
+        "\'" == (e = e.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ""))[0] &&
+          "\'" == e[e.length - 1] &&
+          (e = e.substring(1, e.length - 1)),
+        e
+      );
+    }
+    function sanitizeProductName(e) {
+      return e.toString().replace(/[^a-z0-9]/gi, "");
+    }
+    function checkErrorCode(e) {
+      return licErrors[locale].hasOwnProperty(e.toString()) ? e : "unknown";
+    }
+    function string_encode3(e) {
+      for (var i = 0, t = 0; t < e.length; t++) {
+        i += e.charCodeAt(t);
+      }
+      return i;
+    }
+    function getVerifCode3(e) {
+      var i = e.split("*");
+      if (4 == i.length) {
+        var t = i[3].replace(/^[0-9]+/, "");
+        var n = i[3].match(/^[0-9]+/, "");
+        var r = n[0].substr(0, 2);
+        var a = n[0].substr(n[0].length - 2);
+        var s = r[0] + i[0] + r[1] + i[1] + a[0] + i[2] + a[1] + t;
+        var o = n[0].substring(2, n[0].length - 2);
+        return string_encode3(s) * privateNum == o ? "1" : "0";
+      }
+      return (e != bE("bad") && alert(strNewLicenseFormat), "0");
+    }
+    function string_encode(e) {
+      return (
+        e.length * e.charCodeAt(0) +
+        e.charCodeAt(Math.floor(0.1 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.2 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.3 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.4 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.5 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.7 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.8 * (e.length - 1))) +
+        e.charCodeAt(Math.floor(0.9 * (e.length - 1))) +
+        e.charCodeAt(e.length - 1)
+      );
+    }
+    function check_v1_License(e) {
+      var i = e.split("**");
+      return (
+        !(
+          !e
+            .replace(/^ +|| +$/g, "")
+            .match(/^.+\*\*.+\*\*[0-9]+[A-Za-z]{3}$/) || 3 != i.length
+        ) || (alert(strOldLicenseFormat), false)
+      );
+    }
+    function check_v2_License(e) {
+      var i = e.split("*");
+      return (
+        e.match(/^[A-Z0-9]+\*[^\*]+\*[^\*]+\*[0-9]+[A-Za-z]{3}[0-9]+$/) &&
+        4 == i.length
+      );
+    }
+    function check_timed_License(e) {
+      var i = e.split("*");
+      return (
+        e.match(/^[A-Z0-9]+\*[^\*]+\*[^\*]+\*[A-Z0-9#]+[A-Za-z]{3}[0-9]+$/) &&
+        4 == i.length
+      );
+    }
+    function checkCode(e, i, t) {
+      if (
+        ((i = null == i ? "" : i.replace(/^\s\s*/, "").replace(/\s\s*$/, "")),
+        (myLicense = false),
+        e && ((regUI = licUI()), (myRegPrompt = regUI.show()), !myRegPrompt))
+      ) {
+        return false;
+      }
+      var n = false;
+      "@remote" == (i = null == license ? i : license).toLowerCase() &&
+        ((i = strHeader + i), (n = true));
+      var r = i.split("*");
+      var a = i.match(/#/);
+      var s = a && check_timed_License(i);
+      var o = check_v2_License(i);
+      if (!((offerTrial && "trial" == i.toLowerCase()) || n || o || s)) {
+        if (i.match(/^[A-Z]{2}[A-Z0-9]{30}$/)) {
+          var l = confirm(strTempCode);
+          return (
+            isSecurityPrefSet() && l && openURL(exchangeUrl + "?serial=" + i),
+            myLicense
+          );
+        }
+        return (
+          alert(
+            strInvalidCode + "\n" + betaMode
+              ? strNewLicenseFormat.replace(
+                  new RegExp(bD("U1VM"), "g"),
+                  bD("QlRB"),
+                )
+              : strNewLicenseFormat + "\n\n" + strContactSupport,
+          ),
+          saveSettings(prefsSectionName, prefsName, bE("bad")),
+          saveSettings(prefsSectionName, prefsVersionName, strScriptVersion),
+          saveSettings(prefsSectionName, prefsLicVersion, licensingVersion),
+          checkCode(true),
+          myLicense
+        );
+      }
+      if (("trial" != i.toLowerCase() || n) && !n) {
+        if (null != r[0] && r[0] != strHeader) {
+          return (
+            alert(strWrongProduct + "\n" + strContactSupport),
+            checkCode(e),
+            false
+          );
+        }
+        var c = r[3].match(/[A-Z]{3}[0-9]+$/);
+        if (null != c) {
+          if (c[0].match(bD("QlRB")) && !betaMode) {
+            return (
+              alert(strBetaCodeAlert),
+              saveSettings(prefsSectionName, prefsName, bE("bad")),
+              checkCode(true),
+              false
+            );
+          }
+          myLicense = true;
+        }
+      }
+      if (
+        !isResultValidLicense(
+          (licenseValidity = 2 == licV ? getVerifCode(i) : getVerifCode3(i)),
+        )
+      ) {
+        e || (e = true);
+        var f = "e" in licenseValidity ? "\n" + licenseValidity.e : "";
+        return (
+          alert(
+            licErrors[locale][checkErrorCode(licenseValidity.result)].title +
+              "\n" +
+              licErrors[locale][checkErrorCode(licenseValidity.result)].detail +
+              f,
+          ),
+          -9 == licenseValidity.result &&
+            prompt(strDeactivate + "?") &&
+            getVerifCode("-"),
+          checkCode(e),
+          myLicense
+        );
+      }
+      if (
+        ((isValidTrial =
+          !a &&
+          offerTrial &&
+          "trial" == i.toLowerCase() &&
+          isResultTrial(licenseValidity.result)),
+        e && !isValidTrial)
+      ) {
+        var d = parseInt(retProp("^n", licenseValidity), 10);
+        i.match(/@remote/i) ||
+          alert(
+            strRegSuccess.replace("%u", d) + (1 < d) && "de" != locale
+              ? "s"
+              : "" + betaMode
+                ? ""
+                : "\n" + strRegSuccess1,
+          );
+      }
+      return ((myLicense = true), myLicense);
+    }
+    function checkForLegacyLic() {
+      var e = haveSettings(prefsSectionName, prefsName)
+        ? bD(getSettings(prefsSectionName, prefsName))
+        : "";
+      return check_v2_License(e) ? e : "";
+    }
+    function trial_expired() {
+      var e = confirm(strExpiredAlert);
+      isSecurityPrefSet() && e
+        ? openURL(strTrialUrl)
+        : e && isAE() && alert(strErrScriptAccess);
+    }
+    function bD(e) {
+      var o = "";
+      var l = 0;
+      e = e.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+      for (
+        var c =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        l < e.length;
+      ) {
+        i =
+          (c.indexOf(e.charAt(l++)) << 2) |
+          ((r = c.indexOf(e.charAt(l++))) >> 4);
+        t = ((15 & r) << 4) | ((a = c.indexOf(e.charAt(l++))) >> 2);
+        n = ((3 & a) << 6) | (s = c.indexOf(e.charAt(l++)));
+        o += String.fromCharCode(i);
+        64 != a && (o += String.fromCharCode(t));
+        64 != s && (o += String.fromCharCode(n));
+      }
+      return o;
+    }
+    function bE(e) {
+      for (
+        i,
+          t,
+          n,
+          r,
+          a,
+          s,
+          o,
+          l = "",
+          c = 0,
+          f =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        c < e.length;
+      ) {
+        r = (i = e.charCodeAt(c++)) >> 2;
+        a = ((3 & i) << 4) | ((t = e.charCodeAt(c++)) >> 4);
+        s = ((15 & t) << 2) | ((n = e.charCodeAt(c++)) >> 6);
+        o = 63 & n;
+        isNaN(t) ? (s = o = 64) : isNaN(n) && (o = 64);
+        l = l + f.charAt(r) + f.charAt(a) + f.charAt(s) + f.charAt(o);
+      }
+      return l;
+    }
+    function isSecurityPrefSet() {
+      var e =
+        parseFloat(app.version) < 12
+          ? "Main Pref Section"
+          : "Main Pref Section v2";
+      return (
+        1 ==
+        app.preferences.getPrefAsLong(e, "Pref_SCRIPTING_FILE_NETWORK_SECURITY")
+      );
+    }
+    function openURL(e) {
+      if (
+        ((e = e.toString()).match(/@/) ||
+          e.match(/^https?:\/\//) ||
+          (e = "http://" + e.replace(/^(http)?s?:?\/?\/?/, "")),
+        isAE() || isPS())
+      ) {
+        Folder.commonFiles.parent.fsName;
+        -1 != $.os.indexOf("Windows")
+          ? systemCall('cmd /c "start ' + (e = e.replace(/&/g, "^&")) + '"')
+          : systemCall('open "' + e + '"');
+      } else {
+        createFile(
+          File(Folder.temp.fsName + "/openUrl.url"),
+          "[InternetShortcut]\rURL=" + e + "\r",
+          "UTF-8",
+          true,
+        ).execute();
+      }
+    }
+    function parseRegistration(e) {
+      if (0 == retProp("^r", licenseValidity)) {
+        if (
+          ((a = retProp("^f", licenseValidity)),
+          (s = retProp("^la", licenseValidity)),
+          (o = retProp("^n", licenseValidity)),
+          (l = retProp("pe$", licenseValidity)),
+          isTimeLimited &&
+            (parseDateString(retProp("rt$", licenseValidity)),
+            (f = parseDateString(retProp("nd$", licenseValidity)))),
+          0 < e)
+        ) {
+          return a + "\'" + s + "\'" + retProp("^s", licenseValidity) + l + o;
+        }
+        n = a + s.toString().match(/^@/) ? "" : " " + s + " ";
+        r = l;
+      } else {
+        n = "";
+      }
+      var d = strUsers.replace("%u", o) + (1 < o) && "de" != locale ? "s" : "";
+      switch (r) {
+        case bD("U1VM"):
+          i = " - " + strLicense + " " + d;
+          break;
+        case bD("QlRB"):
+          i = " - " + strBTA + " " + d;
+          break;
+        case bD("RURV"):
+          i = " - " + strEDU + " " + d;
+          break;
+        case bD("RkxU"):
+          i = " - " + strFLT + " " + d;
+          break;
+        default:
+          c = retProp("^t", licenseValidity);
+          isTimeLimited ||
+            (i = c < 1 ? strTrialExpired : strTrialTxt.replace(/%E/, c));
+      }
+      return (
+        (t = "" != n ? strRegistration + n + i : i),
+        isTimeLimited && (t += "\nLicense ends: " + f),
+        t
+      );
+    }
+    function parseDateString(e) {
+      var i = e.toString().split("-");
+      return new Date(
+        parseInt(i[0]),
+        parseInt(i[1] - 1),
+        parseInt(i[2]),
+      ).toDateString();
+    }
+    function retProp(e, i) {
+      for (var t in i) {
+        if (i.hasOwnProperty(t) && t.toString().match(new RegExp(e))) {
+          return i[t];
+        }
+      }
+      return "";
+    }
+    function isAE() {
+      return BridgeTalk.appName == bD("YWZ0ZXJlZmZlY3Rz");
+    }
+    function isPS() {
+      return BridgeTalk.appName == bD("cGhvdG9zaG9w");
+    }
+    function readFile(e) {
+      if (null != e && null != e && e.exists && e.open("r")) {
+        var i = e.read();
+        return (e.close(), i);
+      }
+      return null;
+    }
+    function createFile(e, i, t, n, r) {
+      return (
+        ((null == e || null == e || e.exists) && !n) ||
+          (e.exists && e.remove(),
+          ((e =
+            -1 != $.os.indexOf("Win")
+              ? new File(e.fsName)
+              : new File(e.absoluteURI)).encoding = t),
+          e.open("w"),
+          e.write(i),
+          e.close(),
+          (null != r && r) || (e.hidden = true),
+          -1 != $.os.indexOf("Mac") &&
+            systemCall(bD("Y2htb2QgNzU3IA==") + e.absoluteURI)),
+        e
+      );
+    }
+    function systemCall(e) {
+      if (isAE()) {
+        return system.callSystem(e);
+      }
+      if (isPS()) {
+        var i =
+          -1 != $.os.indexOf("Win")
+            ? Folder.temp.fsName
+            : Folder.temp.absoluteURI +
+              "/" +
+              Math.round(Math.random() * 71827 * new Date().getTime());
+        return (app.system(e + " > " + i), readFile(File(i)));
+      }
+      return "";
+    }
+    function parseSettings(e, i) {
+      for (var t in i) {
+        if (i.hasOwnProperty(t)) {
+          if ("object" == typeof i[t]) {
+            return parseSettings(e, i[t]);
+          }
+          if (t === e) {
+            return i[t];
+          }
+        }
+      }
+    }
+    function readJSON(e) {
+      if (null == e || null == e) {
+        return false;
+      }
+      e instanceof File || File(e);
+      var i = readFile(e);
+      return JSONify(i, "parse");
+    }
+    function writeJSON(e, i) {
+      if (null == e || null == e || null == i || null == i) {
+        return false;
+      }
+      i instanceof File || File(i);
+      return (
+        createFile(i, JSONify(e, "stringify", "\t"), "UTF-8", true, true),
+        i.exists
+      );
+    }
+    function getSettings(e, i, t) {
+      if (isAE() && "settings" != t) {
+        return app.settings.getSetting(e, i);
+      }
+      var n = File(prefsLocation + prefsPrefix + File.encode(e));
+      var r = readFile(n);
+      var a = JSONify(r, "parse");
+      if (a instanceof Array) {
+        for (var s in ((a = fixSettingsFile(a)), n.remove(), a)) {
+          saveSettings(e, s, a[s]);
+        }
+      }
+      return a[i];
+    }
+    function haveSettings(e, i, t) {
+      if (isAE() && "settings" != t) {
+        return app.settings.haveSetting(e, i);
+      }
+      var n = readFile(File(prefsLocation + prefsPrefix + File.encode(e)));
+      if (null != n) {
+        var r = JSONify(n.toString(), "parse");
+        return (r instanceof Array && (r = fixSettingsFile(r)), i in r);
+      }
+      return false;
+    }
+    function fixSettingsFile(e) {
+      for (var i = {}, t = 0; t < e.length - 1; t++) {
+        i[e[t]] = e[t + 1];
+        t++;
+      }
+      return i;
+    }
+    function saveSettings(e, i, t, n) {
+      if (isAE() && "settings" != n) {
+        app.settings.saveSetting(e, i, t);
+        app.preferences.saveToDisk();
+      } else {
+        var r = {};
+        var a = File(prefsLocation + prefsPrefix + File.encode(e));
+        if (a.exists) {
+          var s = readFile(a);
+          null != s && (r = JSONify(s.toString(), "parse"));
+        }
+        r instanceof Array && (r = fixSettingsFile(r));
+        r[i] = t;
+        createFile(
+          File(prefsLocation + prefsPrefix + File.encode(e)),
+          JSONify(r, "stringify", "\t"),
+          "UTF-8",
+          true,
+        );
+      }
+    }
+    function saveVersionsToPrefs() {
+      saveSettings(prefsSectionName, prefsVersionName, strScriptVersion);
+      saveSettings(prefsSectionName, prefsLicVersion, licensingVersion);
+    }
+    function isVT() {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        isResultValidLicense(licenseValidity) &&
+          isResultTrial(licenseValidity.result)
+      );
+    }
+    function getRegistration(e) {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        parseRegistration(e)
+      );
+    }
+    function removeLic() {
+      (void 0 !== licenseValidity &&
+        licenseValidity.hasOwnProperty("result")) ||
+        (licenseValidity = getVerifCode(""));
+      var e =
+        isServerConfigured(licenseValidity) && isServerRunning(licenseValidity)
+          ? strHeader + "@REMOTE"
+          : "";
+      return (
+        (licenseValidity = getVerifCode("-" + e)),
+        (theLicense = false),
+        alert(strScriptName + ": " + strLicenseRemoved),
+        isServerConfigured(licenseValidity) ||
+          (saveSettings(prefsSectionName, prefsName, bE("bad")),
+          saveSettings(prefsSectionName, prefsVersionName, strScriptVersion),
+          saveSettings(prefsSectionName, prefsLicVersion, licensingVersion)),
+        !theLicense
+      );
+    }
+    function mainFunc(e) {
+      if (
+        !isAE() ||
+        isSecurityPrefSet() ||
+        (alert(strErrScriptAccess),
+        parseFloat(app.version) < 16.1
+          ? app.executeCommand(2359)
+          : app.executeCommand(3131),
+        isSecurityPrefSet())
+      ) {
+        if (betaMode && checkBeta(betaExpirationDate, betaStartDate)) {
+          "l" == e && alert(strBetaExpiredAlert);
+        } else {
+          if ("l" == e || "c" == e || "r" == e) {
+            var n = false;
+            if (
+              ("l" == e && doUpdateCheck && checkForNewVersion(), 2 == licV)
+            ) {
+              if ("r" == e) {
+                t = !removeLic();
+              } else {
+                if ("-22" == (licenseValidity = getVerifCode("")).result) {
+                  var r =
+                    "e" in licenseValidity ? "\n" + licenseValidity.e : "";
+                  alert(
+                    licErrors[locale][checkErrorCode(licenseValidity.result)]
+                      .title +
+                      "\n" +
+                      licErrors[locale][checkErrorCode(licenseValidity.result)]
+                        .detail +
+                      r,
+                  );
+                  getVerifCode("-");
+                  n = true;
+                  i =
+                    isServerConfigured(licenseValidity) &&
+                    isServerRunning(licenseValidity)
+                      ? "@REMOTE"
+                      : "trial";
+                }
+                if (
+                  isResultValidLicense(licenseValidity) &&
+                  !isResultTrial(licenseValidity.result)
+                ) {
+                  return true;
+                }
+                "" == (i = checkForLegacyLic()) &&
+                  ((n = true),
+                  (i =
+                    isServerConfigured(licenseValidity) &&
+                    isServerRunning(licenseValidity)
+                      ? "@REMOTE"
+                      : "trial"));
+                t = checkCode(n, i, privateNum);
+              }
+            } else {
+              haveSettings(prefsSectionName, prefsName)
+                ? ((i = getSettings(prefsSectionName, prefsName)),
+                  (n = !(
+                    "c" == e ||
+                    !(
+                      ("bad" == i || "bad" == bD(i) || offerTrial) &&
+                      "trial" == bD(i)
+                    )
+                  )))
+                : "c" == e
+                  ? (saveSettings(
+                      prefsSectionName,
+                      prefsName,
+                      bE((i = !isTimeLimited && offerTrial ? "trial" : "")),
+                    ),
+                    saveSettings(
+                      prefsSectionName,
+                      prefsVersionName,
+                      strScriptVersion,
+                    ),
+                    saveSettings(
+                      prefsSectionName,
+                      prefsLicVersion,
+                      licensingVersion,
+                    ),
+                    (n = false))
+                  : (n = true);
+              t = checkCode(n, i, privateNum);
+            }
+            return t;
+          }
+        }
+      }
+    }
+    var licensingVersion = "3.0.39";
+    null == vars.scriptName &&
+      alert("scriptName variable missing in settings object");
+    var strScriptName = vars.scriptName;
+    null == vars.scriptVersion &&
+      alert("scriptVersion variable missing in settings object");
+    var strScriptVersion = vars.scriptVersion;
+    null == vars.scriptURL &&
+      alert("scriptURL variable missing in settings object");
+    var strTrialUrl = vars.scriptURL;
+    null == vars.privateNumber &&
+      alert("privateNumber variable missing in settings object");
+    var privateNum = vars.privateNumber;
+    null == vars.productSKU &&
+      alert("productSKU variable missing in settings object");
+    var strSKU = vars.productSKU;
+    var strSKUArray = strSKU.toString().split("-");
+    if (null == strSKUArray || 2 != strSKUArray.length) {
+      return (
+        alert(
+          "Product SKU incorrectly entered in settings. Should looks like this: XXXX-SUL",
+        ),
+        false
+      );
+    }
+    null == vars.helpText && (vars.helpText = "");
+    null == vars.helpButtons && (vars.helpButtons = []);
+    var isTimeLimited =
+      vars.hasOwnProperty("isTimeLimited") && vars.isTimeLimited;
+    var strHeader = strSKUArray[0];
+    var betaSupportEmail = vars.hasOwnProperty("betaSupportEmail")
+      ? vars.betaSupportEmail
+      : "";
+    var offerTrial = !vars.hasOwnProperty("offerTrial") || vars.offerTrial;
+    var trialLengthDays = vars.hasOwnProperty("trialLengthDaysX")
+      ? vars.trialLengthDaysX
+      : Math.round(Math.sqrt(parseInt(bD("NTU3Ng==").substr(0, 2))));
+    var betaMode = !!vars.hasOwnProperty("offerBeta") && vars.offerBeta;
+    if (betaMode) {
+      null == vars.betaStartDate &&
+        alert("betaStartDate variable missing in settings object");
+      var betaStartDate = vars.betaStartDate;
+      null == vars.betaExpirationDate &&
+        alert("betaExpirationDate variable missing in settings object");
+      var betaExpirationDate = vars.betaExpirationDate;
+    }
+    var supportEmail =
+      vars.hasOwnProperty("externalSupportURL") && "" != vars.externalSupportURL
+        ? vars.externalSupportURL
+        : "http://aescripts.com/contact";
+    betaMode && "" != betaSupportEmail && (supportEmail = betaSupportEmail);
+    var aescriptsSupportUrl = "https://aescripts.com/contact";
+    var supportUrl =
+      vars.hasOwnProperty("externalSupportURL") && "" != vars.externalSupportURL
+        ? vars.externalSupportURL
+        : aescriptsSupportUrl;
+    var isAescriptsSupportUrl = supportUrl === aescriptsSupportUrl;
+    isAescriptsSupportUrl &&
+      (supportUrl = supportUrl.replace(/\/*/, "") + "/?direct=1&sku=");
+    var aescriptsRetrieveUrl =
+      "https://aescripts.com/downloadable/customer/products";
+    var retrieveUrl =
+      vars.hasOwnProperty("retrieveLicenseURL") && "" != vars.retrieveLicenseURL
+        ? vars.retrieveLicenseURL
+        : aescriptsRetrieveUrl;
+    var exchangeUrl = "https://license.aescripts.com/exchange";
+    var useLegacyPrefsHeader =
+      !!vars.hasOwnProperty("useLegacyPrefsHeader") &&
+      vars.useLegacyPrefsHeader;
+    var managerAppUrl =
+      "https://aescripts.com/learn/aescripts-aeplugins-manager-app/";
+    var remindMeLaterDays = 7;
+    var doUpdateCheck = true;
+    var updateCheckInterval = 5;
+    var maxUIButtons = 3;
+    var licV = 2;
+    var wx = __BLOB__BLOB_000260__;
+    var mx = __BLOB__BLOB_000261__;
+    function JSONify(string, mode, prettyJSON) {
+      if (typeof JSON !== "object") {
+        JSON = {};
+      }
+      (function () {
+        function f(n) {
+          return n < 10 ? "0" + n : n;
+        }
+        function this_value() {
+          return this.valueOf();
+        }
+        function quote(string) {
+          rx_escapable.lastIndex = 0;
+          return rx_escapable.test(string)
+            ? '"' +
+                string.replace(rx_escapable, function (a) {
+                  var c = meta[a];
+                  return typeof c === "string"
+                    ? c
+                    : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+                }) +
+                '"'
+            : '"' + string + '"';
+        }
+        function str(key, holder) {
+          var mind = gap;
+          var value = holder[key];
+          if (
+            value &&
+            typeof value === "object" &&
+            typeof value.toJSON === "function"
+          ) {
+            value = value.toJSON(key);
+          }
+          if (typeof rep === "function") {
+            value = rep.call(holder, key, value);
+          }
+          switch (typeof value) {
+            case "string":
+              return quote(value);
+            case "number":
+              return isFinite(value) ? String(value) : "null";
+            case "boolean":
+            case "null":
+              return String(value);
+            case "object":
+              if (!value) {
+                return "null";
+              }
+              gap += indent;
+              partial = [];
+              if (Object.prototype.toString.apply(value) === "[object Array]") {
+                length = value.length;
+                for (var i = 0; i < length; i += 1) {
+                  partial[i] = str(i, value) || "null";
+                }
+                v =
+                  partial.length === 0
+                    ? "[]"
+                    : gap
+                      ? "[\n" +
+                        gap +
+                        partial.join(",\n" + gap) +
+                        "\n" +
+                        mind +
+                        "]"
+                      : "[" + partial.join(",") + "]";
+                gap = mind;
+                return v;
+              }
+              if (rep && typeof rep === "object") {
+                length = rep.length;
+                for (var i = 0; i < length; i += 1) {
+                  if (typeof rep[i] === "string") {
+                    k = rep[i];
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + gap ? ": " : ":" + v);
+                    }
+                  }
+                }
+              } else {
+                for (var k in value) {
+                  if (Object.prototype.hasOwnProperty.call(value, k)) {
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + gap ? ": " : ":" + v);
+                    }
+                  }
+                }
+              }
+              v =
+                partial.length === 0
+                  ? "{}"
+                  : gap
+                    ? "{\n" +
+                      gap +
+                      partial.join(",\n" + gap) +
+                      "\n" +
+                      mind +
+                      "}"
+                    : "{" + partial.join(",") + "}";
+              gap = mind;
+              return v;
+          }
+        }
+        ("use strict");
+        var rx_one = /^[\],:{}\s]*$/;
+        var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+        var rx_three =
+          /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+        var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
+        var rx_escapable =
+          /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        var rx_dangerous =
+          /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        if (typeof Date.prototype.toJSON !== "function") {
+          Date.prototype.toJSON = function () {
+            return isFinite(this.valueOf())
+              ? this.getUTCFullYear() +
+                  "-" +
+                  f(this.getUTCMonth() + 1) +
+                  "-" +
+                  f(this.getUTCDate()) +
+                  "T" +
+                  f(this.getUTCHours()) +
+                  ":" +
+                  f(this.getUTCMinutes()) +
+                  ":" +
+                  f(this.getUTCSeconds()) +
+                  "Z"
+              : null;
+          };
+          Boolean.prototype.toJSON = this_value;
+          Number.prototype.toJSON = this_value;
+          String.prototype.toJSON = this_value;
+        }
+        if (typeof JSON.stringify !== "function") {
+          meta = {
+            "\b": "\\b",
+            "\t": "\\t",
+            "\n": "\\n",
+            "\f": "\\f",
+            "\r": "\\r",
+            '"': '\\"',
+            "\\": "\\\\",
+          };
+          JSON.stringify = function (value, replacer, space) {
+            gap = "";
+            indent = "";
+            if (typeof space === "number") {
+              for (var i = 0; i < space; i += 1) {
+                indent += " ";
+              }
+            } else {
+              if (typeof space === "string") {
+                indent = space;
+              }
+            }
+            rep = replacer;
+            if (
+              replacer &&
+              typeof replacer !== "function" &&
+              (typeof replacer !== "object" ||
+                typeof replacer.length !== "number")
+            ) {
+              throw new Error("JSON.stringify");
+            }
+            return str("", { "": value });
+          };
+        }
+      })();
+      var jsonParse = (function () {
+        function v(h, j, e) {
+          return j ? u[j] : String.fromCharCode(parseInt(e, 16));
+        }
+        var r =
+          "(?:-?\\b(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b)";
+        var k =
+          '(?:[^\\0-\\x08\\x0a-\\x1f"\\\\]|\\\\(?:["/\\\\bfnrt]|u[0-9A-Fa-f]{4}))';
+        k = '(?:"' + k + '*")';
+        var s = new RegExp(
+          "(?:false|true|null|[\\{\\}\\[\\]]|" + r + "|" + k + ")",
+          "g",
+        );
+        var t = new RegExp("\\\\(?:([^u])|u(.{4}))", "g");
+        var u = {
+          '"': '"',
+          "/": "/",
+          "\\": "\\",
+          b: "\b",
+          f: "\f",
+          n: "\n",
+          r: "\r",
+          t: "\t",
+        };
+        var w = new String("");
+        var x = Object.hasOwnProperty;
+        return function (h, j) {
+          h = h.match(s);
+          var c = h[0];
+          var l = false;
+          if ("{" === c) {
+            e = {};
+          } else if ("[" === c) {
+            e = [];
+          } else {
+            e = [];
+            l = true;
+          }
+          for (b, d = [e], m = 1 - l, y = h.length; m < y; ++m) {
+            c = h[m];
+            switch (c.charCodeAt(0)) {
+              default:
+                a = d[0];
+                a[b || a.length] = c;
+                b = void 0;
+                break;
+              case 34:
+                c = c.substring(1, c.length - 1);
+                if (c.indexOf("\\") !== -1) {
+                  c = c.replace(t, v);
+                }
+                a = d[0];
+                if (!b) {
+                  if (a instanceof Array) {
+                    b = a.length;
+                  } else {
+                    b = c || w;
+                    break;
+                  }
+                }
+                a[b] = c;
+                b = void 0;
+                break;
+              case 91:
+                a = d[0];
+                d.unshift((a[b || a.length] = []));
+                b = void 0;
+                break;
+              case 93:
+                d.shift();
+                break;
+              case 102:
+                a = d[0];
+                a[b || a.length] = false;
+                b = void 0;
+                break;
+              case 110:
+                a = d[0];
+                a[b || a.length] = null;
+                b = void 0;
+                break;
+              case 116:
+                a = d[0];
+                a[b || a.length] = true;
+                b = void 0;
+                break;
+              case 123:
+                a = d[0];
+                d.unshift((a[b || a.length] = {}));
+                b = void 0;
+                break;
+              case 125:
+                d.shift();
+                break;
+            }
+          }
+          if (l) {
+            if (d.length !== 1) {
+              throw new Error();
+            }
+            e = e[0];
+          } else {
+            if (d.length) {
+              throw new Error();
+            }
+          }
+          if (j) {
+            var p = function (n, o) {
+              var f = n[o];
+              if (f && typeof f === "object") {
+                var i = null;
+                for (var g in f) {
+                  if (x.call(f, g) && f !== n) {
+                    var q = p(f, g);
+                    if (q !== void 0) {
+                      f[g] = q;
+                    } else {
+                      i || (i = []);
+                      i.push(g);
+                    }
+                  }
+                }
+                if (i) {
+                  for (g = i.length; --g >= 0; ) {
+                    delete f[i[g]];
+                  }
+                }
+              }
+              return j.call(n, o, f);
+            };
+            e = p({ "": e }, "");
+          }
+          return e;
+        };
+      })();
+      try {
+        switch (mode) {
+          case "parse":
+            if (
+              /^[\],:{}\s]*$/.test(
+                string
+                  .replace(/\\["\\\/bfnrtu]/g, "@")
+                  .replace(
+                    /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
+                    "]",
+                  )
+                  .replace(/(?:^|:|,)(?:\s*\[)+/g, ""),
+              )
+            ) {
+              return jsonParse(string);
+            } else {
+              alert("JSON validation error\n" + string.substring(0, 1000));
+            }
+            break;
+          case "stringify":
+            return JSON.stringify(string, undefined, prettyJSON);
+            break;
+        }
+      } catch (e) {
+        alert(e.toString());
+      }
+    }
+    $.locale = isAE() ? app.isoLanguage : $.locale;
+    var locale = $.locale.split("_")[0];
+    ("fr" == locale && "de" == locale && "es" == locale) || (locale = "en");
+    var strTempCode = localize({
+      de:
+        "Du hast eine tempor\xe4re Seriennummer eingegeben, die gegen eine permanente Lizenz eingetauscht werden muss.\n\nSobald Du eine permanente Lizenz erhalten hast, kannst Du sie verwenden um" +
+        strScriptName +
+        " zu registrieren.  Der Austausch ist schnell und unkompliziert, gehe einfach zu:\n\n" +
+        exchangeUrl +
+        "\n\nWillst Du jetzt dorthin gehen?",
+      en:
+        "You entered a temporary serial number that needs to be exchanged for a permanent license.\n\nOnce you obtain your permanent license you can use it to register " +
+        strScriptName +
+        ".  It is quick and easy to exchange it, simply go to:\n\n" +
+        exchangeUrl +
+        "\n\nWould you like to go there now?",
+      es:
+        "Ha introducido un n\xfamero de serie provisional que necesita ser sustituido por una licencia permanente.\n\nUna vez obtenga una licencia permamente puede usarla para registrar " +
+        strScriptName +
+        ". Reemplazarla es r\xe1pido y sencillo, simplemente vaya a:\n\n" +
+        exchangeUrl +
+        "\n\n\xbfQuiere ir all\xed ahora?",
+      fr:
+        "Vous avez entr\xe9 un num\xe9ro de s\xe9rie temporaire devant \xeatre \xe9chang\xe9 contre une licence permanente.\n\nUne fois votre licence permanente acquise, vous pouvez l\'utiliser pour vous enregistrer " +
+        strScriptName +
+        ".  Le changement est rapide et facile,  allez simplement \xe0:\n\n" +
+        exchangeUrl +
+        "\n\nVoulez-vous y aller maintenant?",
+    });
+    var strExpiredAlert = localize({
+      de:
+        "Die Testversion ist leider abgelaufen.\nDu kannst unter " +
+        strTrialUrl +
+        " eine Lizenz erwerben.\n\nM\xf6chtest Du jetzt dorthin gehen?",
+      en:
+        "Sorry, this trial version has expired. \nYou can purchase a license at " +
+        strTrialUrl +
+        "\n\nWould you like to go there now?",
+      es:
+        "Lo siento, esta versi\xf3n de prueba ha expirado.\nPuede obtener una licencia en" +
+        strTrialUrl +
+        "\n\n\xbfQuiere ir all\xed ahora?",
+      fr:
+        "D\xe9sol\xe9, la p\xe9riode d\'essai a expir\xe9.\nPour acheter une licence, veuillez vous rendre sur la page " +
+        strTrialUrl +
+        "\n\nVoulez-vous ouvrir cette page maintenant ?",
+    });
+    var strBetaExpiredAlert = localize({
+      de: "Die Betaversion ist leider abgelaufen",
+      en: "Sorry, this beta version has expired",
+      es: "Lo siento est\xe1 versi\xf3n beta ha expirado",
+      fr: "D\xe9sol\xe9, la p\xe9riode beta a expir\xe9",
+    });
+    var strBetaCodeAlert = localize({
+      de:
+        "Beta Lizenzcode erkannt f\xfcr " +
+        strScriptName +
+        "\nBeta Lizenzen k\xf6nnen nur f\xfcr Betaversionen verwendet werden. Bitte verwende eine normale Lizenz f\xfcr diese Version.",
+      en:
+        "Beta license code detected for " +
+        strScriptName +
+        "\nBeta license codes can only be used on beta versions, please obtain a normal license to use this version.",
+      es:
+        "Licencia beta detectada para " +
+        strScriptName +
+        "\nLas licencias beta s\xf3lo pueden ser usadas con versiones beta, por favor obtenga una licencia normal para usar esta versi\xf3n.",
+      fr:
+        "Licence beta d\xe9tect\xe9e pour " +
+        strScriptName +
+        "\nLes codes pour licence beta ne peuvent \xeatre utilis\xe9s que pour les versions beta, merci de demander une licence r\xe9guli\xe8re pour utiliser cette version.",
+    });
+    var strBetaLicReq = localize({
+      de: "F\xfcr diese Betaversion wird eine Lizenz ben\xf6tigt.\nBitte kontaktiere den Autor f\xfcr eine Betatester-Lizenz.",
+      en: "A license is required to run this beta version\nPlease contact the author for a beta testing license.",
+      es: "Es necesaria una licencia para utilizar esta versi\xf3n beta.\nPor favor, p\xf3ngase en contacto con el autor para obtener una licencia beta.",
+      fr: "Une licence est requise pour ex\xe9cuter cette version beta\nMerci de contacter l\'auteur pour une licence beta de test.",
+    });
+    var strUsers = localize({
+      de: "f\xfcr %u Nutzer",
+      en: "for %u user",
+      es: "para %u usuario",
+      fr: "pour %u utilisateur",
+    });
+    var strRegSuccess = localize({
+      de: "Registrierung erfolgreich " + strUsers,
+      en: "Registration successful " + strUsers,
+      es: "Registro completado " + strUsers,
+      fr: "Enregistrement r\xe9ussi " + strUsers,
+    });
+    var strRegSuccess1 = localize({
+      de: "Danke f\xfcr den Kauf von " + strScriptName,
+      en: "Thank you for purchasing " + strScriptName,
+      es: "Gracias por comprar " + strScriptName,
+      fr: "Merci d\'avoir achet\xe9 " + strScriptName,
+    });
+    var strInvalidCode = localize({
+      de: "Entschuldigung, der Lizenzcode ist nicht g\xfcltig.",
+      en: "Sorry, the license code is not valid",
+      es: "Lo siento, la licencia no es v\xe1lida",
+      fr: "D\xe9sol\xe9, ce num\xe9ro de licence n\'est pas valide.",
+    });
+    var strFirewall = localize({
+      de: "Eine Firewall oder ein Antivirus-Programm blockiert den Lizenz-Prozess. Bitte deaktiviere das Antivirus-Programm oder konfiguriere das System so, dass die Lizenz verifiziert werden kann.",
+      en: "A firewall or virus protection software is blocking the licensing process.  Please disable this or configure it to allow this process so that the license can be verified.",
+      es: 'Un software de "firewall" o de protecci\xf3n antivirus est\xe1 bloqueando el proceso de concesi\xf3n de licencias. Desactivela o configurela para permitir este proceso para que la licencia puede ser verificada.',
+      fr: "Un logiciel pare-feu ou un logiciel antivirus bloque le processus de v\xe9rification de licence. Veuillez le d\xe9sactiver ou le configurer pour permettre \xe0 ce processus de v\xe9rifier la licence.",
+    });
+    var strContactSupport = localize({
+      de: "Wenn Du Hilfe ben\xf6tigst, kontaktiere bitte " + supportEmail,
+      en: "If you require assistance please contact " + supportEmail,
+      es: "Si necesita ayuda, por favor contacte " + supportEmail,
+      fr: "Si vous avez besoin d\'aide, merci de contacter " + supportEmail,
+    });
+    var strCorruptedCode = localize({
+      de:
+        "Entschuldigung, irgendetwas ist mit dem " +
+        strScriptName +
+        " Lizenzcode passiert. Bitte gebe ihn erneut ein.\n\n" +
+        strContactSupport,
+      en:
+        "Sorry, something must have happened to the " +
+        strScriptName +
+        " license code.  Please re-enter it at the prompt.\n" +
+        strContactSupport,
+      es:
+        "Lo siento, algo ha ocurrido con la licencia de " +
+        strScriptName +
+        ". Por favor, vuelva a introducirla en la casilla.\n" +
+        strContactSupport,
+      fr:
+        "D\xe9sol\xe9, il y a eu un probl\xe8me avec le num\xe9ro de licence pour " +
+        strScriptName +
+        ". Merci de bien vouloir le saisir \xe0 nouveau.n\n" +
+        strContactSupport,
+    });
+    var strTrialThanks = localize({
+      de: "Danke, dass Du " + strScriptName + " ausprobierst!",
+      en: "Thanks for trying " + strScriptName + "!",
+      es: "\xa1Gracias por probar " + strScriptName + "!",
+      fr: "Merci d\'avoir essay\xe9 " + strScriptName + "!",
+    });
+    var strTrialTxt = localize({
+      de: "Testversion - noch %E Tage g\xfcltig",
+      en: "Trial version - %E days left",
+      es: "Versi\xf3n de prueba - faltan %E d\xedas",
+      fr: "Version d\'\xe9valuation - %E jour(s) restant",
+    });
+    var strTrialTxt2 = localize({
+      de: "%E Programmstarts \xfcbrig f\xfcr die Testversion",
+      en: "%E launches left in the trial",
+      es: "%E usos restantes de la versi\xf3n de prueba",
+      fr: "Il vous reste %E essais",
+    });
+    var strTrialWelcomeHeader = localize({
+      de: "Willkommen bei " + strScriptName,
+      en: "Welcome to " + strScriptName,
+      es: "Bienvenido a " + strScriptName,
+      fr: "Bienvenue sur " + strScriptName,
+    });
+    var strOK = localize({ de: "OK", en: "OK", es: "OK", fr: "OK" });
+    var strCancel = localize({
+      de: "Abbrechen",
+      en: "Cancel",
+      es: "Cancelar",
+      fr: "Annuler",
+    });
+    var strGetSupport = localize({
+      de: "Support zu erhalten",
+      en: "Get support",
+      es: "Obtener apoyo",
+      fr: "Contacter le support client",
+    });
+    var strRetrieveLic = localize({
+      de: "%t vergessen?",
+      en: "Retrieve %t",
+      es: "Recuperar %t",
+      fr: "Retrouver votre %t",
+    });
+    var strBuyLic = localize({
+      de: "%t Kaufen",
+      en: "Buy %t",
+      es: "Compra %t",
+      fr: "Acheter une %t",
+    });
+    var strLicense = localize({
+      de: "Lizenz",
+      en: "License",
+      es: "licencia",
+      fr: "Licence",
+    });
+    var strDownloads = localize({
+      de: "Download",
+      en: "Download",
+      es: "Descarga",
+      fr: "T\xe9l\xe9chargement",
+    });
+    var strPpcNotSupported = localize({
+      de: "PowerPC (PPC) Prozessoren werden leider nicht unterst\xfctzt. Bitte kontaktiere den Support f\xfcr weitere Informationen.",
+      en: "Sorry, PowerPC (PPC) processors are not supported, please contact support for further assistance.",
+      es: "Lo siendto, los procesadores PowerPC (PPC) no est\xe1n soportados, por favor contacte con soporte para m\xe1s informaci\xf3n.",
+      fr: "D\xe9sol\xe9, les processeurs PowerPC (PPC) ne sont pas support\xe9s, veuillez contacter le service client\xe8le pour plus de d\xe9tails.",
+    });
+    var strAllowScriptsPrefsSection =
+      parseFloat(app.version) < 16.1
+        ? localize({
+            de: "Allgemein",
+            en: "General",
+            es: "General",
+            fr: "G\xe9n\xe9ral",
+          })
+        : localize({
+            de: "Skripterstellung und Expression",
+            en: "Scripting & Expressions",
+            es: "Escripts y expresi\xf3nes",
+            fr: "Scripts et expressions",
+          });
+    var strErrScriptAccess = localize({
+      de:
+        strScriptName +
+        ' ben\xf6tigt die Erlaubnis Dateien zu schreiben\n Gehe in Voreinstellungen von After Effects in die Rubrik "' +
+        strAllowScriptsPrefsSection +
+        '" und aktiviere die Option "Skripten k\xf6nnen Dateien schreiben und haben Netzwerkzugang".',
+      en:
+        strScriptName +
+        ' requires access to write files\nGo to the "' +
+        strAllowScriptsPrefsSection +
+        '" panel of the application preferences and make sure "Allow Scripts to Write Files and Access Network" is checked.',
+      es:
+        strScriptName +
+        ' necesita poder escribir archivos\nVaya al panel "' +
+        strAllowScriptsPrefsSection +
+        '" de las Preferencias y aseg\xfarese de que "Permitir que los scripts puedan escribir archivos y acceder a la red" est\xe1 marcado.\n',
+      fr:
+        strScriptName +
+        " n\xe9cessite les droits d\'\xe9criture de fichiers\nAllez dans le panneau \"" +
+        strAllowScriptsPrefsSection +
+        '" des pr\xe9f\xe9rences de l\'application et cochez \n"Autoriser les scripts \xe0 \xe9crire des fichiers et \xe0 acc\xe9der au r\xe9seau"',
+    });
+    var strUpdateLicenseHeader = localize({
+      de: strScriptName + " Lizenz-Update ben\xf6tigt",
+      en: strScriptName + " License Update Required",
+      es: strScriptName + " necesita actualizar la licencia",
+      fr: "La licence de " + strScriptName + " doit \xeatre mise \xe0 jour",
+    });
+    var strLicenseDownloadOptions = localize({
+      de: 'Alle Deine %t findest Du unter "My Downloads & Licenses" in Deinem aescripts.com Benutzer-Account, oder \xfcber unsere Manager-App.',
+      en: 'All your %t are in the "My Downloads & Licenses" section of your aescripts.com user account, or via our Manager App.',
+      es: 'Todas sus %t est\xe1n en la secci\xf3n "My Downloads & Licenses" de su cuenta de usuario en aescripts.com, o a trav\xe9s de nuestra App Manager.',
+      fr: 'Toutes vos %t se trouvent dans la section "My Downloads & Licenses" de votre compte utilisateur sur aescripts.com, ou via notre App Manager.',
+    });
+    var strMyDownloads = localize({
+      de: "Gehen Sie zu My Downloads & Licenses",
+      en: "Go to My Downloads & Licenses",
+      es: "Ir a My Downloads & Licenses",
+      fr: "Aller \xe0 My Downloads & Licenses",
+    });
+    var strDownloadManager = localize({
+      de: "Laden Sie die Manager-App herunter",
+      en: "Download Manager App",
+      es: "Descargar App Manager",
+      fr: "T\xe9l\xe9charger App Manager",
+    });
+    var strOldLicenseFormat = localize({
+      de: "Die Lizenz sollte so aussehen:\n\nFirstname**Lastname**111111111SUL",
+      en: "License should look like this:\n\nFirstname**Lastname**111111111SUL",
+      es: "La licencia debe tener este aspecto:\n\nNombre**Apellido**111111111SUL",
+      fr: "Votre licence doit \xeatre similaire \xe0 : \n\nPr\xe9nom**Nom**111111111SUL",
+    });
+    var strNewLicenseFormat = localize({
+      de: "Die Lizenz sollte so aussehen:\n\nPRODUCTID*FIRSTNAME*LASTNAME*1111111SUL1",
+      en: "License should look like this:\n\nPRODUCTID*FIRSTNAME*LASTNAME*1111111SUL1",
+      es: "La licencia debe tener este aspecto:\n\nPRODUCTID*NOMBRE*APELLIDO*1111111SUL1",
+      fr: "Votre licence doit \xeatre similaire \xe0 : \n\nPRODUCTID*PRENOM*NOM*1111111SUL1",
+    });
+    var strRegistration = localize({
+      de: "Registriert f\xfcr: ",
+      en: "Registered to: ",
+      es: "Registrado a: ",
+      fr: "Enregistr\xe9 pour: ",
+    });
+    var strUnknownError = localize({
+      de:
+        "Es gab einen unerwarteten Fehler\nBitte \xf6ffne hier ein Support-Ticket:\n" +
+        supportEmail +
+        "\n\nund f\xfcge einen Screenshot der Fehlermeldung bei\n\n",
+      en:
+        "There was an unexpected error\nPlease please open a support ticket here:\n" +
+        supportEmail +
+        "\n\nand submit screenshot of this error message\n\n",
+      es:
+        "Se ha producido un error desconocido\nPor favor habra un ticket de soporte aqui:\n" +
+        supportEmail +
+        "\n\ny presente una captura de pantalla con este mensaje de error\n\n",
+      fr:
+        "Une erreur vient de se produire \nVeuillez ouvrir un ticket de service client \xe0 cette adresse:\n" +
+        supportEmail +
+        "\n\net n\'oubliez pas d\'y joindre une capture d\'\xe9cran de ce message\n\n",
+    });
+    var strWrongProduct = localize({
+      de: "Dieser Lizenz-Code ist f\xfcr ein anderes Produkt, bitte stelle sicher, dass du den richtigen Lizenzcode eingibst\n\n",
+      en: "This license code is for a different product, please double check that you are entering the correct license\n\n",
+      es: "Este c\xf3digo de licencia es para un producto diferente, por favor, comprobar que esta introduciendo la licencia correcta\n\n",
+      fr: "Vous venez d\'entrer la cl\xe9 de licence d\'un autre produit, assurez-vous d\'utiliser la bonne cl\xe9 de licence\n\n",
+    });
+    var strNewVersionAvailableHdr = localize({
+      de: strScriptName + " Update verf\xfcgbar",
+      en: strScriptName + " Update Available",
+      es: strScriptName + " Actualizaci\xf3n disponible",
+      fr: strScriptName + " Mise \xe0 jour disponible",
+    });
+    var strNewVersionAvailable = localize({
+      de:
+        "Eine neuere Version von " + strScriptName + " ist verf\xfcgbar: v%\n",
+      en: "A newer version of " + strScriptName + " is available: %v\n",
+      es:
+        "Una versi\xf3n nueva de " +
+        strScriptName +
+        " est\xe1 disponible: v%\n",
+      fr: "Une version plus de " + strScriptName + " est disponible: v%\n",
+    });
+    var strCurrentVersion = localize({
+      de: "Votre version install\xe9e est: v%",
+      en: "Your installed version is: %v",
+      es: "Su versi\xf3n instalada es: v%",
+      fr: "Votre version install\xe9e est: v%",
+    });
+    var strDownload = localize({
+      de: "Download",
+      en: "Download",
+      es: "Descargar",
+      fr: "T\xe9l\xe9charger",
+    });
+    var strVersion = localize({
+      de: "Version",
+      en: "version",
+      es: "versi\xf3n",
+      fr: "version",
+    });
+    var strSkipVersion = localize({
+      de: "Diese Version \xdcberspringen",
+      en: "Skip this Version",
+      es: "Salta esta versi\xf3n",
+      fr: "Ignorer cette version",
+    });
+    var strRemindMeLater = localize({
+      de: "Erinnere mich sp\xe4ter",
+      en: "Remind Me Later",
+      es: "Recu\xe9rdame m\xe1s tarde",
+      fr: "Rappelle-moi plus tard",
+    });
+    var strNewestVersionAvailable = localize({
+      de: "Neueste verf\xfcgbare Version",
+      en: "Newest available version",
+      es: "Versi\xf3n mas nueva disponible",
+      fr: "Nouvelle version disponible",
+    });
+    var strVersionRev = localize({
+      de: "v%a%b - %c",
+      en: "v%a%b - %c",
+      es: "v%a%b - %c",
+      fr: "v%a%b - %c",
+    });
+    var strDeactivate = localize({
+      de: "Lizenz Deaktivieren",
+      en: "Deactivate License",
+      es: "Desactivar Licencia",
+      fr: "D\xe9sactiver la licence",
+    });
+    var strVersionCheck = localize({
+      de: "Automatisch nach Aktualisierungen suchen",
+      en: "Check for updates automatically",
+      es: "Revisar actualizaciones automaticamente",
+      fr: "V\xe9rifier les mises \xe0 jour automatiquement",
+    });
+    var strCheckNow = localize({
+      de: "Jetzt nach Update suchenn",
+      en: "Check for update now",
+      es: "Buscar actualizaci\xf3n ahora",
+      fr: "V\xe9rifier les mise \xe0 jour maintenant",
+    });
+    var strUpdateCheckError = localize({
+      de: "Bei der Suche nach Updates ist ein Fehler aufgetreten.\nBitte vergewissern Sie sich, dass Sie \xfcber eine g\xfcltige Internetverbindung verf\xfcgen und diese nicht durch Firewalls blockiert wird.",
+      en: "There was an error when checking for updates.\nPlease verify that you have a valid internet connection and that it is not blocked by any firewalls.",
+      es: "Hubo un error en la comprobaci\xf3n de actualizaciones.\nPor favor compruebe que tiene una conexi\xf3n a Internet v\xe1lida y que no est\xe9 bloqueada por un cortafuegos.",
+      fr: "Une erreur s\'est produite lors de la recherche de mises \xe0 jour.\nV\xe9rifiez que votre connexion Internet est valide et qu\'elle n\'est bloqu\xe9e par aucun pare-feu.",
+    });
+    var strUpToDate = localize({
+      de:
+        "Sie sind auf dem neuesten Stand! \n" +
+        strScriptName +
+        " " +
+        strVersion +
+        " " +
+        strScriptVersion +
+        " ist derzeit die neueste Version verf\xfcgbar.",
+      en:
+        "You are up to date!\n" +
+        strScriptName +
+        " " +
+        strVersion +
+        " " +
+        strScriptVersion +
+        " is currently the latest version available.",
+      es:
+        "\xa1Est\xe1 actualizado! \n" +
+        strScriptName +
+        " " +
+        strVersion +
+        " " +
+        strScriptVersion +
+        " es actualmente la \xfaltima versi\xf3n disponible.",
+      fr:
+        "Vous \xeates \xe0 jour!\n" +
+        strScriptName +
+        " " +
+        strVersion +
+        " " +
+        strScriptVersion +
+        " est actuellement la derni\xe8re version disponible.",
+    });
+    var strInvalidLicense = localize({
+      de: "Ung\xfcltige Lizenz",
+      en: "Invalid license",
+      es: "La licencia no es v\xe1lida",
+      fr: "Licence non valide",
+    });
+    var strLicenseRemoved = localize({
+      de: "Lizenz entfernt",
+      en: "License removed",
+      es: "Licencia eliminada",
+      fr: "Licence supprim\xe9e",
+    });
+    var strLicense = localize({
+      de: "Lizenz",
+      en: "License",
+      es: "Licencia",
+      fr: "Licence",
+    });
+    var strBTA = localize({
+      de: "Beta-Lizenz",
+      en: "Beta License",
+      es: "Licencia Beta",
+      fr: "Licence Beta",
+    });
+    var strEDU = localize({
+      de: "EDU-Lizenz",
+      en: "Educational License",
+      es: "Licencia Educacional",
+      fr: "T\xe9l\xe9charger",
+    });
+    var strFLT = localize({
+      de: "Floating-Lizenz",
+      en: "Floating License",
+      es: "Licencia flotante",
+      fr: "Licence flottante",
+    });
+    var strUNKNOWN = localize({
+      de: "License mit unbekanntem Typ",
+      en: "License of unknown type",
+      es: "Licencia de tipo desconocido",
+      fr: "Licence inconnue",
+    });
+    var strTrialExpired = localize({
+      de: "Testversion abgelaufen",
+      en: "Hadi SLH",
+      es: "Termino de prueba expirado",
+      fr: "\xc9valuation termin\xe9e",
+    });
+    var licErrors = {
+      de: {
+        "-1": { detail: "", title: "Ung\xfcltige Lizenz (-1)" },
+        "-10": {
+          detail: "Auf dem Lizenzserver sind alle Lizenzen bereits vergeben",
+          title: "Keine freien Slots (-10)",
+        },
+        "-100": {
+          detail:
+            "Eine Lizenz kann \xfcber den Button \'Lizenz Kaufen\' erworben werden",
+          title: "Testversion abgelaufen",
+        },
+        "-101": {
+          detail:
+            "Bitte konfigurieren oder deaktivieren Sie alle Firewalls oder Virenprogramme, die den Zugriff auf den Basisordner blockieren k\xf6nnten. Wenn dieser Zugriff blockiert ist, kann die Lizenz nicht verifiziert werden.",
+          title: "Zugriff blockiert (-101)",
+        },
+        "-102": {
+          detail:
+            "Bitte kontaktieren Sie den Support und senden Sie einen Screenshot dieses Fehlers. " +
+            supportEmail,
+          title: "Kein Ergebnis (-102)",
+        },
+        "-103": {
+          detail: "Could not find the number of trial days",
+          title: "Anzahl der Test-Tage nicht festgelegt (-103)",
+        },
+        "-104": {
+          detail: "Die Lizenz ist nicht f\xfcr dieses Produkt",
+          title: "Ung\xfcltige Lizenz (-104)",
+        },
+        "-105": {
+          detail:
+            "Eine Beta-Lizenz kann f\xfcr diese Vollversion nicht verwendet werden",
+          title: "Beta-Lizenz nicht verwendbar (-105)",
+        },
+        "-106": {
+          detail:
+            "Dieses Produkt beinhaltet keine Testversion und ben\xf6tigt eine Lizenz",
+          title: "Bitte Lizenz installieren (-106)",
+        },
+        "-107": {
+          detail:
+            "Diese Beta beinhaltet keine Testversion und ben\xf6tigt eine Lizenz",
+          title: "Bitte Lizenz installieren (-107)",
+        },
+        "-108": {
+          detail:
+            "Bitte konfigurieren oder deaktivieren Sie alle Firewalls oder Virenprogramme, die den Zugriff auf den Basisordner blockieren k\xf6nnten. Wenn dieser Zugriff blockiert ist, kann die Lizenz nicht verifiziert werden.",
+          title: "Nicht in der Lage, auf den Home-Ordner zuzugreifen (-108)",
+        },
+        "-11": {
+          detail: "Die Lizenz kann auf dem Lizenzserver nicht gefunden werden",
+          title: "Unbekannte Lizenz (-11)",
+        },
+        "-12": {
+          detail:
+            "Die Lizenz konnte nicht deaktiviert werden, da sie dem Server unbekannt ist",
+          title: "Unbekannte Lizenz (-12)",
+        },
+        "-13": {
+          detail:
+            "Die IP-Adresse dieses Rechners ist \xfcber eine Blacklist auf dem Lizenzserver gesperrt",
+          title: "Klient ist auf Blacklist (-13)",
+        },
+        "-14": {
+          detail: "Konnte keine Netzwerkkarte finden",
+          title: "Keine Netzwerkkarte (-14)",
+        },
+        "-2": { detail: "", title: "Ung\xfcltige Lizenz (-2)" },
+        "-20": {
+          detail: "Die Lizenzdauer beginnt am ",
+          title: "Die Lizenzdauer hat noch nicht begonnen (-20)",
+        },
+        "-21": {
+          detail: "Lizenzlaufzeit endete am ",
+          title: "Die Lizenzdauer ist abgelaufen (-21)",
+        },
+        "-22": {
+          detail:
+            "Weitere Informationen zum Einrichten und Lizenzieren von Client-Computern finden Sie in den Anweisungen zum Server.",
+          title:
+            "Floating-Lizenzen k\xf6nnen nur mit dem Floating License Server verwendet werden (-22)",
+        },
+        "-3": { detail: "", title: "Lizenzdatei nicht gefunden (-3)" },
+        "-4": { detail: "", title: "Lizenzdatei besch\xe4digt (-4)" },
+        "-5": { detail: "", title: "Generischer Fehler (-5)" },
+        "-6": { detail: "", title: "Ung\xfcltiger Produktname (-6)" },
+        "-7": { detail: "", title: "Testversion (-7)" },
+        "-8": { detail: "", title: "Ung\xfcltige Lizenz (-8)" },
+        "-9": {
+          detail:
+            "Bitte stellen Sie sicher, dass der Lizenzserver ordnungsgem\xe4\xdf arbeitet",
+          title: "Kann Server nicht kontaktieren (-9)",
+        },
+        "-99": { detail: "", title: "Unbekannter Fehler (-99)" },
+        unknown: { detail: "", title: "Unbekannter Fehler (0)" },
+      },
+      en: {
+        "-1": { detail: "", title: "Invalid license (-1)" },
+        "-10": {
+          detail: "There are no more free slots on the license server",
+          title: "No free slots (-10)",
+        },
+        "-100": {
+          detail:
+            "You can purchase a license by clicking the button \'Buy License\'",
+          title: "Hadi SLH",
+        },
+        "-101": {
+          detail:
+            "Please configure or disable any firewalls or virus software that might be blocking access to the home folder. If this access is blocked the license cannot be verified.",
+          title: "Access Blocked(-101)",
+        },
+        "-102": {
+          detail:
+            "Please contact support " +
+            supportEmail +
+            " and send a screenshot of this error.\n\n",
+          title: "No result code (-102)",
+        },
+        "-103": {
+          detail: "Could not find the number of trial days",
+          title: "No trial days found (-103)",
+        },
+        "-104": {
+          detail: "The license is not for this product",
+          title: "License mismatch (-104)",
+        },
+        "-105": {
+          detail: "A beta license cannot be used for the full version",
+          title: "Cannot use beta license (-105)",
+        },
+        "-106": {
+          detail: "This product does not offer a trial and requires a license",
+          title: "Please install a license (-106)",
+        },
+        "-107": {
+          detail:
+            "The beta version does not offer a trial and requires a license",
+          title: "Please install a license (-107)",
+        },
+        "-108": {
+          detail:
+            "Please configure or disable any firewalls or virus software that might be blocking access to the home folder. If this access is blocked the license cannot be verified.",
+          title: "Not able to access home folder (-108)",
+        },
+        "-11": {
+          detail: "The license cannot be found on the license server",
+          title: "Unknown license (-11)",
+        },
+        "-12": {
+          detail:
+            "The license you are trying to deactivate is not found on the license server",
+          title: "Unknown license (-12)",
+        },
+        "-13": {
+          detail: "Your client IP is blacklisted on the license server",
+          title: "Client blacklisted (-13)",
+        },
+        "-14": {
+          detail: "Could not find a network adapter",
+          title: "No network adapter (-14)",
+        },
+        "-2": { detail: "", title: "Invalid license (-2)" },
+        "-20": {
+          detail: "License period starts on ",
+          title: "License period has not started yet (-20)",
+        },
+        "-21": {
+          detail: "License period ended on ",
+          title: "License period has ended (-21)",
+        },
+        "-22": {
+          detail:
+            "Please refer to the server instructions on how to setup and license client machines.",
+          title:
+            "Floating licenses can only be used with the Floating License Server (-22)",
+        },
+        "-3": { detail: "", title: "License file not found (-3)" },
+        "-4": { detail: "", title: "License file corrupted (-4)" },
+        "-5": { detail: "", title: "Generic error (-5)" },
+        "-6": { detail: "", title: "Invalid product name (-6)" },
+        "-7": { detail: "", title: "Trial (-7)" },
+        "-8": { detail: "", title: "Invalid license (-8)" },
+        "-9": {
+          detail: "Please make sure the license server is running properly",
+          title: "Cannot connect to server (-9)",
+        },
+        "-99": { detail: "", title: "Unknown error (-99)" },
+        unknown: { detail: "", title: "Unknown error (0)" },
+      },
+      es: {
+        "-1": { detail: "", title: "La licencia no es v\xe1lida (-1)" },
+        "-10": {
+          detail: "No hay m\xe1s espacios libres en el servidor de licencias",
+          title: "No hay espacios libres (-10)",
+        },
+        "-100": {
+          detail:
+            "Puede adquirir una licencia haciendo clic en el bot\xf3n \'Comprar Licencia\'",
+          title: "Esta versi\xf3n de prueba se ha expirado",
+        },
+        "-101": {
+          detail:
+            "Configure o desactive cualquier firewall o software antivirus que pueda estar bloqueando el acceso a la carpeta de inicio. Si este acceso est\xe1 bloqueado, la licencia no se puede verificar.",
+          title: "Acceso bloqueado (-101)",
+        },
+        "-102": {
+          detail:
+            "Por favor, p\xf3ngase en contacto con soporte y env\xede una captura de pantalla de este error. " +
+            supportEmail,
+          title: "No hay c\xf3digo de resultado (-102)",
+        },
+        "-103": {
+          detail: "No se pudo encontrar el n\xfamero de d\xedas de prueba",
+          title: "No se encontraron d\xedas de prueba (-103)",
+        },
+        "-104": {
+          detail: "La licencia no es para este producto",
+          title: "La licencia no es la correcta (-104)",
+        },
+        "-105": {
+          detail:
+            "No se puede utilizar una licencia \'beta\' con esta versi\xf3n",
+          title: "No se puede usar licencia beta (-105)",
+        },
+        "-106": {
+          detail:
+            "Este producto no ofrece una version de prueba y requiere una licencia",
+          title: "Por favor, instale una licencia (-106)",
+        },
+        "-107": {
+          detail:
+            "La versi\xf3n beta no ofrece una versi\xf3n de prueba y requiere una licencia",
+          title: "Por favor, instale una licencia (-107)",
+        },
+        "-108": {
+          detail:
+            "Configure o desactive cualquier firewall o software antivirus que pueda estar bloqueando el acceso a la carpeta de inicio. Si este acceso est\xe1 bloqueado, la licencia no se puede verificar.",
+          title: "No se puede acceder a la carpeta de inicio (-108)",
+        },
+        "-11": {
+          detail:
+            "No se puede encontrar esta licencia en el servidor de licencias",
+          title: "Licencia desconocida (-11)",
+        },
+        "-12": {
+          detail:
+            "La licencia que est\xe1 intentando de desactivar no se encuentra en el servidor de licencias",
+          title: "Licencia desconocida (-12)",
+        },
+        "-13": {
+          detail: "Su IP est\xe1 en la lista negra del servidor de licencias",
+          title: "IP en la lista negra (-13)",
+        },
+        "-14": {
+          detail: "No se pudo encontrar un adaptador de red",
+          title: "No hay adaptador de red (-14)",
+        },
+        "-2": { detail: "", title: "La licencia no es v\xe1lida (-2)" },
+        "-20": {
+          detail: "El per\xedodo de licencia comienza en ",
+          title: "El periodo de licencia no ha comenzado (-20)",
+        },
+        "-21": {
+          detail: "El per\xedodo de licencia termin\xf3 en ",
+          title: "El per\xedodo de licencia ha terminado (-21)",
+        },
+        "-22": {
+          detail:
+            "Consulte las instrucciones del servidor sobre c\xf3mo configurar y licenciar las m\xe1quinas cliente.",
+          title:
+            "Las licencias flotantes solo se pueden utilizar con el Servidor de licencias flotantes (-22)",
+        },
+        "-3": {
+          detail: "",
+          title: "No se encontr\xf3 el archivo de licencia (-3)",
+        },
+        "-4": {
+          detail: "",
+          title: "El archivo de licencia esta da\xf1ado (-4)",
+        },
+        "-5": { detail: "", title: "Error generico (-5)" },
+        "-6": {
+          detail: "",
+          title: "El nombre de el producto no v\xe1lido (-6)",
+        },
+        "-7": { detail: "", title: "Versi\xf3n de prueba (-7)" },
+        "-8": { detail: "", title: "La licencia no es v\xe1lida (-8)" },
+        "-9": {
+          detail:
+            "Aseg\xfarese de que el servidor de licencias est\xe1 funcionando correctamente",
+          title: "No es posible conectar con el servidor (-9)",
+        },
+        "-99": { detail: "", title: "Error desconocido (-99)" },
+        unknown: { detail: "", title: "Error desconocido (0)" },
+      },
+      fr: {
+        "-1": { detail: "", title: "Licence non valide (-1)" },
+        "-10": {
+          detail: "Il n\'y a plus de place sur le serveur de licence",
+          title: "Plus de place (-10)",
+        },
+        "-100": {
+          detail:
+            "Vous pouvez acqu\xe9rir une licence en cliquant sur le bouton \'Acheter une Licence\' ci-dessous",
+          title: "P\xe9riode d\'\xe9valuation expir\xe9e",
+        },
+        "-101": {
+          detail:
+            "Veuillez configurer ou d\xe9sactiver tous les firewall ou logiciels antivirus susceptibles de bloquer l\'acc\xe8s au dossier de d\xe9part. Si cet acc\xe8s est bloqu\xe9, la licence ne peut pas \xeatre v\xe9rifi\xe9e.",
+          title: "Acc\xe8s bloqu\xe9 (-101)",
+        },
+        "-102": {
+          detail:
+            "S\'il vous pla\xeet contacter le support et envoyer une capture d\'\xe9cran de cette erreur. " +
+            supportEmail,
+          title: "Pas de code de r\xe9sultat (-102)",
+        },
+        "-103": {
+          detail:
+            "Echec d\'identification du nombre de jour de p\xe9riode d\'essai disponible",
+          title: "Impossible de trouver des jours d\'essai (-103)",
+        },
+        "-104": {
+          detail: "Cette licence n\'est pas valable pour ce produit",
+          title: "Mauvaise licence (-104)",
+        },
+        "-105": {
+          detail:
+            "Une licence de version Beta ne peut \xeatre utilis\xe9e pour le produit final",
+          title: "Licence Beta invalide (-105)",
+        },
+        "-106": {
+          detail:
+            "Ce produit ne propose pas de p\xe9riode d\'essai et n\xe9cessite une licence",
+          title: "Licence n\xe9cessaire (-106)",
+        },
+        "-107": {
+          detail:
+            "La version Beta de ce produit ne propose pas de p\xe9riode d\'essai et n\xe9cessite une licence",
+          title: "Licence n\xe9cessaire (-107)",
+        },
+        "-108": {
+          detail:
+            "Veuillez configurer ou d\xe9sactiver tous les firewall ou logiciels antivirus susceptibles de bloquer l\'acc\xe8s au dossier de d\xe9part. Si cet acc\xe8s est bloqu\xe9, la licence ne peut pas \xeatre v\xe9rifi\xe9e.",
+          title: "Impossible d\'acc\xe9der au dossier de d\xe9part (-108)",
+        },
+        "-11": {
+          detail: "La licence est introuvable sur le serveur",
+          title: "Licence inconnue (-11)",
+        },
+        "-12": {
+          detail:
+            "La licence que vous essayez de d\xe9sactiver est introuvable sur le serveur",
+          title: "Licence inconnue (-12)",
+        },
+        "-13": {
+          detail:
+            "L\'adresse ip de votre client est bannie du serveur de licence",
+          title: "Client sur liste noire (-13)",
+        },
+        "-14": {
+          detail: "Impossible de trouver une carte r\xe9seau",
+          title: "Pas de carte r\xe9seau (-14)",
+        },
+        "-2": { detail: "", title: "Licence non valide (-2)" },
+        "-20": {
+          detail: "La p\xe9riode de licence commence ",
+          title: "La p\xe9riode de licence n\'a pas encore commenc\xe9 (-20)",
+        },
+        "-21": {
+          detail: "La p\xe9riode de licence s\'est termin\xe9e le ",
+          title: "La p\xe9riode de licence est termin\xe9e (-21)",
+        },
+        "-22": {
+          detail:
+            "Veuillez vous reporter aux instructions du serveur pour savoir comment configurer et attribuer une licence aux ordinateurs clients.",
+          title:
+            "Les licences flottantes ne peuvent \xeatre utilis\xe9es qu\'avec le serveur de licences flottantes (-22)",
+        },
+        "-3": { detail: "", title: "Fichier de licence introuvable (-3)" },
+        "-4": { detail: "", title: "Fichier de licence corrompu (-4)" },
+        "-5": { detail: "", title: "Erreur g\xe9n\xe9rique (-5)" },
+        "-6": { detail: "", title: "Nom de produit invalide (-6)" },
+        "-7": { detail: "", title: "P\xe9riode d\'\xe9valuation (-7)" },
+        "-8": { detail: "", title: "Licence non valide (-8)" },
+        "-9": {
+          detail: "Verifiez que le serveur de licence fonctionne correctement",
+          title: "Impossible de se connecter au serveur (-9)",
+        },
+        "-99": { detail: "", title: "Erreur inconnue (-99)" },
+        unknown: { detail: "", title: "Erreur inconnue (0)" },
+      },
+    };
+    var prefsSectionName = vars.hasOwnProperty("legacyPrefsGroup")
+      ? vars.legacyPrefsGroup
+      : "aescripts";
+    var prefsName = useLegacyPrefsHeader
+      ? strScriptName
+      : strHeader + "_Registration";
+    var prefsVersionName = strHeader + "_Version";
+    var prefsLicVersion = strHeader + "_LicVersion";
+    var prefsVersionCheckInit = strHeader + "_VersionCheckInit";
+    var prefsLastVersionChecked = strHeader + "_LastVersionChecked";
+    var prefsLastServerVersionChecked = strHeader + "_LastServerVersionChecked";
+    var prefsLastTimeVersionChecked = strHeader + "_LastTimeVersionChecked";
+    var prefsNextTimeVersionChecked = strHeader + "_NextTimeVersionChecked";
+    var prefsNextTimeVersionCheckedSkipVersion =
+      strHeader + "_NextTimeVersionCheckedSkipVersion";
+    var prefsDoUpdateCheck = strHeader + "_doUpdateCheck";
+    haveSettings(prefsSectionName, prefsDoUpdateCheck) &&
+      (doUpdateCheck = !(
+        "false" == getSettings(prefsSectionName, prefsDoUpdateCheck)
+      ));
+    ScriptUI.environment.keyboardState.shiftKey &&
+      ScriptUI.environment.keyboardState.altKey &&
+      !ScriptUI.environment.keyboardState.ctrlKey &&
+      !ScriptUI.environment.keyboardState.metaKey &&
+      ((doUpdateCheck = false),
+      saveSettings(prefsSectionName, prefsDoUpdateCheck, false),
+      alert("New version update checks disabled"));
+    saveSettings(prefsSectionName, prefsVersionName, strScriptVersion);
+    saveSettings(prefsSectionName, prefsLicVersion, licensingVersion);
+    cmdKey = -1 != $.os.indexOf("Mac") ? "cmd" : "Ctrl";
+    var strEnterLicenseCode = localize({
+      de: "Bitte gebe den Lizenzcode ein.",
+      en: "Please enter the license code.",
+      es: "Por favor, introduzca el c\xf3digo de licencia.",
+      fr: "Veuillez entrer votre num\xe9ro de licence.",
+    });
+    var strPasteHelp = localize({
+      de:
+        "(Wenn das Einf\xfcgen mit " +
+        cmdKey +
+        "+V nicht funktioniert, versuche Bearbeiten->Einf\xfcgen.)",
+      en:
+        "(If pasting the code with " + cmdKey + "+V doesn\'t work try " + 10 <=
+        parseFloat(app.version)
+          ? "Right-Click and Paste)"
+          : "Edit->Paste)",
+      es:
+        "(Si pegar la licencia usando " +
+          cmdKey +
+          "+V no funciona, pruebe " +
+          10 <=
+        parseFloat(app.version)
+          ? "Clic derecho y pegar)"
+          : "Edici\xf3n->Pegar)",
+      fr:
+        "(Si vous ne parvenez pas \xe0 coller le code avec " +
+          cmdKey +
+          "+V essayez " +
+          10 <=
+        parseFloat(app.version)
+          ? "Clique droit et Coller)"
+          : "Edition->Coller)",
+    });
+    var strTrialInstructMsg = localize({
+      de: 'Um die Testversion zu starten, gebe "trial" ein.',
+      en: "To run in trial mode type: trial",
+      es: "Para ejecutar el modo Trial, escriba: trial",
+      fr: "Pour lancer la version de d\xe9monstration, tapez : trial",
+    });
+    var strOr = localize({ de: "oder", en: "or", es: "o", fr: "ou" });
+    var strServerInstructMsg = localize({
+      de: "Aktivieren Sie eine Lizenz vom Server mit @REMOTE",
+      en: "Activate a license from the server with @REMOTE",
+      es: "Activar una licencia del servidor con @REMOTE",
+      fr: "Activer une licence du serveur avec @REMOTE",
+    });
+    var strServerNotRunning = localize({
+      de: "Der Client ist konfiguriert, aber der Floating License Server l\xe4uft nicht oder ist nicht erreichbar.",
+      en: "Client configured but floating license server is either not running or not accessible.",
+      es: "Cliente configurado pero servidor de licencias flotantes o no est\xe1 ejecutado o no es accesible.",
+      fr: "Client configur\xe9 mais le serveur de licence flottante est soit en cours d\'ex\xe9cution ou ne pas accessible.",
+    });
+    var prefHeader = "Initialization Fragments";
+    var prefSection1 = (
+      string_encode(
+        Math.floor(parseFloat(app.version))
+          .toString()
+          .charAt(
+            Math.max(
+              0,
+              Math.floor(parseFloat(app.version)).toString().length - 1,
+            ),
+          ) +
+          strScriptName.substring(
+            Math.max(0, strScriptName.length - 15),
+            strScriptName.length,
+          ) +
+          strScriptVersion,
+      ) *
+      0.457 *
+      privateNum
+    ).toString(36);
+    var prefSection2 = (
+      string_encode(
+        Math.floor(parseFloat(app.version))
+          .toString()
+          .charAt(
+            Math.max(
+              0,
+              Math.floor(parseFloat(app.version)).toString().length - 1,
+            ),
+          ) +
+          strScriptName.substring(
+            Math.max(0, strScriptName.length - 15),
+            strScriptName.length,
+          ) +
+          strScriptVersion,
+      ) *
+      (privateNum / 3.981)
+    ).toString(36);
+    var prefsLocation = Folder.userData.fsName + "/Aescripts/";
+    var prefsPrefix = "pref_";
+    isAE() || Folder(prefsLocation).exists || Folder(prefsLocation).create();
+    var sanitizedName = sanitizeProductName(strScriptName);
+    this.getSetting = function (e, i) {
+      return getSettings((e = strHeader + "_" + e), i, "settings");
+    };
+    this.readJSON = function (e) {
+      return readJSON(e);
+    };
+    this.writeJSON = function (e, i) {
+      return writeJSON(e, i);
+    };
+    this.JSONify = function (e, i, t) {
+      return JSONify(e, i, t);
+    };
+    this.haveSetting = function (e, i) {
+      return haveSettings((e = strHeader + "_" + e), i, "settings");
+    };
+    this.saveSetting = function (e, i, t) {
+      return saveSettings((e = strHeader + "_" + e), i, t, "settings");
+    };
+    function compareVersions(a, b) {
+      if (a === b) {
+        return 0;
+      }
+      var a_components = a.toString().split(".");
+      var b_components = b.toString().split(".");
+      if (a_components.length <= 2 && b_components.length <= 2) {
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+      } else {
+        var len = Math.min(a_components.length, b_components.length);
+        for (var i = 0; i < len; i += 1) {
+          if (parseInt(a_components[i]) > parseInt(b_components[i])) {
+            return 1;
+          }
+          if (parseInt(a_components[i]) < parseInt(b_components[i])) {
+            return -1;
+          }
+        }
+        if (a_components.length > b_components.length) {
+          return 1;
+        }
+        if (a_components.length < b_components.length) {
+          return -1;
+        }
+        return 0;
+      }
+    }
+    function JSONify(string, mode, prettyJSON) {
+      if (typeof JSON !== "object") {
+        JSON = {};
+      }
+      (function () {
+        function f(n) {
+          return n < 10 ? "0" + n : n;
+        }
+        function this_value() {
+          return this.valueOf();
+        }
+        function quote(string) {
+          rx_escapable.lastIndex = 0;
+          return rx_escapable.test(string)
+            ? '"' +
+                string.replace(rx_escapable, function (a) {
+                  var c = meta[a];
+                  return typeof c === "string"
+                    ? c
+                    : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+                }) +
+                '"'
+            : '"' + string + '"';
+        }
+        function str(key, holder) {
+          var mind = gap;
+          var value = holder[key];
+          if (
+            value &&
+            typeof value === "object" &&
+            typeof value.toJSON === "function"
+          ) {
+            value = value.toJSON(key);
+          }
+          if (typeof rep === "function") {
+            value = rep.call(holder, key, value);
+          }
+          switch (typeof value) {
+            case "string":
+              return quote(value);
+            case "number":
+              return isFinite(value) ? String(value) : "null";
+            case "boolean":
+            case "null":
+              return String(value);
+            case "object":
+              if (!value) {
+                return "null";
+              }
+              gap += indent;
+              partial = [];
+              if (Object.prototype.toString.apply(value) === "[object Array]") {
+                length = value.length;
+                for (var i = 0; i < length; i += 1) {
+                  partial[i] = str(i, value) || "null";
+                }
+                v =
+                  partial.length === 0
+                    ? "[]"
+                    : gap
+                      ? "[\n" +
+                        gap +
+                        partial.join(",\n" + gap) +
+                        "\n" +
+                        mind +
+                        "]"
+                      : "[" + partial.join(",") + "]";
+                gap = mind;
+                return v;
+              }
+              if (rep && typeof rep === "object") {
+                length = rep.length;
+                for (var i = 0; i < length; i += 1) {
+                  if (typeof rep[i] === "string") {
+                    k = rep[i];
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + gap ? ": " : ":" + v);
+                    }
+                  }
+                }
+              } else {
+                for (var k in value) {
+                  if (Object.prototype.hasOwnProperty.call(value, k)) {
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + gap ? ": " : ":" + v);
+                    }
+                  }
+                }
+              }
+              v =
+                partial.length === 0
+                  ? "{}"
+                  : gap
+                    ? "{\n" +
+                      gap +
+                      partial.join(",\n" + gap) +
+                      "\n" +
+                      mind +
+                      "}"
+                    : "{" + partial.join(",") + "}";
+              gap = mind;
+              return v;
+          }
+        }
+        ("use strict");
+        var rx_one = /^[\],:{}\s]*$/;
+        var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+        var rx_three =
+          /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+        var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
+        var rx_escapable =
+          /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        var rx_dangerous =
+          /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        if (typeof Date.prototype.toJSON !== "function") {
+          Date.prototype.toJSON = function () {
+            return isFinite(this.valueOf())
+              ? this.getUTCFullYear() +
+                  "-" +
+                  f(this.getUTCMonth() + 1) +
+                  "-" +
+                  f(this.getUTCDate()) +
+                  "T" +
+                  f(this.getUTCHours()) +
+                  ":" +
+                  f(this.getUTCMinutes()) +
+                  ":" +
+                  f(this.getUTCSeconds()) +
+                  "Z"
+              : null;
+          };
+          Boolean.prototype.toJSON = this_value;
+          Number.prototype.toJSON = this_value;
+          String.prototype.toJSON = this_value;
+        }
+        if (typeof JSON.stringify !== "function") {
+          meta = {
+            "\b": "\\b",
+            "\t": "\\t",
+            "\n": "\\n",
+            "\f": "\\f",
+            "\r": "\\r",
+            '"': '\\"',
+            "\\": "\\\\",
+          };
+          JSON.stringify = function (value, replacer, space) {
+            gap = "";
+            indent = "";
+            if (typeof space === "number") {
+              for (var i = 0; i < space; i += 1) {
+                indent += " ";
+              }
+            } else {
+              if (typeof space === "string") {
+                indent = space;
+              }
+            }
+            rep = replacer;
+            if (
+              replacer &&
+              typeof replacer !== "function" &&
+              (typeof replacer !== "object" ||
+                typeof replacer.length !== "number")
+            ) {
+              throw new Error("JSON.stringify");
+            }
+            return str("", { "": value });
+          };
+        }
+      })();
+      var jsonParse = (function () {
+        function v(h, j, e) {
+          return j ? u[j] : String.fromCharCode(parseInt(e, 16));
+        }
+        var r =
+          "(?:-?\\b(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b)";
+        var k =
+          '(?:[^\\0-\\x08\\x0a-\\x1f"\\\\]|\\\\(?:["/\\\\bfnrt]|u[0-9A-Fa-f]{4}))';
+        k = '(?:"' + k + '*")';
+        var s = new RegExp(
+          "(?:false|true|null|[\\{\\}\\[\\]]|" + r + "|" + k + ")",
+          "g",
+        );
+        var t = new RegExp("\\\\(?:([^u])|u(.{4}))", "g");
+        var u = {
+          '"': '"',
+          "/": "/",
+          "\\": "\\",
+          b: "\b",
+          f: "\f",
+          n: "\n",
+          r: "\r",
+          t: "\t",
+        };
+        var w = new String("");
+        var x = Object.hasOwnProperty;
+        return function (h, j) {
+          h = h.match(s);
+          var c = h[0];
+          var l = false;
+          if ("{" === c) {
+            e = {};
+          } else if ("[" === c) {
+            e = [];
+          } else {
+            e = [];
+            l = true;
+          }
+          for (b, d = [e], m = 1 - l, y = h.length; m < y; ++m) {
+            c = h[m];
+            switch (c.charCodeAt(0)) {
+              default:
+                a = d[0];
+                a[b || a.length] = c;
+                b = void 0;
+                break;
+              case 34:
+                c = c.substring(1, c.length - 1);
+                if (c.indexOf("\\") !== -1) {
+                  c = c.replace(t, v);
+                }
+                a = d[0];
+                if (!b) {
+                  if (a instanceof Array) {
+                    b = a.length;
+                  } else {
+                    b = c || w;
+                    break;
+                  }
+                }
+                a[b] = c;
+                b = void 0;
+                break;
+              case 91:
+                a = d[0];
+                d.unshift((a[b || a.length] = []));
+                b = void 0;
+                break;
+              case 93:
+                d.shift();
+                break;
+              case 102:
+                a = d[0];
+                a[b || a.length] = false;
+                b = void 0;
+                break;
+              case 110:
+                a = d[0];
+                a[b || a.length] = null;
+                b = void 0;
+                break;
+              case 116:
+                a = d[0];
+                a[b || a.length] = true;
+                b = void 0;
+                break;
+              case 123:
+                a = d[0];
+                d.unshift((a[b || a.length] = {}));
+                b = void 0;
+                break;
+              case 125:
+                d.shift();
+                break;
+            }
+          }
+          if (l) {
+            if (d.length !== 1) {
+              throw new Error();
+            }
+            e = e[0];
+          } else {
+            if (d.length) {
+              throw new Error();
+            }
+          }
+          if (j) {
+            var p = function (n, o) {
+              var f = n[o];
+              if (f && typeof f === "object") {
+                var i = null;
+                for (var g in f) {
+                  if (x.call(f, g) && f !== n) {
+                    var q = p(f, g);
+                    if (q !== void 0) {
+                      f[g] = q;
+                    } else {
+                      i || (i = []);
+                      i.push(g);
+                    }
+                  }
+                }
+                if (i) {
+                  for (g = i.length; --g >= 0; ) {
+                    delete f[i[g]];
+                  }
+                }
+              }
+              return j.call(n, o, f);
+            };
+            e = p({ "": e }, "");
+          }
+          return e;
+        };
+      })();
+      try {
+        switch (mode) {
+          case "parse":
+            if (validateJSON(string)) {
+              return jsonParse(string);
+            } else {
+              alert("JSON validation error\n" + string.substring(0, 1000));
+              return null;
+            }
+            break;
+          case "stringify":
+            return JSON.stringify(string, undefined, prettyJSON);
+            break;
+        }
+      } catch (e) {
+        alert(e.toString());
+      }
+    }
+    function validateJSON(string) {
+      return /^[\],:{}\s]*$/.test(
+        string
+          .replace(/\\["\\\/bfnrtu]/g, "@")
+          .replace(
+            /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
+            "]",
+          )
+          .replace(/(?:^|:|,)(?:\s*\[)+/g, ""),
+      );
+    }
+    this.c = function () {
+      return mainFunc("l");
+    };
+    this.s = function () {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        isResultValidLicense(licenseValidity)
+      );
+    };
+    this.r = function () {
+      return !mainFunc("r");
+    };
+    this.t = function () {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        isResultTrial(licenseValidity.result)
+      );
+    };
+    this.l = function () {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        licenseValidity.license
+      );
+    };
+    this.ss = function () {
+      return (
+        (void 0 !== licenseValidity &&
+          licenseValidity.hasOwnProperty("result")) ||
+          (licenseValidity = getVerifCode("")),
+        isResultValidLicense(licenseValidity) &&
+          !isResultTrial(licenseValidity.result)
+      );
+    };
+    this.vt = function () {
+      return isVT();
+    };
+    this.helpUI = function (e) {
+      helpUI(e);
+    };
+    this.getRegistration = function (e) {
+      return getRegistration(e);
+    };
+    this.openSupportTicket = function (e) {
+      openSupportTicket(e);
+    };
+    this.openURL = function (e) {
+      openURL(e);
+    };
+    this.doUpdateCheck = function (e) {
+      setUpdateCheck(e);
+    };
+    this.getUpdateCheckStatus = function () {
+      return doUpdateCheck;
+    };
+    this.doUpdateCheckNow = function () {
+      return doUpdateCheckNow();
+    };
+    this.frameworkVersion = function () {
+      return licensingVersion;
+    };
+  }
+  var qsl9 = new a(qsl9_settings);
+  if (qsl9.c()) {
+    IsoMatic_FX(thisObj);
+  } else {
+    return;
+  }
+}
+IsoMatic_FX_Main(this);

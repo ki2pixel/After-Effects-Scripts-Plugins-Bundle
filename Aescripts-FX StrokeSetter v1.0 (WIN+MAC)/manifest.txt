@@ -1,4 +1,0 @@
-{
-	"FXStrokeSetterAssets": "ADOBE-AE-SCRIPT_UI",
-	"FX_StrokeSetter.jsxbin": "ADOBE-AE-SCRIPT_UI"
-}

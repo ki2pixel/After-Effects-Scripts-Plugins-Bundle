@@ -1,0 +1,7 @@
+{
+	"CircusMonkey.jsxbin" : "ADOBE_AE_SCRIPT_UI",
+	"CM_Camera_Controls.ffx" : "ADOBE_AE_SCRIPT_UI",
+	"CM_Circle_Controls.ffx" : "ADOBE_AE_SCRIPT_UI",
+	"CM_Text_Controls.ffx" : "ADOBE_AE_SCRIPT_UI",
+	"CM_Rig_Controls.ffx" : "ADOBE_AE_SCRIPT_UI"
+}

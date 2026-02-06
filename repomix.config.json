@@ -1,0 +1,45 @@
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-after-effects-output.md",
+    "removeComments": false,
+    "showLineNumbers": true,
+    "topFilesLength": 40
+  },
+  "include": [
+    "Aescripts-easyRulers 2 v2.01/easyRulers.jsx",
+    "Aescripts-Origami v1.4.0/**/*.jsx",
+    "Aescripts-Easy Clones v1.1/Easy Clones.jsx",
+    "Aescripts-Faux Parent 1.1/Faux Parent.jsx",
+    "Aescripts-Good Parents v1.4.1/goodParents.jsx"
+  ],
+  "ignore": {
+    "customPatterns": [
+      ".idea/**",
+      "**/*.mp4",
+      "**/*.mov",
+      "**/*.mp3",
+      "**/*.wav",
+      "**/*.aep",
+      "**/*.ffx",
+      "**/*.zip",
+      "**/*.rar",
+      "**/*.7z",
+      "**/*.exe",
+      "**/*.dmg",
+      "**/*.pkg",
+      "**/*.pdf",
+      "**/*.png",
+      "**/*.jpg",
+      "**/*.jpeg",
+      "**/*.gif",
+      "**/*.svg",
+      "**/*.ico",
+      "**/*.psd",
+      "**/*.ai",
+      "**/*.reg",
+      "**/*.url",
+      "Aescripts-Social Importer 1.0.3 for After Effects/Social Importer/panel.js"
+    ]
+  }
+}
