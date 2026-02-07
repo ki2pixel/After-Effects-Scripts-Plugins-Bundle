@@ -16,11 +16,13 @@ Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cible
 
 1.  **Cartographie (Filtre Bruit)** :
     - `run_command "tree -L 2 -I '__pycache__|.git|*.idea|blob_manifest*.json|regenerated_manifests|repomix*'"`
-    - *But* : Visualiser l'architecture AE (JSX dans Scripts_AE/, Python dans PyShiftAE/, Bridge dans PyShiftBridge/, C++/Python dans AETK-main/, docs/).
+    - *But* : Visualiser l'architecture AE (JSX dans Scripts_AE/, Python dans PyShiftAE/, Bridge dans PyShiftBridge/, C++/Python dans AETK-main/, docs/, CEP dans MédiaSolution/MediaSolution-CEP).
 
 2.  **Volumétrie (Code Source)** :
     - **Python & C++** : `run_command "cloc PyShiftAE PyShiftBridge AETK-main docs --md --exclude-dir=__pycache__,node_modules,.git"`
       - *But* : Quantifier le code Python (PyShiftAE) et C++/Python (AETK-main) sans les manifests.
+    - **CEP (HTML/CSS/JS + ExtendScript)** : `run_command "cloc 'MédiaSolution/MediaSolution-CEP/client' 'MédiaSolution/MediaSolution-CEP/host' --md --exclude-ext=png,jpg,svg"`
+      - *But* : Mesurer l'effort côté interface CEP (client) et hôte ExtendScript pour aligner la documentation MediaSolution.
     - **Python/C++ de référence** : `run_command "cloc 'PyShiftAE/Python/pyshiftae/ae.py' 'AETK-main/AETK/AEGP/Core/PyFx.hpp' 'AETK-main/AETK/src/AEGP/Core/Suites.cpp' 'AETK-main/AEGP/Grabba/Grabba.cpp' 'AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp' --md"`
       - *But* : Analyser les fichiers Python/C++ de référence identifiés dans la documentation PyShiftAE.
     - **JSX de référence** : `run_command "cloc 'Scripts_AE/Aescripts-easyRulers 2 v2.01/easyRulers.jsx' 'Scripts_AE/Aescripts-Easy Clones v1.1/Easy Clones.jsx' 'Scripts_AE/Aescripts-Good Parents v1.4.1/goodParents.jsx' 'Scripts_AE/Aescripts-Origami v1.4.0/Origami.jsx' 'Scripts_AE/origami_fix.jsx' --md"`
@@ -33,6 +35,10 @@ Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cible
       - *But* : Vérifier la présence des fichiers Python/C++ de référence.
     - **JSX de référence** : `run_command "ls -la 'Scripts_AE/Aescripts-easyRulers 2 v2.01/easyRulers.jsx' 'Scripts_AE/Aescripts-Easy Clones v1.1/Easy Clones.jsx' 'Scripts_AE/Aescripts-Good Parents v1.4.1/goodParents.jsx' 'Scripts_AE/Aescripts-Origami v1.4.0/Origami.jsx' 'Scripts_AE/origami_fix.jsx' | wc -l"`
       - *But* : Vérifier la présence des scripts JSX de référence.
+    - **CEP MediaSolution** : `run_command "ls -la 'MédiaSolution/MediaSolution-CEP/host/MediaSolution.jsx' 'MédiaSolution/MediaSolution-CEP/client/main.js' 'MédiaSolution/MediaSolution-CEP/client/style.css' | wc -l"`
+      - *But* : S'assurer que les scripts hôte et client MediaSolution sont pris en compte avant mise à jour de la documentation CEP.
+    - **PyShiftBridge MediaSolution** : `run_command "ls -la 'PyShiftBridge/bridge_daemon.py' 'PyShiftBridge/js/main.js' 'PyShiftBridge/mediasolution_cuts_core.py' | wc -l"`
+      - *But* : Vérifier la présence des scripts critiques du pont MediaSolution (daemon, transport JS, cœur Python) pour aligner la documentation Bridge.
 
 ## Étape 2 — Diagnostic Triangulé
 Comparer les sources pour détecter les incohérences :
@@ -59,9 +65,9 @@ Choisir le modèle approprié pour l'écosystème AE :
   - **Intégration** : Comment connecter Python à After Effects.
 
 - **Documentation Bridge** (`PyShiftBridge/`) :
-  - **Communication** : Protocoles (named pipes, sockets, mailbox).
-  - **Configuration** : Installation et setup.
-  - **Exemples** : Cas d'usage concrets.
+  - **Communication** : Protocoles (named pipes, sockets, mailbox) illustrés via `bridge_daemon.py`.
+  - **Configuration** : Installation et setup (scripts `install/*.sh`, `CONFIGURATION_GUIDE.md`).
+  - **Exemples** : Cas d'usage concrets, notamment MediaSolution (`mediasolution_cuts_core.py`, `js/main.js`, intégration CEP).
 
 - **Architecture Globale** :
   - Diagrammes textuels (Mermaid) des interactions.
@@ -70,7 +76,6 @@ Choisir le modèle approprié pour l'écosystème AE :
 ## Étape 4 — Proposition de Mise à Jour
 Générer un plan de modification avant d'appliquer :
 
-```markdown
 ## 📝 Plan de Mise à Jour Documentation
 ### Audit Métrique
 - **Cible** : `PyShiftAE/ae.py`, `AETK-main/AETK/AEGP/Core/PyFx.hpp` ou `Scripts_AE/[script]/script.jsx`
@@ -84,14 +89,50 @@ Générer un plan de modification avant d'appliquer :
   ```markdown
   [Contenu proposé respectant le standard choisi]
   ```
-```
 
 ## Étape 5 — Application et Finalisation
 1.  **Exécution** : Après validation, utiliser `edit` ou `multi_edit`.
-2.  **Mise à jour Memory Bank** :
+2.  **Mode Rédaction** : 
+    - Charger immédiatement `.windsurf/skills/documentation/SKILL.md`
+    - Appliquer le modèle correspondant (article deep-dive, README, etc.)
+    - Respecter les checkpoints obligatoires du skill
+3.  **Mise à jour Memory Bank** :
     - Si une complexité importante est découverte, ajouter une entrée dans `decisionLog.md` ou `systemPatterns.md`.
-3.  **Validation AE** :
+4.  **Validation AE** :
     - Vérifier que la documentation respecte les conventions AE (matchNames, versions, patterns).
+
+### Sous-protocole Rédaction — Application de documentation/SKILL.md
+
+#### 5.1 Point d'Entrée Explicite
+- **Mode Rédaction** : Déclenché après validation du plan de mise à jour
+- **Lecture obligatoire** : `.windsurf/skills/documentation/SKILL.md`
+- **Modèle à appliquer** : Spécifié dans le plan (article deep-dive, README, etc.)
+
+#### 5.2 Checkpoints Obligatoires
+**Avant rédaction** :
+- [ ] TL;DR présent (section 1 du skill)
+- [ ] Problem-first opening (section 2 du skill)
+
+**Pendant rédaction** :
+- [ ] Comparaison ❌/✅ (section 4 du skill)
+- [ ] Trade-offs table si applicable (section 7 du skill)
+- [ ] Golden Rule (section 8 du skill)
+- [ ] Éviter les artefacts AI (section 6 du skill)
+
+**Après rédaction** :
+- [ ] Validation checklist "Avoiding AI-Generated Feel"
+- [ ] Vérification ponctuation (remplacer " - " par ;/:/—)
+
+#### 5.3 Traceability
+Dans la proposition de mise à jour (Étape 4), ajouter :
+#### Application du skill
+- **Modèle** : [Article deep-dive | README | Technique]
+- **Éléments appliqués** : TL;DR ✔, Problem-First ✔, Comparaison ✔, Trade-offs ✔, Golden Rule ✔
+
+#### 5.4 Hook d'Automation
+- **Validation Git** : Commentaire de commit "Guidé par documentation/SKILL.md — sections: [list]"
+- **Blocking** : Le workflow ne peut pas se terminer si les checkpoints ne sont pas cochés
+- **Audit trail** : Chaque fichier modifié contient une note de validation interne
 
 ## 📋 Check-list Spécifique AE
 
@@ -114,7 +155,7 @@ Générer un plan de modification avant d'appliquer :
 - [ ] Exemples de plugins
 
 ### Bridge & Communication
-- [ ] Protocoles de communication documentés
-- [ ] Guide d'installation
-- [ ] Exemples de code fonctionnels
-- [ ] Dépannage commun
+- [ ] Protocoles de communication documentés (PyShiftBridge daemon + transport CEP MediaSolution)
+- [ ] Guide d'installation (`CONFIGURATION_GUIDE.md`, scripts `install/`)
+- [ ] Exemples de code fonctionnels (`bridge_daemon.py`, `mediasolution_cuts_core.py`, `js/main.js`)
+- [ ] Dépannage commun (flux CEP MediaSolution ↔ PyShiftBridge ↔ PyShiftAE)

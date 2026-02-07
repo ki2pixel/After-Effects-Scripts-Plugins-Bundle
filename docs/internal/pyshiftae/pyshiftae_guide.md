@@ -1,24 +1,26 @@
-# Guide PyShiftAE – Architecture, Patterns & Workflows
+# Manuel de Développement PyShiftAE
 
-> **Version** : 1.0 – 6 février 2026  
-> **Statut** : Document de référence consolidé  
-> **Audience** : Développeurs Python/C++ travaillant avec After Effects via PyShiftAE/AETK  
-> **Sources** : Analyse basée sur AETK, API Python PyShiftAE, et sources externes (CEPy-Resources, PyFxCore, PyShift-Utils via Repomix)  
+Title: Manuel de Développement PyShiftAE  
+Status: Stable  
+Audience: Développeurs Python/C++ travaillant avec After Effects via PyShiftAE/AETK  
+Sources: Basé sur AETK, API Python PyShiftAE, et sources externes (CEPy-Resources, PyFxCore, PyShift-Utils via Repomix)  
+
+TL;DR: PyShiftAE permet de piloter After Effects avec Python 3.11+. Utilisez-le pour les calculs lourds et l'I/O, mais déléguez les mutations UI à CEP.
 
 ---
 
 ## Table des matières
 
-1. [Vue d’ensemble & architecture](#1-vue-densemble-architecture)  
-2. [Cadre d’usage & limitations](#2-cadre-dusage-limitations)  
-3. [Safe patterns & opérations critiques](#3-safe-patterns-opérations-critiques)  
-4. [Workflows de référence](#4-workflows-de-référence)  
+1. [Architecture](#1-architecture)  
+2. [Core Concepts](#2-core-concepts)  
+3. [Workflow](#3-workflow)  
+4. [Safe patterns & opérations critiques](#4-safe-patterns-opérations-critiques)  
 5. [Installation & maintenance](#5-installation-maintenance)  
-6. [Annexes](#6-annexes)  
+6. [Annexes](#6-annexes)
 
 ---
 
-## 1. Vue d’ensemble & architecture
+## 1. Architecture
 
 ### 1.1 Paradigme PyShiftAE
 
@@ -28,15 +30,16 @@ PyShiftAE est un **plugin AEGP qui embarque un runtime CPython** dans After Effe
 - **Module PyFx** (pybind11) : wrappers des suites SDK (ProjSuite, ItemSuite, StreamSuite…)  
 - **Wrappers AETK → SDK** : appels AEGP natifs marshaled vers le main thread AE
 
-> **Note importante** : Le code source C++ du plugin PyShiftAE lui-même n’est pas inclus dans ce bundle (symlink cassé dans `PyShiftAE/AEGP/`). L.analyse se base sur AETK, l.API Python exposée, et les sources externes disponibles dans `docs/internal/repomix/`.
+### 1.2 Embedded Python vs ExtendScript
 
-### 1.2 Concurrence & threading
+Contrairement à ExtendScript qui s'exécute dans un moteur JavaScript intégré, PyShiftAE utilise **CPython embarqué**. Cette approche offre :
 
-- **Python worker threads** : calculs, I/O, logique métier (hors appels SDK)  
-- **AE main thread** : toutes les mutations projet via `TaskScheduler` + idle hook  
-- **Marshaling obligatoire** : les appels SDK doivent passer par `ae::TaskScheduler::ScheduleTask()` ou `ScheduleOrExecute()`
+- **Performance native** pour les calculs lourds et l'I/O
+- **Accès à l'écosystème Python** (librairies scientifiques, ML, traitement de données)
+- **Threading réel** pour les tâches en arrière-plan
+- **Contrainte** : toutes les mutations du projet AE doivent passer par le main thread
 
-### 1.3 Couverture API (approximation)
+### 1.3 Couverture API
 
 | Domaine | Couverture | Notes |
 |---|---|---|
@@ -47,40 +50,117 @@ PyShiftAE est un **plugin AEGP qui embarque un runtime CPython** dans After Effe
 | Rendu/Pixels | 🟠 Limitée | C++ sait faire, binding Python partiel |
 | UI dockable | 🔴 Très limitée | Pas de ScriptUI natif, panels C++ non exposés |
 
+### 1.4 La Golden Rule
+
+**Python calcule (Worker Threads), After Effects applique (Main Thread).**
+
 ---
 
-## 2. Cadre d’usage & limitations
+## 2. Core Concepts
 
-### 2.1 Cas d’usage idéaux
+### 2.1 Le TaskScheduler - Le concept clé
+
+Le TaskScheduler est le mécanisme fondamental qui évite les crashs d'After Effects. Il garantit que toutes les mutations du projet AE s'exécutent sur le main thread.
+
+#### 2.1.1 Pourquoi c'est crucial
+
+- **AE main thread only** pour les appels SDK
+- **Marshaling obligatoire** via `ae::TaskScheduler::ScheduleTask()`
+- **Threading safe** : workers Python calculent, AE applique
+
+#### 2.1.2 Séquence d'exécution
+
+```mermaid
+sequenceDiagram
+    participant W as Python Worker
+    participant P as PyFx (pybind11)
+    participant T as TaskScheduler
+    participant A as AE Main Thread
+    
+    W->>P: schedule_task(lambda)
+    P->>T: ScheduleTask()
+    T->>A: Queue via idle hook
+    A->>A: Execute lambda
+    A->>W: Callback (optional)
+```
+
+### 2.2 Patterns de communication
+
+#### 2.2.1 Worker Thread Pattern
+```python
+import pyshiftae as ae
+import threading
+
+def calculs_lourds():
+    """Pure Python - aucun appel AE"""
+    return [(i/24.0, (i, i*1.5, 0)) for i in range(1000)]
+
+def appliquer(donnees):
+    """Exécuté dans AE main thread via scheduler - RAPIDE"""
+    comp = ae.Item.active_item()
+    if not comp: return
+    layer = comp.layers.add_solid("Solid_IA", (0,1,0,1), 1920, 1080, 10)
+
+# Lancement
+threading.Thread(target=lambda: (
+    data := calculs_lourds(),
+    ae.schedule_task(lambda: appliquer(data))
+)).start()
+```
+
+#### 2.2.2 À éviter
+```python
+# MAUVAIS : calcul lent + appels AE mélangés
+for i in range(1000):
+    time.sleep(0.01)  # Calcul sur main thread
+    layer.position.set_value((i, i, 0))  # Ping-pong C++ constant
+```
+
+---
+
+## 3. Workflow
+
+### 3.1 CEP → Python → AE
+
+Le workflow recommandé suit l'architecture Hybrid 2.0 :
+
+```
+CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
+     → fallback JSON files → bridge_daemon.py → PyShiftAE
+```
+
+#### 3.1.1 Composants
+- **CEP** : UI + events + JSX runtime  
+- **Python** : logique outillée + opérations natives  
+- **IPC** : PyInterface (prioritaire) ou mailbox JSON
+
+#### 3.1.2 Format JSON (pipe)
+```json
+{ "endpoint": "Response", "functionName": "<func>", "args": {"param1": "..."} }
+```
+
+### 3.2 Cas d'usage idéaux
 
 - **Automation pipeline** (batch rename, ingest footage, render queue)  
 - **Interop IA/ML** (analyse metadata, génération, orchestration)  
-- **Outils assistés** déclenchés par menu (pas UI riche)  
+- **Outils assistés** déclenchés par menu (pas UI riche)
 
-### 2.2 Limitations techniques
+### 3.3 Limitations techniques
 
 - **Shape Paths (bézier)** : non exposé en Python (nécessite ARB + parsing)  
 - **UI dockable** : pas de ScriptUI, panels natifs C++ non accessibles depuis Python  
 - **Hooks événements** : pas de binding Python natif, nécessite modifs C++ mineures ou workaround CEP  
-- **Risque crash** : plus élevé qu’ExtendScript (C++ lifetime, threading)  
-
-### 2.3 Recommandation architecture
-
-**Priorité absolue** : Mettre en œuvre l’architecture **Hybrid 2.0**  
-- **Chemin A** : CEP → Pipe/Socket → PyShiftAE (latence minimale)  
-- **Chemin B** : Fallback mailbox JSON (compatibilité garantie)  
-- **Monitoring** : Console CEP pour vérifier le transport actif  
+- **Risque crash** : plus élevé qu'ExtendScript (C++ lifetime, threading)
 
 ---
 
-## 3. Safe patterns & opérations critiques
+## 4. Safe patterns & opérations critiques
 
-### 3.1 Règle d’or threading
+### 4.1 Règle d'or threading
 
-> **AE main thread only** pour les appels SDK.  
-> Utiliser `TaskScheduler` pour marshaler les appels depuis les workers Python.
+AE main thread only pour les appels SDK. Utiliser TaskScheduler pour marshaler les appels depuis les workers Python.
 
-### 3.2 Patterns recommandés
+### 4.2 Patterns recommandés
 
 #### ✅ Pattern worker + scheduler
 ```python
@@ -113,13 +193,13 @@ for i in range(1000):
     layer.position.set_value((i, i, 0))  # Ping-pong C++ constant
 ```
 
-### 3.3 GIL & mémoire
+### 4.3 GIL & mémoire
 
 - **GIL acquisition minimale** : `py::gil_scoped_acquire` uniquement autour du code Python  
 - **Handles AE courte durée** : ne pas stocker long-terme, re-valider avant usage  
 - **Pas de références circulaires** Python ↔ PyFx  
 
-### 3.4 Architecture Hybrid 2.0 (CEP ↔ Python)
+### 4.4 Architecture Hybrid 2.0 (CEP ↔ Python)
 
 | Élément | Mode natif | Fallback |
 |---|---|---|
@@ -127,47 +207,6 @@ for i in range(1000):
 | Latence | <10ms | ~300ms |
 | Temps réel | ✅ Sliders, interactions | ❌ Polling only |
 | Configuration | `localStorage.setItem('pyshift_pipe_name', '...')` | Automatique |
-
----
-
-## 4. Workflows de référence
-
-### 4.1 Shape Navigator (navigation MatchName + écriture)
-
-**Objectif** : Prouver la navigation dans l’arbre d’un Shape Layer et modifier une propriété simple.
-
-> Voir [Annexe C – Recettes & snippets](./pyshiftae_implementation_shape_navigator_cep_bridge.md) pour le script complet.
-
-**Résumé** :
-1. Récupérer le calque actif (`ae.Layer.active_layer()`)  
-2. Descendre dans `ADBE Root Vectors Group` via `DynamicStreamSuite.GetNewStreamRefByMatchname()`  
-3. Chercher `ADBE Vector Graphic - Fill`  
-4. Modifier `ADBE Vector Fill Opacity` ou `ADBE Vector Fill Color`  
-5. Relire la valeur pour validation
-
-### 4.2 CEP Bridge Hybrid 2.0
-
-**Architecture** :
-```
-CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
-     → fallback JSON files → bridge_daemon.py → PyShiftAE
-```
-
-**Composants** :
-- **CEP** : UI + events + JSX runtime  
-- **Python** : logique outillée + opérations natives  
-- **IPC** : PyInterface (prioritaire) ou mailbox JSON  
-
-**Format JSON** (pipe) :
-```json
-{ "endpoint": "Response", "functionName": "<func>", "args": {"param1": "..."} }
-```
-
-### 4.3 Hooks simulés via CEP
-
-**Principe** : CEP observe l’état AE (sélection, calque actif) via `evalScript`, détecte les changements, et envoie des commandes à Python.
-
-**Exemple** : Polling sélection active toutes les 300ms, déclenchement `run_python` sur changement.
 
 ---
 
@@ -179,7 +218,7 @@ CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
 
 **Points clés** :
 - Python 3.11 recommandé (builder officiel)  
-- Méthode portable : copie locale de `Lib`, `DLLs`, `python311.dll` près d’AE  
+- Méthode portable : copie locale de `Lib`, `DLLs`, `python311.dll` près d'AE  
 - Gestion multi-disques (C: Python, F: AE)  
 
 ### 5.2 Maintenance
@@ -192,7 +231,8 @@ CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
 
 ## 6. Annexes
 
-### [Annexe A – Faisabilité avancée](./pyshiftae_feasibility_study_shape_layers_hooks.md)
+### Annexe A – Faisabilité avancée
+*Document en préparation*
 - Étude détaillée Shape Layers & Hooks  
 - Verdicts techniques et modifications C++ requises  
 
@@ -212,10 +252,10 @@ CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
 
 ## Changelog
 
-- **v1.0 (2026-02-06)** : Création du guide consolidé à partir des documents existants  
+- **v1.0 (2026-02-07)** : Refactorisation en Manuel de Développement selon standards documentation
 - **Prochaine revue** : Trimestrielle ou sur mise à jour majeure de PyShiftAE/AETK  
 
 ---
 
-> **Contributeurs** : Analyse consolidée à partir des documents techniques internes  
+> **Contributeurs** : Basé sur les documents techniques internes et l'expertise PyShiftAE  
 > **Contact** : Pour questions ou mises à jour, référez-vous aux annexes détaillées ou ouvrez une issue dans le repo.

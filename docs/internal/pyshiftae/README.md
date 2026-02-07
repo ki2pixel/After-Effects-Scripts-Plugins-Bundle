@@ -1,30 +1,34 @@
 # Documentation PyShiftAE
 
-Ce dossier contient la documentation technique consolidée pour PyShiftAE (plugin After Effects avec binding Python).
+> Contenu technique pour développeurs Python/C++ • 8 documents • Actif
 
-## Structure
+## Organisation
 
-### 📖 Guide principal
-- **[pyshiftae_guide.md](./pyshiftae_guide.md)** – Document de référence consolidé (architecture, patterns, workflows, installation)
+### 📖 Guides fondamentaux
+- **[pyshiftae_guide.md](./pyshiftae_guide.md)** – Guide complet d'architecture, patterns et workflows
+- **[pyshiftae_installation_windows.md](./pyshiftae_installation_windows.md)** – Installation et configuration Windows
 
-### 📚 Annexes techniques
-- **[Annexe A – Faisabilité avancée](./pyshiftae_feasibility_study_shape_layers_hooks.md)** – Étude détaillée Shape Layers & Hooks, verdicts techniques
-- **[Annexe B – Installation Windows](./pyshiftae_installation_windows.md)** – Guide complet d'installation et troubleshooting Windows
-- **[Annexe C – Recettes & snippets](./pyshiftae_implementation_shape_navigator_cep_bridge.md)** – Scripts complets (Shape Navigator) et architecture CEP Bridge
-- **[Annexe D – Safe patterns checklist](./pyshiftae_safe_patterns_checklist.md)** – Checklist opérationnelle (threading, GIL, IPC, DO/DON'T)
+### 🔧 Référence Technique
+- **[pyshiftae_safe_patterns_checklist.md](./pyshiftae_safe_patterns_checklist.md)** – Checklist opérationnelle (threading, GIL, IPC)
+- **[architecture_interne_pyshiftae.md](./architecture_interne_pyshiftae.md)** – Architecture interne et rapport technique
+
+### 📚 Limitations & Patterns
+- **[pyshiftae_implementation_shape_navigator_cep_bridge.md](./pyshiftae_implementation_shape_navigator_cep_bridge.md)** – Recettes Shape Layers et CEP Bridge
+- **[pyshiftae_capabilities_matrix.md](./pyshiftae_capabilities_matrix.md)** – Matrice des capacités et limitations
+- **[aetk_bindings.md](./aetk_bindings.md)** – Documentation des bindings AETK
 
 ## Navigation recommandée
 
-1. **Nouveaux utilisateurs** : Commencer par le [guide principal](./pyshiftae_guide.md)
-2. **Implémentation technique** : Consulter les annexes selon vos besoins
-3. **Installation** : Suivre l'annexe B pour Windows
-4. **Dépannage** : Voir les sections troubleshooting dans chaque annexe
+1. **Nouveaux venus** : Commencez par le [Guide principal](./pyshiftae_guide.md)
+2. **Architectes** : Lisez l'[Architecture Interne](./architecture_interne_pyshiftae.md)
+3. **Implémentation** : Consultez les références techniques selon vos besoins
+4. **Dépannage** : Voir sections troubleshooting dans chaque guide
 
-## Historique
+## Propriétaire & maintenance
 
-- **6 février 2026** : Création du guide consolidé et réorganisation des documents existants
-- Documents originaux conservés en annexes pour référence détaillée
+- **Lead** : [@lead-python]
+- **Statut** : Actif
+- **Dernière revue** : 2026-02-07
 
 ---
-
-> **Note** : Cette documentation est basée sur l'analyse du code AETK et de l'API Python PyShiftAE, ainsi que sur les sources externes analysées dans `docs/internal/repomix/` (CEPy-Resources, PyFxCore, PyShift-Utils, etc.). Le code source C++ du plugin PyShiftAE lui-même n'est pas inclus dans ce bundle (symlink cassé dans `PyShiftAE/AEGP/`).
+*Document généré le 2026-02-07 • Basé sur DOCS_PLAYBOOK.md*

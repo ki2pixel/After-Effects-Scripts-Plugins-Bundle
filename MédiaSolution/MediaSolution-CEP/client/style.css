@@ -1,0 +1,312 @@
+/* Media Solution v12.0 CEP - Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    background: #2a2a2a;
+    color: #e0e0e0;
+    line-height: 1.4;
+}
+
+.panel-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Header */
+.panel-header {
+    background: #1e1e1e;
+    padding: 12px 16px;
+    border-bottom: 1px solid #404040;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+}
+
+.status-dot.ready {
+    background: #4caf50;
+}
+
+.status-dot.working {
+    background: #ff9800;
+    animation: pulse 1.5s infinite;
+}
+
+.status-dot.error {
+    background: #f44336;
+}
+
+.daemon-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+    display: inline-block;
+}
+
+.daemon-dot.ready {
+    background: #4caf50;
+}
+
+.daemon-dot.working {
+    background: #ff9800;
+    animation: pulse 1.5s infinite;
+}
+
+.daemon-dot.error {
+    background: #f44336;
+}
+
+.status-text {
+    font-size: 11px;
+    color: #b0b0b0;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Main */
+.panel-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.section {
+    background: #333333;
+    border: 1px solid #404040;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.section h2 {
+    background: #404040;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    border-bottom: 1px solid #555555;
+}
+
+.section-content {
+    padding: 12px;
+}
+
+/* Form Controls */
+.folder-controls,
+.cuts-controls,
+.config-actions,
+.batch-controls,
+.logs-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px;
+}
+
+.folder-input,
+.config-input {
+    flex: 1;
+    background: #2a2a2a;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #e0e0e0;
+    font-size: 11px;
+}
+
+.folder-input:focus,
+.config-input:focus {
+    outline: none;
+    border-color: #007acc;
+    box-shadow: 0 0 0 1px #007acc;
+}
+
+/* Buttons */
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #007acc;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #005a9e;
+}
+
+.btn-secondary {
+    background: #555555;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #666666;
+}
+
+.btn-danger {
+    background: #d32f2f;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #b71c1c;
+}
+
+/* Config Grid */
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-item label {
+    font-size: 11px;
+    color: #b0b0b0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.config-item input[type="checkbox"] {
+    margin: 0;
+}
+
+/* Folder Info */
+.folder-info {
+    padding: 0 12px 12px;
+    font-size: 11px;
+    color: #888;
+}
+
+/* Progress */
+.batch-progress {
+    padding: 12px;
+    border-top: 1px solid #404040;
+}
+
+.progress-bar {
+    height: 4px;
+    background: #404040;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #007acc;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 11px;
+    color: #b0b0b0;
+    text-align: center;
+}
+
+/* Logs */
+.logs-container {
+    height: 200px;
+    overflow-y: auto;
+    background: #1e1e1e;
+    border: 1px solid #404040;
+    margin: 12px;
+    padding: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 10px;
+    line-height: 1.3;
+}
+
+.log-entry {
+    margin-bottom: 2px;
+    word-wrap: break-word;
+}
+
+.log-entry.info {
+    color: #e0e0e0;
+}
+
+.log-entry.success {
+    color: #4caf50;
+}
+
+.log-entry.warning {
+    color: #ff9800;
+}
+
+.log-entry.error {
+    color: #f44336;
+}
+
+.log-entry.python {
+    color: #00bcd4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555555;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}

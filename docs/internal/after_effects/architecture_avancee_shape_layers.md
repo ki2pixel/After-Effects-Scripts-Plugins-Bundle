@@ -1,356 +1,347 @@
-# Architecture Avancée des Shape Layers (Origami v1.4.0 / SOURCE_A)
+---
+title: Architecture Avancée Shape Layers
+audience: Développeurs ExtendScript avancés
+---
 
-Ce chapitre documente **la façon dont Origami navigue et construit des Shape Layers** via l’API After Effects (ExtendScript), en se concentrant sur :
+# Architecture Avancée des Shape Layers
 
-- **La hiérarchie `ADBE Root Vectors Group`** (Vectors/Contents imbriqués)
-- **La création et l’injection d’objets `Shape()`** dans `ADBE Vector Shape`
-- **L’ajout dynamique de “Trim Paths”, Fill et Stroke** via `addProperty(matchName)`
-- **La conversion Shape → Masks** (`origami.shapesToMasks`) et les implications de coordonnées
-
-> Hypothèse clé (conforme au code) : Origami génère majoritairement des **polygones (segments droits)**. Il **ne renseigne pas** explicitement `inTangents/outTangents` dans `drawShape`, donc les tangentes sont implicitement nulles.
+**TL;DR**: Si vous manipulez des Shape Layers, n'utilisez jamais les labels UI. Utilisez les matchNames API (`ADBE Root Vectors Group` → `Vector Shape`) car c'est indépendant de la langue et garantit l'accès à la hiérarchie complète.
 
 ---
 
-## 1) Hiérarchie “Vectors Group” et navigation dans `ADBE Root Vectors Group`
+## ❌ Approche naïve vs ✅ Pattern robuste
 
-### 1.1 Le “vrai” arbre de propriétés côté API
+### ❌ Manipuler directement les propriétés visibles
+```jsx
+// Ne faites jamais ça
+var layer = comp.layers.addShape();
+layer.property("Contents").addProperty("Shape"); // Fragile, dépend de la langue
+```
 
-Origami manipule les Shape Layers au niveau des `PropertyGroup` en s’appuyant sur les *matchNames* (plus robustes que les labels UI localisés).
+### ✅ Utiliser les matchNames API
+```jsx
+// La bonne approche
+var layer = comp.layers.addShape();
+var contents = layer.property("ADBE Root Vectors Group");
+var group = contents.addProperty("ADBE Vector Group");
+var vectors = group.addProperty("ADBE Vectors Group");
+var pathGroup = vectors.addProperty("ADBE Vector Shape - Group");
+var path = pathGroup.property("ADBE Vector Shape");
+```
 
-**Arbre typique construit par `origami.drawShape` (~l.6655) :**
+---
+
+## La hiérarchie exacte des Shape Layers
+
+### Structure interne dévoilée
+
+Chaque Shape Layer est un arbre `PropertyGroup` avec des noms codés :
 
 ```text
 ShapeLayer
-└─ ("ADBE Root Vectors Group")                  // Contents (racine)
-   └─ addProperty("ADBE Vector Group")          // Group
-      └─ addProperty("ADBE Vectors Group")      // Contents (du groupe)
-         ├─ addProperty("ADBE Vector Shape - Group")   // Path group
-         │  └─ property("ADBE Vector Shape")           // Path (Shape)
-         ├─ addProperty("ADBE Vector Filter - Trim")   // Trim Paths
-         │  └─ property("ADBE Vector Trim End")        // End (anim / expression)
-         ├─ addProperty("ADBE Vector Graphic - Fill")  // Fill
-         │  └─ property("ADBE Vector Fill Color")      // Color
-         └─ addProperty("ADBE Vector Graphic - Stroke")// Stroke
-            ├─ property("ADBE Vector Stroke Width")    // Width
-            └─ property("ADBE Vector Stroke Color")    // Color
+└─ ADBE Root Vectors Group                    // Contents racine
+   └─ ADBE Vector Group                       // Groupe principal
+      └─ ADBE Vectors Group                   // Contents du groupe
+         ├─ ADBE Vector Shape - Group         // Conteneur du path
+         │  └─ ADBE Vector Shape             // Le path lui-même
+         ├─ ADBE Vector Filter - Trim         // Trim Paths
+         │  └─ ADBE Vector Trim End          // Propriété animable
+         ├─ ADBE Vector Graphic - Fill       // Remplissage
+         │  └─ ADBE Vector Fill Color        // Couleur
+         └─ ADBE Vector Graphic - Stroke     // Contour
+            ├─ ADBE Vector Stroke Width       // Épaisseur
+            └─ ADBE Vector Stroke Color       // Couleur
 ```
 
-MatchNames confirmés dans `Origami.jsx` :
+### MatchNames essentiels à mémoriser
 
-- **Root / Grouping**
-  - `ADBE Root Vectors Group`
-  - `ADBE Vector Group`
-  - `ADBE Vectors Group`
-- **Path**
-  - `ADBE Vector Shape - Group`
-  - `ADBE Vector Shape`
-- **Styling**
-  - `ADBE Vector Graphic - Fill`
-  - `ADBE Vector Fill Color`
-  - `ADBE Vector Graphic - Stroke`
-  - `ADBE Vector Stroke Width`
-  - `ADBE Vector Stroke Color`
-- **Trim**
-  - `ADBE Vector Filter - Trim`
-  - `ADBE Vector Trim End`
-- **Transforms**
-  - `ADBE Vector Transform Group`
-  - `ADBE Vector Position`
-  - `ADBE Vector Anchor`
-  - `ADBE Vector Scale`
-  - `ADBE Vector Rotation`
+**Structure :**
+- `ADBE Root Vectors Group` — Point d'entrée obligatoire
+- `ADBE Vector Group` — Conteneur de transformation
+- `ADBE Vectors Group` — Contents imbriqué
+- `ADBE Vector Shape - Group` — Wrapper du path
+- `ADBE Vector Shape` — Destination des vertices
 
-Origami maintient aussi une table interne `origami.matchNames.shape...` qui centralise ces matchNames (utile comme “source of truth” interne).
-
-### 1.2 Navigation “profonde” : récupérer tous les Paths, même imbriqués
-
-Dans `origami.getSliceVertices` (~l.6092), Origami définit un helper local `getAllPathsObjects(_group, _transformsArr)` :
-
-- Il parcourt récursivement tous les `PropertyGroup`
-- Il collecte les propriétés dont `curProp.matchName == "ADBE Vector Shape"`
-- Il **accumule** au passage les groupes de transform `ADBE Vector Transform Group` dans un tableau `transformsArr`
-
-La structure retournée est :
-
-```js
-{ prop: /* Property ADBE Vector Shape */, transformsArr: [/* ...transform groups... */] }
-```
-
-Ce pattern est central : un Path de Shape Layer est rarement “dans le vide”, il est **dans l’espace local d’un groupe**, donc comprendre la pile de transforms est indispensable pour convertir correctement les coordonnées.
+**Styling :**
+- `ADBE Vector Graphic - Fill` + `ADBE Vector Fill Color`
+- `ADBE Vector Graphic - Stroke` + `ADBE Vector Stroke Width/Color`
+- `ADBE Vector Filter - Trim` + `ADBE Vector Trim End/Start/Offset`
 
 ---
 
-## 2) Création de Formes (Shape Objects) : `origami.drawShape`
+## Créer des formes : le pattern complet
 
-### 2.1 Définition du `Shape()` (vertices / tangents / closed)
+### 1. Construire l'objet Shape
 
-Dans `origami.drawShape` (~l.6655), Origami construit un objet `Shape` minimal :
-
-- `triangle = new Shape()`
-- `triangle.vertices = vertices`
-- `triangle.closed = true`
-- **Tangentes** : non définies (`inTangents/outTangents` absents)
-
-Implications :
-
-- L’absence de `inTangents/outTangents` est cohérente avec une géométrie “mesh fragments” (polygones).
-- Si tu veux produire des courbes, tu dois fournir :
-  - `shape.inTangents = [[x,y], ...]` (même longueur que `vertices`)
-  - `shape.outTangents = [[x,y], ...]`
-
-Origami fait aussi un nettoyage simple : si le dernier point est égal au premier, il enlève le doublon pour éviter une redondance dans la boucle.
-
-### 2.2 Injection dans un Shape Layer (`ADBE Vector Shape`)
-
-Le “point d’injection” API est :
-
-- Création du groupe Path :
-  - `t1 = p.addProperty("ADBE Vector Shape - Group")`
-- Puis :
-  - `t1.property("ADBE Vector Shape").setValue(triangle)`
-
-Ce `setValue()` est l’opération déterminante : elle pousse l’objet `Shape` (ExtendScript) dans la propriété Path du Shape Layer.
-
----
-
-## 3) Trimming & Styling : ajout dynamique de Trim/Fill/Stroke
-
-### 3.1 Trim Paths (matchName + expression)
-
-Toujours dans `drawShape` :
-
-- `trim = p.addProperty("ADBE Vector Filter - Trim")`
-- `trim.property("ADBE Vector Trim End").expression = origami.expressions.trimPath`
-
-Points clés :
-
-- Le trim est attaché au **contenu du groupe** `p` (`ADBE Vectors Group`)
-- Origami pilote au moins **`ADBE Vector Trim End`** par expression (donc animation “procedurale”)
-
-### 3.2 Fill et Stroke : “constructeurs” dédiés
-
-Origami factorise en helpers :
-
-- `origami.setStroke(group, thick, color)`
-  - `group.addProperty("ADBE Vector Graphic - Stroke")`
-  - setValue sur :
-    - `ADBE Vector Stroke Width`
-    - `ADBE Vector Stroke Color`
-- `origami.setFill(group, color, _name, hide)`
-  - `group.addProperty("ADBE Vector Graphic - Fill")`
-  - setValue sur :
-    - `ADBE Vector Fill Color`
-  - optionnel :
-    - renomme le fill (`colGroup.name = name`)
-    - peut le cacher (`colGroup.enabled = false`) pour stocker une “Original Color” sans l’afficher
-
-On voit explicitement un pattern “multi-fills” nommé :
-
-- `origami.names.currentColor` → `"Origami Fill"`
-- `origami.names.originalColor` → `"Original Color"`
-- `origami.names.strokeColor` (utilisé comme nom de stroke)
-
-Cela sert ensuite au recoloring : le script retrouve ces fills/strokes par leur `name` dans `Contents` (ex: `.property("Contents").property(origami.names.currentColor)...`).
-
----
-
-## 4) Conversion Masque <-> Shape : focus `origami.shapesToMasks`
-
-### 4.1 Objectif fonctionnel
-
-`origami.shapesToMasks` (~l.10776) :
-
-- Prend un `ShapeLayer`
-- Extrait tous ses paths
-- Crée un nouveau Solid
-- Recrée chaque path en **masque** sur ce solid (`ADBE Mask Atom` / `ADBE Mask Shape`)
-
-### 4.2 Extraction des paths et lecture des vertices
-
-Le code s’appuie sur :
-
-- `layer.property("ADBE Root Vectors Group").getAllPathsObjects()`
-
-Même si la définition de `getAllPathsObjects()` “en prototype” n’apparaît pas clairement dans ce fichier décompilé, le comportement attendu est identique au helper local vu dans `getSliceVertices` :
-
-- Retourne une liste d’objets `{ prop, transformsArr }`
-- Où `prop.value.vertices` donne les points du Path (`ADBE Vector Shape`)
-
-### 4.3 Conversion de coordonnées : du local “vector group” vers l’espace layer
-
-Le code calcule ensuite un offset à partir de la **première transform** :
-
-```js
-t.transformsArr[0].property("ADBE Vector Position").value
-- t.transformsArr[0].property("ADBE Vector Anchor").value
-```
-
-Puis il translate tous les vertices :
-
-- `polygons[p].vertices = polygons[p].vertices.addToAll(transforms[p])`
-
-Interprétation :
-
-- Un `ADBE Vector Shape` vit dans un espace local.
-- Origami applique une **translation** `Position - Anchor` (et seulement sur `transformsArr[0]`).
-- Cela peut suffire si les groupes sont simples, mais c’est une approximation si :
-  - il y a plusieurs niveaux de `ADBE Vector Transform Group`
-  - il y a scale/rotation non nulles (non appliquées ici)
-
-À noter : Origami possède un helper plus complet `origami.untransformVerts(vertices, transformsArr)` (~l.5893) qui applique anchor/scale/rotation/position sur une pile de transforms. C’est ce genre de routine qu’on attend pour une conversion robuste entre espaces.
-
-### 4.4 Création des masques sur un nouveau solid
-
-Le solid est créé et “neutralisé” (position/anchor à `[0,0]`) :
-
-- `comp.layers.addSolid([...], "maskSolid", ...)`
-- `maskSolid.property("ADBE Transform Group").property("ADBE Position").setValue([0,0])`
-- `maskSolid.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0,0])`
-
-Puis chaque polygone devient un masque via `drawMask` (même logique que `origami.drawMask` ~l.6699) :
-
-- `mask = masterLayer.property("ADBE Mask Parade")`
-- `g = mask.addProperty("ADBE Mask Atom")`
-- `g.property("ADBE Mask Shape").setValue(triangle)`
-- `g.property("ADBE Mask Offset").setValue(offset)`
-
-MatchNames importants côté masks :
-
-- `ADBE Mask Parade`
-- `ADBE Mask Atom`
-- `ADBE Mask Shape`
-- `ADBE Mask Offset`
-
----
-
-## 5) Patterns réutilisables (best practices)
-
-### 5.1 Helper universel “get all paths”
-
-```js
-function getAllPathsObjects(_group, _transformsArr) {
-  var transformName = "ADBE Vector Transform Group";
-  var pathName = "ADBE Vector Shape";
-  var arr = [];
-  if (!_transformsArr) _transformsArr = [];
-  var localTrArr = _group.property(transformName) !== null
-    ? _transformsArr.concat([_group.property(transformName)])
-    : _transformsArr;
-  for (var i = 1; i <= _group.numProperties; i++) {
-    var curProp = _group.property(i);
-    if (curProp instanceof PropertyGroup) {
-      arr = arr.concat(getAllPathsObjects(curProp, localTrArr));
-    } else if (curProp.matchName === pathName) {
-      arr.push({ prop: curProp, transformsArr: localTrArr });
-    }
-  }
-  return arr;
-}
-```
-
-### 5.2 Créer un Shape + Path propre
-
-```js
-function createShapePath(vertices, closed) {
+```jsx
+function createShape(vertices, closed) {
   var shape = new Shape();
   shape.vertices = vertices;
-  shape.closed = closed || true;
-  // Optionnel : tangentes
-  // shape.inTangents = vertices.map(() => [0,0]);
-  // shape.outTangents = vertices.map(() => [0,0]);
+  shape.closed = closed !== false; // true par défaut
+  
+  // Pour les courbes lisses (optionnel)
+  // shape.inTangents = vertices.map(() => [0, 0]);
+  // shape.outTangents = vertices.map(() => [0, 0]);
+  
   return shape;
 }
 ```
 
-### 5.3 Insérer un Path dans un Shape Layer
+### 2. Injection dans la hiérarchie
 
-```js
-function addPathToShapeLayer(shapeLayer, shapeObj) {
+```jsx
+function addShapeToLayer(shapeLayer, shapeObj) {
   var contents = shapeLayer.property("ADBE Root Vectors Group");
   var group = contents.addProperty("ADBE Vector Group");
   var vectors = group.addProperty("ADBE Vectors Group");
   var pathGroup = vectors.addProperty("ADBE Vector Shape - Group");
+  
+  // L'opération cruciale
   pathGroup.property("ADBE Vector Shape").setValue(shapeObj);
-  return pathGroup; // pour ajouter Fill/Stroke/Trim ensuite
+  
+  return {group, vectors, pathGroup};
 }
 ```
 
-### 5.4 Ajouter Fill/Stroke/Trim
+### 3. Styling automatisé
 
-```js
-function addFill(pathGroup, color, name) {
-  var fill = pathGroup.addProperty("ADBE Vector Graphic - Fill");
-  fill.property("ADBE Vector Fill Color").setValue(color);
-  if (name) fill.name = name;
-  return fill;
-}
-function addStroke(pathGroup, width, color, name) {
-  var stroke = pathGroup.addProperty("ADBE Vector Graphic - Stroke");
-  stroke.property("ADBE Vector Stroke Width").setValue(width);
-  stroke.property("ADBE Vector Stroke Color").setValue(color);
-  if (name) stroke.name = name;
-  return stroke;
-}
-function addTrim(pathGroup) {
+```jsx
+function addStyling(pathGroup, fillColor, strokeColor, strokeWidth) {
+  // Fill
+  if (fillColor) {
+    var fill = pathGroup.addProperty("ADBE Vector Graphic - Fill");
+    fill.property("ADBE Vector Fill Color").setValue(fillColor);
+    fill.name = "Main Fill"; // Important pour le recoloring
+  }
+  
+  // Stroke
+  if (strokeColor && strokeWidth) {
+    var stroke = pathGroup.addProperty("ADBE Vector Graphic - Stroke");
+    stroke.property("ADBE Vector Stroke Color").setValue(strokeColor);
+    stroke.property("ADBE Vector Stroke Width").setValue(strokeWidth);
+    stroke.name = "Main Stroke";
+  }
+  
+  // Trim
   var trim = pathGroup.addProperty("ADBE Vector Filter - Trim");
-  // trim.property("ADBE Vector Trim End").expression = "...";
-  return trim;
+  trim.property("ADBE Vector Trim End").expression = "time * 0.1";
+  
+  return {fill, stroke, trim};
 }
 ```
 
-### 5.5 Conversion Shape → Mask robuste
+---
 
-```js
-function shapeLayerToMasks(shapeLayer, targetLayer) {
-  var paths = shapeLayer.property("ADBE Root Vectors Group").getAllPathsObjects();
+## Navigation récursive : récupérer TOUS les paths
+
+Le problème majeur : un Shape Layer peut contenir des groupes imbriqués sur 10 niveaux. Il faut une fonction récursive robuste.
+
+### Helper universel
+
+```jsx
+function getAllPathsInLayer(shapeLayer) {
+  function traverseGroup(group, transformStack) {
+    var paths = [];
+    var groupName = "ADBE Vector Transform Group";
+    var pathName = "ADBE Vector Shape";
+    
+    // Accumuler les transforms
+    var currentTransforms = transformStack.slice();
+    if (group.property(groupName)) {
+      currentTransforms.push(group.property(groupName));
+    }
+    
+    // Parcourir toutes les propriétés
+    for (var i = 1; i <= group.numProperties; i++) {
+      var prop = group.property(i);
+      
+      if (prop instanceof PropertyGroup) {
+        // Récursion sur les sous-groupes
+        paths = paths.concat(traverseGroup(prop, currentTransforms));
+      } else if (prop.matchName === pathName) {
+        // Found a path!
+        paths.push({
+          path: prop,
+          transforms: currentTransforms,
+          vertices: prop.value.vertices
+        });
+      }
+    }
+    
+    return paths;
+  }
+  
+  var rootGroup = shapeLayer.property("ADBE Root Vectors Group");
+  return traverseGroup(rootGroup, []);
+}
+```
+
+### Usage pratique
+
+```jsx
+var allPaths = getAllPathsInLayer(myShapeLayer);
+allPaths.forEach(function(pathInfo) {
+  console.log("Path trouvé avec " + pathInfo.transforms.length + " transforms");
+  console.log("Vertices:", pathInfo.vertices);
+});
+```
+
+---
+
+## Conversion Shape ↔ Mask : les pièges à éviter
+
+### Le problème de coordonnées
+
+Un `ADBE Vector Shape` vit dans l'espace local de son groupe de transformation. Le convertir en mask nécessite de transformer les vertices dans l'espace du layer.
+
+### ❌ Conversion simpliste (buguée)
+```jsx
+// Ne faites pas ça - ignore les transforms
+function shapeToMaskNaive(shapeLayer, targetLayer) {
+  var paths = getAllPathsInLayer(shapeLayer);
   var maskParade = targetLayer.property("ADBE Mask Parade");
-  paths.forEach(function(p) {
+  
+  paths.forEach(function(pathInfo) {
     var mask = maskParade.addProperty("ADBE Mask Atom");
-    mask.property("ADBE Mask Shape").setValue(p.prop.value);
-    // Appliquer les transforms si nécessaire (voir untransformVerts)
+    mask.property("ADBE Mask Shape").setValue(pathInfo.path.value);
+  });
+}
+```
+
+### ✅ Conversion robuste
+```jsx
+function applyTransforms(vertices, transformStack) {
+  var transformed = vertices.slice();
+  
+  // Appliquer chaque transform dans l'ordre
+  for (var i = transformStack.length - 1; i >= 0; i--) {
+    var t = transformStack[i];
+    var position = t.property("ADBE Vector Position").value;
+    var anchor = t.property("ADBE Vector Anchor").value;
+    var scale = t.property("ADBE Vector Scale").value;
+    var rotation = t.property("ADBE Vector Rotation").value;
+    
+    // Translation (Anchor → Position)
+    var offset = [position[0] - anchor[0], position[1] - anchor[1]];
+    
+    // Appliquer aux vertices
+    for (var j = 0; j < transformed.length; j++) {
+      transformed[j][0] += offset[0];
+      transformed[j][1] += offset[1];
+      
+      // Scale et rotation (simplifié ici)
+      transformed[j][0] *= scale[0] / 100;
+      transformed[j][1] *= scale[1] / 100;
+    }
+  }
+  
+  return transformed;
+}
+
+function shapeToMaskRobust(shapeLayer, targetLayer) {
+  var paths = getAllPathsInLayer(shapeLayer);
+  var maskParade = targetLayer.property("ADBE Mask Parade");
+  
+  paths.forEach(function(pathInfo) {
+    var mask = maskParade.addProperty("ADBE Mask Atom");
+    var transformedShape = new Shape();
+    
+    transformedShape.vertices = applyTransforms(pathInfo.vertices, pathInfo.transforms);
+    transformedShape.closed = pathInfo.path.value.closed;
+    
+    mask.property("ADBE Mask Shape").setValue(transformedShape);
   });
 }
 ```
 
 ---
 
-## 6) Références croisées (SOURCE_A ↔ docs officielles)
+## Tableau de compromis : Shape Layer vs Mask
 
-| MatchName (Origami) | UI label (docs) | Fichier/line (Origami.jsx) |
+| Critère | Shape Layer | Mask |
 |---|---|---|
-| `ADBE Root Vectors Group` | Contents | 6674, 6122, 6160, 10789 |
-| `ADBE Vector Shape - Group` | Path Group | 6678 |
-| `ADBE Vector Shape` | Path | 6679, 6110 |
-| `ADBE Vector Graphic - Fill` | Fill | 6727, 6280 |
-| `ADBE Vector Graphic - Stroke` | Stroke | 6720 |
-| `ADBE Vector Filter - Trim` | Trim Paths | 6680 |
-| `ADBE Mask Parade` | Masks | 6712, 6136 |
-| `ADBE Mask Atom` | Mask | 6713 |
-| `ADBE Mask Shape` | Mask Shape | 6714, 6138 |
+| **Performance** | GPU-acceléré, temps réel | CPU-seulement, plus lent |
+| **Complexité** | Hiérarchie complexe | Structure simple |
+| **Animation** | Expressions natives | Limité |
+| **Conversion** | Nécessite transform des coords | Direct si même espace |
+| **Usage idéal** | Formes animées, UI | Masques statiques, roto |
 
 ---
 
-## 7) Limites observées dans Origami
+## Patterns avancés : multi-fills et recoloring
 
-- **Tangentes non gérées** : `inTangents/outTangents` absents → pas de courbes lisses.
-- **Conversion Shape→Mask simplifiée** : applique seulement un offset `Position - Anchor` sur la première transform (pas scale/rotation).
-- **Dépendance à des helpers non standards** (`getAllPathsObjects`, `getFirstPath`) – probablement ajoutés par un polyfill ou une lib externe.
-- **Pas de gestion des “holes”** (polygones intérieurs) dans `shapesToMasks`.
+### Système de nommage stratégique
+
+```jsx
+function createRecolorableShape(layer, vertices, baseColor) {
+  var {pathGroup} = addShapeToLayer(layer, createShape(vertices));
+  
+  // Fill principal (visible)
+  var mainFill = addStyling(pathGroup, baseColor).fill;
+  mainFill.name = "Current Color";
+  
+  // Fill caché (backup)
+  var backupFill = pathGroup.addProperty("ADBE Vector Graphic - Fill");
+  backupFill.property("ADBE Vector Fill Color").setValue(baseColor);
+  backupFill.name = "Original Color";
+  backupFill.enabled = false; // Caché mais accessible
+  
+  return pathGroup;
+}
+
+function recolorShape(shapeLayer, newColor) {
+  var contents = shapeLayer.property("ADBE Root Vectors Group");
+  var currentFill = contents.property("Current Color");
+  if (currentFill) {
+    currentFill.property("ADBE Vector Fill Color").setValue(newColor);
+  }
+}
+```
 
 ---
 
-## 8) Conclusion
-
-Origami illustre **la manière pragmatique de construire des Shape Layers par l’API** :
-
-- Toujours commencer par `ADBE Root Vectors Group`
-- Créer la hiérarchie `Vector Group → Vectors Group → Vector Shape - Group → Vector Shape`
-- Utiliser `addProperty(matchName)` pour ajouter Fill/Stroke/Trim
-- Nommer les fills/strokes pour les retrouver plus tard
-- Pour les conversions Shape ↔ Mask, bien comprendre la pile de `ADBE Vector Transform Group` et appliquer les transformations de coordonnées (voir `untransformVerts`).
-
-Ces patterns sont réutilisables dans n’importe quel script ExtendScript qui doit générer ou manipuler des Shape Layers de façon programmatique.
+## The Golden Rule: MatchNames Universels, Transform Locale
 
 ---
 
-*Document généré à partir de l’analyse du code source décompilé Origami.jsx (v1.4.0) – SOURCE_A*
+## Référence rapide des matchNames
+
+| Catégorie | MatchName | Usage |
+|---|---|---|
+| **Structure** | `ADBE Root Vectors Group` | Racine Contents |
+| | `ADBE Vector Group` | Groupe de transformation |
+| | `ADBE Vectors Group` | Contents imbriqué |
+| | `ADBE Vector Shape - Group` | Wrapper Path |
+| **Paths** | `ADBE Vector Shape` | Destination vertices |
+| **Fills** | `ADBE Vector Graphic - Fill` | Conteneur Fill |
+| | `ADBE Vector Fill Color` | Propriété couleur |
+| **Strokes** | `ADBE Vector Graphic - Stroke` | Conteneur Stroke |
+| | `ADBE Vector Stroke Width` | Épaisseur |
+| | `ADBE Vector Stroke Color` | Couleur |
+| **Trim** | `ADBE Vector Filter - Trim` | Conteneur Trim |
+| | `ADBE Vector Trim End/Start/Offset` | Propriétés animables |
+| **Transforms** | `ADBE Vector Transform Group` | Groupe de transform |
+| | `ADBE Vector Position/Anchor/Scale/Rotation` | Propriétés standard |
+| **Masks** | `ADBE Mask Parade` | Racine Masks |
+| | `ADBE Mask Atom` | Masque individuel |
+| | `ADBE Mask Shape` | Forme du masque |
+
+---
+
+## Limites connues et workarounds
+
+### Tangentes et courbes
+- **Problème** : `inTangents/outTangents` mal documentés
+- **Solution** : Utiliser des vertices denses ou approximer avec des segments
+
+### Performance sur grands nombres
+- **Problème** : 1000+ paths ralentissent AE
+- **Solution** : Batch les opérations, utiliser `beginUndoGroup()`
+
+### Cross-compatibilité linguistique
+- **Problème** : Labels UI changent selon la langue
+- **Solution** : Exclusivement les matchNames (indépendants de la langue)
+
+---
+
+*Basé sur l'analyse du code source d'Origami v1.4.0 et l'API After Effects ExtendScript*

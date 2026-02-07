@@ -73,6 +73,9 @@ memory_bank_updates:
     trigger: "When a task begins, is completed, or its status changes."
     action: "Append the new entry using insert_content. Never overwrite. Include timestamp."
     format: "[YYYY-MM-DD HH:MM:SS] - [Summary of Progress Update]"
+  entry_formatting:
+    - "In memory-bank/progress.md and memory-bank/decisionLog.md, always insert new entries at the top (reverse chronological order: most recent first)."
+    - "In these two files, each new entry must occupy a single line for readability (avoid multi-line bullet lists per entry)."
 
 umb: # Update Memory Bank command
   trigger: "^(Update Memory Bank|UMB)$"

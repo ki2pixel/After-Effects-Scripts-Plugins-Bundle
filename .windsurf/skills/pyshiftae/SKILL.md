@@ -110,7 +110,10 @@ Use `.set_value(...)` to write.
 
 ### Scheduler & threading (critical)
 
-- Any call into AE SDK must execute on the AE main thread via `TaskScheduler`. Heavy computation runs on Python workers, then enqueue micro-tasks via `ae.schedule_task`.
+- Any call into AE SDK must execute on the AE main thread via `TaskScheduler`. Heavy computation still belongs on Python workers, but **there is currently no `ae.schedule_task` helper exposed by the runtime**. Use one of the following strategies instead:
+  1. Run the mutating code where you are already on the AE thread (e.g., `bridge_daemon.py`, TaskScheduler callbacks invoked from C++).
+  2. Build/extend the C++ TaskScheduler wrapper (see `AETK/TaskScheduler`) and expose your own marshaling helper before calling into AE objects from worker threads.
+- When crossing from worker threads, pass only pure data structures through your queue and reacquire AE handles on the AE thread just before use.
 - Never block the UI thread with long loops or `future.get()` inside hooks.
 - Acquire the GIL only when running Python (`py::gil_scoped_acquire` at the edge) and release ASAP.
 

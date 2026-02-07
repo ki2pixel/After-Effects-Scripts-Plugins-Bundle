@@ -25,6 +25,7 @@ globs:
 - **Memory:** Short-lived AE handles, lock→use→unlock→free pattern
 - **Error Handling:** try/except with contextual messages (comp/layer/prop), never silent failures
 - **Dependencies:** Pure Python libraries only, document version strategy
+- **⚠️ NOTE:** Current PyShiftAE runtime does NOT expose `ae.schedule_task()` helper. Use direct PyFx calls when already on AE main thread (e.g., bridge_daemon.py) or implement TaskScheduler wrapper in C++.
 
 ### ExtendScript/JSX
 - **ES3 Compatibility:** Use `var` only, no `const`/`let`, no arrow functions, no template literals
@@ -35,6 +36,8 @@ globs:
 ## Patterns
 
 ### PyShiftAE: Worker Thread + Scheduler Pattern
+
+> **⚠️ CURRENT LIMITATION:** `ae.schedule_task()` helper not yet exposed in PyShiftAE runtime. Pattern below is conceptual - use direct PyFx calls when on AE main thread (e.g., bridge_daemon.py) or implement TaskScheduler wrapper.
 
 ```python
 import pyshiftae as ae
@@ -50,10 +53,11 @@ def apply_changes(data):
     if not comp: return
     layer = comp.layers.add_solid("Solid_IA", (0,1,0,1), 1920, 1080, 10)
 
-threading.Thread(target=lambda: (
-    data := heavy_computation(),
-    ae.schedule_task(lambda: apply_changes(data))
-)).start()
+# TODO: Replace with actual ae.schedule_task() when available
+# threading.Thread(target=lambda: (
+#     data := heavy_computation(),
+#     ae.schedule_task(lambda: apply_changes(data))
+# )).start()
 ```
 
 ### ExtendScript: Dockable Panel Pattern
@@ -131,8 +135,9 @@ def handle_command(command):
 ### PyShiftAE Operations
 1. **Thread boundary**: Pure Python vs AE SDK calls
 2. **Worker function**: Implement computation without AE calls
-3. **Scheduler function**: Apply results via `ae.schedule_task()`
+3. **Scheduler function**: Apply results via `ae.schedule_task()` *(TODO: not yet exposed)*
 4. **Error handling**: Wrap in try/except with context
+5. **Main thread context**: Direct PyFx calls when already on AE thread (e.g., bridge_daemon.py)
 
 ### ExtendScript UI Panels
 1. **Dockable detection**: Test `thisObj instanceof Panel`
@@ -177,6 +182,7 @@ Test scenarios: project closed, layer deleted, comp inactive, undo groups
 - Version alignment: CPython ↔ .aex compatibility
 - Performance: Batch writes, avoid N+1 queries
 - IPC: Pipes/sockets preferred, mailbox fallback
+- **TODO:** Implement `ae.schedule_task()` wrapper for TaskScheduler C++ integration
 
 ### ExtendScript
 - File encoding: UTF-8, avoid BOM
@@ -206,3 +212,8 @@ Traditional scripting? → AE Scripting Expert skill
 ```
 
 For hybrid projects: Use primary skill + reference this file for unified conventions.
+
+## Final notes
+- Keep this document under 12,000 characters. Revise after any major changes.
+- **PyShiftAE TODO:** Add `ae.schedule_task()` helper to align documentation with runtime capabilities.
+- **Bridge Daemon Pattern:** Document main-thread execution model for direct PyFx calls.

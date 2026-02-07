@@ -1,125 +1,48 @@
-# Checklist “safe patterns” (PyShiftAE / AETK)
+# PyShiftAE: Best Practices & Anti-Patterns
 
-## 1) Pré-vol (avant d'exécuter du Python dans AE)
-- **Alignement versions** : vérifier que la version de Python ciblée correspond exactement au `.aex` packagé (cf. `PyShiftAE/Python/setup.py` et l'installateur `PyShiftAE/Python/plugin_installer.py`).
-- **Projet de test minimal** : valider sur un projet AE "sandbox" (1 comp, 1 footage, 1 layer) avant tout run en prod.
-- **Surface API** : identifier explicitement ce qui passe par des suites AE (risque thread) vs logique pure Python (safe).
+**TL;DR**: Ne jamais appeler l'API AEGP hors du TaskScheduler. Utilisez un worker thread pour les calculs et le main thread via scheduler pour les mutations AE.
 
-## 2) Règle d'or threading : "AE main thread only" pour les appels SDK
-- **Ne jamais appeler directement les suites AE depuis un thread Python** si tu n'as pas une garantie de marshaling vers le main thread.
-- **Pattern recommandé** : encapsuler tout appel suite/handle AE dans un mécanisme type `ScheduleOrExecute` / file d'exécution main thread.
-  - Référence : `AETK-main/AETK/src/AEGP/Core/Suites.cpp` (usage de `ae::ScheduleOrExecute(...)` pour sérialiser/exécuter côté main thread).
-- **Longs traitements** : faire le calcul lourd dans un worker thread *sans toucher AE*, puis publier une petite tâche main thread pour appliquer les résultats.
+## Le problème critique qui fait tout exploser
 
-## 3) Scheduler / Idle : découper en micro-tâches
-- **Petites unités de travail** : préférer 100 tâches de 5–10 ms plutôt qu'une tâche de 1s qui freeze l'UI.
-- **Exécution via idle hook** : s'appuyer sur l'exécution en idle pour éviter les blocages UI.
-  - Référence : `AETK-main/AETK/AEGP/Util/TaskScheduler.hpp` + `AETK-main/AETK/AEGP/TaskScheduler/TaskScheduler.cpp` (`onIdle()` appelle `ExecuteTask()`).
-- **Éviter les attentes bloquantes** : éviter de `wait()`/bloquer le thread UI sur un `future` si tu n'es pas certain que l'idle va tourner.
+Vous écrivez un script PyShiftAE. After Effects freeze complètement. L'interface ne répond plus. Le crash est inévitable. Pourquoi? Vous avez mélangé calculs Python et appels AE sur le même thread.
 
-## 4) GIL (Python) : acquisition minimale, pas de GIL "global"
-- **Pattern recommandé** : acquérir le GIL uniquement au moment d'exécuter du Python, et le relâcher dès que possible.
-  - Référence : `AETK-main/AEGP/Grabba/Grabba.cpp` (`py::gil_scoped_acquire`).
-- **Éviter** : garder le GIL durant des appels AE ou durant des I/O longues (risque d'affamer d'autres tâches Python).
+## La Golden Rule
 
-## 5) Gestion des handles / objets AE : durée de vie courte, pas de cache "dangling"
-- **Ne pas stocker** des handles AE (items, layers, streams) "longtemps" côté Python si la structure projet peut changer (suppression layer, fermeture projet).
-- **Re-validation** : re-récupérer les handles par ID/index quand c'est possible, ou vérifier que l'objet est toujours valide avant usage.
-- **Pattern mémoire AE** : si tu manipules des `AEGP_MemHandle`, respecter le triptyque lock → use → unlock → free.
-  - Référence : `memHandleToString` dans `AETK-main/AETK/AEGP/Core/Suites.hpp` (lock/unlock/free).
-- **Références circulaires** : éviter les références circulaires Python impliquant des objets PyFx (risque GC ↔ destructeurs C++).
+**Ne jamais appeler l'API AEGP hors du TaskScheduler.**
 
-## 6) Erreurs : jamais "silent fail", toujours contextualiser
-- **Encapsuler** chaque commande "haut niveau" dans un `try/except` (Python) ou `try/catch` (C++).
-- **Message actionnable** : inclure le contexte (comp/layer/property visé, matchName si pertinent, étape du pipeline).
-- **Surface utilisateur** : préférer une erreur claire + rollback partiel plutôt qu'un état projet incohérent.
-  - Référence : `TaskScheduler::onIdle` catch + `App::Alert(...)` dans `AETK-main/AETK/AEGP/TaskScheduler/TaskScheduler.cpp`.
+C'est la règle qui sépare le code qui fonctionne du code qui crash AE. Tout le reste en découle.
 
-## 7) Transactions / cohérence projet : appliquer en batch, minimiser les allers-retours
-- **Batching** : regrouper les modifications sur un même layer/comp (set de propriétés) plutôt que ping-pong property par property.
-- **Lecture vs écriture** : faire une passe "read snapshot" (collecte) puis une passe "write apply" (application) pour limiter les états intermédiaires.
+---
 
-## 8) Performance : réduire le coût des accès propriété
-- **Éviter les boucles "N x property queries"** : les getters AE peuvent être chers.
-- **Cache local courte durée** : ok pour une seule commande (ex: dictionnaire property->value) mais **pas** persistant entre commandes si le projet change.
-- **I/O disque** : si tu exportes (images, JSON), le faire hors main thread.
+## Threading: L'Architecte et le Maçon
 
-## 9) UI / Interactivité : ne pas promettre du ScriptUI depuis Python
-- **Attendu réaliste** : pas de panels dockables ScriptUI natifs depuis PyShiftAE ; limiter l'UI à messages, logs, commandes menu.
-- **UI déportée** : utiliser CEP (HTML/JS) pour l'interface utilisateur, qui envoie des ordres à la couche Python.
-- **Interdit** : ne pas utiliser PyQt/Tkinter dans le process AE (crash garanti).
-- **Feedback utilisateur** : au minimum
-  - début/fin d'exécution
-  - progression grossière (étapes)
-  - possibilité d'annuler (flag partagé lu entre micro-tâches)
-- **Pattern CEP ↔ Python** : ne jamais faire d'appel bloquant côté UI CEP, laisser Python notifier quand terminé.
+Imaginez un chantier. L'architecte (Python worker) conçoit les plans dans son bureau. Le maçon (AE main thread) exécute les modifications sur le chantier. Ils ne peuvent pas travailler au même endroit en même temps.
 
-### 9.1 Architecture Hybrid 2.0 (CEP Bridge)
-- **Transport natif** : Utiliser PyInterface (named pipes/Unix sockets) si disponible
-- **Fallback** : Mailbox JSON si pipe non exposé
-- **Temps réel** : Sliders et interactions continues possibles via pipe mode
-- **Diagnostic** : Scripts PowerShell/Bash pour découvrir les pipes disponibles
-- **Configuration** : `localStorage.setItem('pyshift_pipe_name', '...')` dans la console CEP
-- **Monitoring** : Console CEP pour vérifier le transport actif (`"Pipe connected"` ou `"mailbox"`)
+### ❌ Le Pattern qui Freeze AE
 
-## 10) Dépendances Python : "vendoring" léger, éviter le natif lourd
-- **Préférer** : libs pure Python, stables, sans extensions C.
-- **Éviter** : packages nécessitant OpenSSL/BLAS/CUDA/etc (risque de conflits ABI dans un interpreter embarqué).
-- **Isolation** : si tu dois ajouter des libs, documenter précisément la stratégie (venv vs site-packages embarqué) et tester sur machine "clean".
-
-## 11) Observabilité : logs structurés + mode debug
-- **Logger** : un logger Python unique (niveau INFO/DEBUG) et un mode "verbose" activable.
-- **Trace IDs** : un identifiant d'exécution par commande pour recoller les logs.
-- **Crash triage** : conserver la dernière commande, la dernière tâche scheduler, et la stacktrace Python.
-
-## 12) Tests "safe"
-- **Unit tests** : isoler la logique pure Python (sans AE) et la tester via `pytest`.
-- **Integration tests manuels** : scripts idempotents (peuvent être relancés sans dupliquer/importer 10x).
-- **Scénarios edge** : projet fermé pendant exécution, item supprimé, comp inactive, layer verrouillé, footage offline.
-
-## 13) Patterns hybrides (Python ↔ ExtendScript)
-- **Bridge** : utiliser Python pour logique métier + ExtendScript injecté pour shapes/propriétés non exposées.
-- **Mécanisme** : Python formate commande JS → exécute via `UtilitySuite.executeScript` ou socket CEP.
-- **Workflow pixels/IA** : RenderQueue → PNG/JPG → Python (Pillow/OpenCV) → réimport via AssetManager.
-
-### 13.1 Communication CEP ↔ Python (Hybrid 2.0)
-- **Mode natif** : CEP → Pipe/Socket → PyShiftAE (latence minimale)
-- **Mode fallback** : CEP → JSON files → bridge_daemon.py → PyShiftAE
-- **Format** : JSON newline-delimited `{endpoint: "Response|NoResponse", functionName: "...", args: {...}}`
-- **Auto-détection** : Tentative de connexion pipe au boot avec fallback transparent
-
-## 14) Interdictions spécifiques
-- **Boucles infinies** : interdit `while True` ou `time.sleep()` long sur thread principal AE.
-- **Deadlocks** : ne pas appeler `future.get()` dans un callback Hook AE (`CommandHook`).
-
-## 15) Modèle mental & exemples concrets
-
-### Architecture : Architecte (Python) ↔ Maçon (AE) via Talkie-Walkie (TaskScheduler)
-- **Python Worker** : calculs, IA, réseau, fichiers (rapide, isolé)
-- **AE Main Thread** : mutations projet (une seule tâche à la fois)
-- **TaskScheduler** : seul canal de communication entre les deux
-
-### ❌ Crash Pattern (à éviter)
 ```python
 import pyshiftae as ae
 import time
 
-# MAUVAIS : calcul lent + appels AE mélangés
+# DÉSASTRE: calcul lent + appels AE mélangés
 comp = ae.Item.active_item()
 layer = comp.layers.add_solid("Solid", (1,0,0,1), 1920, 1080, 10)
 
 for i in range(1000):
-    time.sleep(0.01)  # Calcul sur main thread
+    time.sleep(0.01)  # Calcul sur main thread = UI bloquée
     layer.position.set_value((i, i, 0))  # Ping-pong C++ constant
 ```
 
-### ✅ Safe Pattern (recommandé)
+**Ce qui se passe**: Le thread principal AE est occupé avec `time.sleep()` ET les appels SDK. L'UI ne reçoit aucun temps de traitement. Résultat: AE freeze.
+
+### ✅ Le Pattern qui Fluidifie AE
+
 ```python
 import pyshiftae as ae
 import threading
 
 def calculs_lourds_ia():
-    """Pure Python - aucun appel AE"""
+    """PUR PYTHON - aucun appel AE"""
     resultats = []
     for i in range(1000):
         val = (i, i * 1.5, 0)
@@ -138,48 +61,327 @@ def appliquer_changements(donnees):
         idx = pos_prop.add_key(temps)
         pos_prop.set_value_at_key(idx, valeur)
 
-# Exécution
+# Exécution: worker thread → scheduler → main thread
 threading.Thread(target=lambda: (
     data := calculs_lourds_ia(),
     ae.schedule_task(lambda: appliquer_changements(data))
 )).start()
 ```
 
-### Interface utilisateur : architecture découplée
-- **CEP (HTML/JS)** pour l'UI
-- **Communication** : **priorité aux pipes/sockets** (PyInterface) ou **fichier JSON** (fallback)
-- **Python** : surveille/détecte → déclenche action AE
-- **Interdit** : PyQt/Tkinter dans process AE (conflits boucles événementielles)
+**Ce qui se passe**: Le worker thread fait les calculs lourds SANS toucher à AE. Une fois terminé, il envoie une petite tâche au scheduler qui s'exécute sur le main thread. L'UI reste fluide.
 
-### Architecture Hybrid 2.0 recommandée
+---
+
+## Mémoire: La Bombe à Retardement des Handles
+
+Les handles AE sont comme des références à des objets qui peuvent disparaître à tout moment.
+
+### ❌ Le Pattern du Crash par Handle Stale
+
+```python
+# DANGER: cache long-terme de handles AE
+cached_layer = comp.layers[1]  # Handle stocké
+
+# ...plus tard dans le code...
+if cached_layer:  # Handle peut être invalide!
+    cached_layer.position.set_value((100, 100, 0))  # CRASH GARANTI
 ```
-CEP Panel → [Pipe/Socket] → PyShiftAE (natif) → réponse directe
-     → fallback JSON files → bridge_daemon.py → PyShiftAE
+
+**Ce qui se passe**: L'utilisateur a supprimé le layer entre-temps. Le handle pointe vers une mémoire invalide. Crash immédiat.
+
+### ✅ Le Pattern de la Survie
+
+```python
+# SÉCURITÉ: re-validation systématique
+layer_id = 1  # ID stable
+
+def apply_to_layer():
+    comp = ae.Item.active_item()
+    if not comp: return
+    
+    # Re-récupérer le handle à chaque usage
+    if layer_id <= comp.layers.num_layers:
+        layer = comp.layers[layer_id]
+        layer.position.set_value((100, 100, 0))
+```
+
+**Ce qui se passe**: On vérifie l'existence du layer à chaque usage. Le handle est toujours valide.
+
+### ❌ Memory Leak avec HandleWrapper
+
+```python
+# FUITE MÉMOIRE: lock sans unlock
+handle = ae.get_some_handle()
+locked_data = handle.lock()  # Lock acquis
+# Oubli de unlock() → fuite mémoire garantie
+```
+
+### ✅ Pattern Lock→Use→Unlock→Free
+
+```python
+# SÉCURITÉ: cycle mémoire complet
+handle = ae.get_some_handle()
+try:
+    locked_data = handle.lock()
+    # Utilisation rapide des données
+    process_data(locked_data)
+finally:
+    handle.unlock()  # Libération systématique
+    handle.free()    # Nettoyage final
 ```
 
 ---
 
-## Règles "DO / DON'T" (résumé)
-- **DO** : worker thread pour calcul + main thread pour mutation AE (via scheduler).
-- **DO** : micro-tâches en idle + possibilité d'annuler.
-- **DO** : lock/unlock/free strict sur `AEGP_MemHandle`.
-- **DO** : pattern hybride Python ↔ ExtendScript pour shapes/propriétés manquantes.
-- **DO** : workflow fichier pour traitement IA (RenderQueue → PNG → Python → réimport).
-- **DO** : utiliser l'architecture Hybrid 2.0 (pipes/sockets) pour le temps réel si disponible.
-- **DO** : configurer le nom du pipe via localStorage et utiliser les scripts de diagnostic.
-- **DON'T** : appels suites AE depuis threads arbitraires.
-- **DON'T** : blocage UI avec waits longs ou boucles infinies.
-- **DON'T** : cache long-terme de handles AE.
-- **DON'T** : références circulaires Python ↔ PyFx.
-- **DON'T** : PyQt/Tkinter dans process AE.
+## TaskScheduler: Le Seul Canal Autorisé
+
+Le TaskScheduler est le seul pont sécurisé entre Python et AE.
+
+### ❌ Appel Direct depuis Thread Arbitraire
+
+```python
+# CRASH: appel SDK depuis thread non-main
+def background_task():
+    comp = ae.Item.active_item()  # Appel SDK hors main thread!
+
+threading.Thread(target=background_task).start()
+```
+
+### ✅ Passage Forcé par Scheduler
+
+```python
+# SÉCURITÉ: tout passe par le scheduler
+def background_task():
+    # Calculs purs Python seulement
+    return calculate_positions()
+
+def apply_results(positions):
+    # Exécuté dans main thread
+    comp = ae.Item.active_item()
+    if comp:
+        apply_positions(comp, positions)
+
+# Worker → Scheduler → Main Thread
+threading.Thread(target=lambda: (
+    positions := background_task(),
+    ae.schedule_task(lambda: apply_results(positions))
+)).start()
+```
 
 ---
 
-## Références techniques
+## Micro-tâches: Éviter la Monolithique
+
+Une grosse tâche bloque l'UI. Des micro-tâches gardent AE responsive.
+
+### ❌ La Tâche Monolithique
+
+```python
+# BLOCAGE: une tâche de 1 seconde
+def massive_update():
+    for i in range(1000):
+        layer.position.set_value((i, i, 0))
+        time.sleep(0.001)  # UI morte pendant 1 seconde
+
+ae.schedule_task(massive_update)
+```
+
+### ✅ La Découpe en Micro-tâches
+
+```python
+# FLUIDITÉ: 1000 tâches de 1ms
+def update_step(step_num):
+    layer.position.set_value((step_num, step_num, 0))
+    if step_num < 999:
+        # Re-scheduler la prochaine étape
+        ae.schedule_task(lambda: update_step(step_num + 1))
+
+# Démarrage
+ae.schedule_task(lambda: update_step(0))
+```
+
+---
+
+## GIL: La Prison Python
+
+Le GIL (Global Interpreter Lock) peut affamer d'autres tâches Python.
+
+### ❌ GIL Captif
+
+```python
+# GIL bloqué pendant toute l'opération
+def long_operation_with_ae():
+    ae.begin_computation()  # GIL acquis
+    time.sleep(2.0)         # Calcul long avec GIL
+    ae.end_computation()    # GIL relâché trop tard
+```
+
+### ✅ GIL Minimal
+
+```python
+# GIL relâché dès que possible
+def smart_operation():
+    # Phase 1: calcul sans GIL
+    results = heavy_computation()  # GIL relâché entre appels
+    
+    # Phase 2: mutation AE avec GIL bref
+    ae.begin_computation()
+    try:
+        apply_results(results)  # Rapide
+    finally:
+        ae.end_computation()    # GIL relâché immédiatement
+```
+
+---
+
+## Architecture UI: CEP ou Rien
+
+### ❌ UI Native dans Process AE
+
+```python
+# CRASH: Qt/Tkinter dans process AE
+import tkinter as tk
+root = tk.Tk()  # Conflit boucles événementielles garanti
+```
+
+### ✅ Architecture Découplée
+
+```
+CEP Panel (HTML/JS) → [Pipe/Socket] → PyShiftAE → réponse directe
+                → fallback JSON → bridge_daemon.py → PyShiftAE
+```
+
+**Configuration CEP**:
+```javascript
+// Détection automatique du transport
+const pipeName = localStorage.getItem('pyshift_pipe_name') || 'pyshift_default';
+const transport = pipeAvailable ? new PyInterface(pipeName) : new MailboxJSON();
+```
+
+---
+
+## Erreurs: Jamais Silencieuses
+
+### ❌ Échec Muet
+
+```python
+# DANGER: erreur ignorée
+try:
+    comp = ae.Item.active_item()
+    layer = comp.layers.add_solid(...)
+except:
+    pass  # L'utilisateur ne sait pas que ça a échoué
+```
+
+### ✅ Erreur Contextualisée
+
+```python
+# SÉCURITÉ: erreur actionnable
+try:
+    comp = ae.Item.active_item()
+    if not comp:
+        raise ValueError("Aucune composition active")
+    
+    layer = comp.layers.add_solid("MySolid", (1,0,0,1), 1920, 1080, 10)
+except Exception as e:
+    logger.error(f"Erreur création solid - Comp: {comp.name if comp else 'None'} - {e}")
+    raise  # Propager pour rollback
+```
+
+---
+
+## Performance: Le Coût des Allers-Retours
+
+### ❌ N+1 Queries
+
+```python
+# GASPILLAGE: un appel par propriété
+for layer in comp.layers:
+    pos = layer.position  # Appel SDK
+    scale = layer.scale  # Appel SDK
+    opacity = layer.opacity  # Appel SDK
+```
+
+### ✅ Batch Reading
+
+```python
+# OPTIMISATION: lecture groupée
+properties = []
+for layer in comp.layers:
+    properties.append({
+        'position': layer.position,
+        'scale': layer.scale,
+        'opacity': layer.opacity
+    })
+# Un seul passage SDK par layer
+```
+
+---
+
+## Dépendances: La Règle du Pure Python
+
+### ❌ Dépendances Natives Lourdes
+
+```python
+# RISQUE: conflits ABI dans interpreter embarqué
+import tensorflow  # CUDA/BLAS/OpenSSL = crash probable
+import cv2         # Dépendances natives = conflit garanti
+```
+
+### ✅ Pure Python Uniquement
+
+```python
+# SÉCURITÉ: libs pure Python
+import json        # Standard, safe
+import pillow      # Pure Python (version allégée)
+import numpy       # OK si version compatible testée
+```
+
+---
+
+## Résumé des Commandements
+
+### ✅ FAITES
+- Worker thread pour calculs + main thread pour mutations AE
+- Micro-tâches via scheduler pour garder l'UI responsive
+- Lock→use→unlock→free systématique sur les handles
+- Re-validation des handles à chaque usage
+- Architecture CEP découplée (pipes/sockets prioritaires)
+- Erreurs contextualisées avec rollback
+- Dépendances pure Python uniquement
+
+### ❌ NE FAITES JAMAIS
+- Appels SDK AE depuis threads arbitraires
+- Calculs longs sur le main thread
+- Cache long-terme de handles AE
+- PyQt/Tkinter dans le process AE
+- Références circulaires Python ↔ PyFx
+- GIL captif pendant des opérations longues
+- Dépendances natives non testées
+
+---
+
+## La Checklist de Survie
+
+Avant d'exécuter du PyShiftAE en production:
+
+1. **Version alignée**: Python ↔ .aex compatible?
+2. **Thread boundary**: Calculs worker, mutations main thread?
+3. **Handle lifecycle**: Lock→use→unlock→free?
+4. **Scheduler usage**: Tout passe par `ae.schedule_task()`?
+5. **Error handling**: Contexte + rollback?
+6. **Dependencies**: Pure Python uniquement?
+7. **UI architecture**: CEP découplé?
+
+Si vous répondez "non" à l'une de ces questions, votre code va crasher AE. C'est mathématique.
+
+---
+
+## Références Techniques
+
 - `AETK-main/AETK/AEGP/Util/TaskScheduler.hpp` - Scheduler singleton
 - `AETK-main/AETK/AEGP/TaskScheduler/TaskScheduler.cpp` - Idle hook et exécution
 - `AETK-main/AETK/src/AEGP/Core/Suites.cpp` - Pattern ScheduleOrExecute
 - `AETK-main/AETK/AEGP/Core/Suites.hpp` - memHandleToString (lock/unlock/free)
 - `AETK-main/AEGP/Grabba/Grabba.cpp` - GIL acquisition pattern
-- `PyShiftAE/Python/setup.py` - Packaging et version alignement
-- `PyShiftAE/Python/plugin_installer.py` - Installation .aex
+
+**La règle d'or reste la même: Ne jamais appeler l'API AEGP hors du TaskScheduler.**

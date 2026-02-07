@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Media Solution v12.0 CEP</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="panel-container">
+        <header class="panel-header">
+            <h1>Media Solution v12.0</h1>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot ready"></span>
+                <span class="status-text">Prêt</span>
+            </div>
+        </header>
+
+        <main class="panel-main">
+            <!-- Section Sélection Dossier -->
+            <section class="section folder-section">
+                <h2>Sélection du Dossier</h2>
+                <div class="folder-controls">
+                    <input type="text" id="folderPath" class="folder-input" placeholder="Aucun dossier sélectionné..." readonly>
+                    <button id="browseFolder" class="btn btn-primary">Parcourir...</button>
+                </div>
+                <div class="folder-info" id="folderInfo"></div>
+            </section>
+
+            <!-- Section Configuration -->
+            <section class="section config-section">
+                <h2>Configuration</h2>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <label for="pythonCmd">Chemin Python:</label>
+                        <input type="text" id="pythonCmd" class="config-input" value="C:/Python313/python.exe">
+                    </div>
+                    <div class="config-item">
+                        <label for="enablePythonCutsParser">
+                            <input type="checkbox" id="enablePythonCutsParser" checked>
+                            <span class="daemon-dot" id="bridgeHealthDot" title="PyShiftBridge daemon status"></span>
+                            Parser CSV Python
+                        </label>
+                    </div>
+                    <div class="config-item">
+                        <label for="enableAutoRecentering">
+                            <input type="checkbox" id="enableAutoRecentering" checked>
+                            Auto-recentrage
+                        </label>
+                    </div>
+                    <div class="config-item">
+                        <label for="enablePythonRecentering">
+                            <input type="checkbox" id="enablePythonRecentering">
+                            Auto-recentrage Python
+                        </label>
+                    </div>
+                    <div class="config-item">
+                        <label for="enablePythonAnalyzer">
+                            <input type="checkbox" id="enablePythonAnalyzer" checked>
+                            Analyzer Python
+                        </label>
+                    </div>
+                    <div class="config-item">
+                        <label for="enablePythonProjectOpen">
+                            <input type="checkbox" id="enablePythonProjectOpen">
+                            Ouverture projet Python (STEP3.1) (opt-in)
+                        </label>
+                    </div>
+                    <div class="config-item">
+                        <label for="enablePythonBaseAepCreation">
+                            <input type="checkbox" id="enablePythonBaseAepCreation">
+                            Création base AEP Python (opt-in)
+                        </label>
+                    </div>
+                </div>
+                <div class="config-actions">
+                    <button id="exportConfig" class="btn btn-secondary">Exporter Config</button>
+                    <button id="importConfig" class="btn btn-secondary">Importer Config</button>
+                </div>
+            </section>
+
+            <!-- Section Traitement Batch -->
+            <section class="section batch-section">
+                <h2>Traitement Batch</h2>
+                <div class="batch-controls">
+                    <button id="startBatch" class="btn btn-primary" disabled>Démarrer Batch</button>
+                    <button id="cancelBatch" class="btn btn-danger" disabled>Annuler</button>
+                    <button id="runDiagnostics" class="btn btn-secondary" disabled>Diagnostics</button>
+                </div>
+                <div class="batch-progress" id="batchProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0 / 0 projets traités</div>
+                </div>
+            </section>
+
+            <!-- Section Cuts CSV -->
+            <section class="section cuts-section">
+                <h2>Cuts CSV</h2>
+                <div class="cuts-controls">
+                    <input type="text" id="csvPath" class="folder-input" placeholder="Sélectionner un fichier CSV..." readonly>
+                    <button id="browseCsv" class="btn btn-primary">Parcourir...</button>
+                    <button id="applyCuts" class="btn btn-primary" disabled>Appliquer Cuts</button>
+                </div>
+            </section>
+
+            <!-- Section Logs -->
+            <section class="section logs-section">
+                <h2>Logs</h2>
+                <div class="logs-controls">
+                    <button id="clearLogs" class="btn btn-secondary">Effacer</button>
+                    <button id="exportLogs" class="btn btn-secondary">Exporter</button>
+                </div>
+                <div class="logs-container" id="logsContainer">
+                    <div class="log-entry">Media Solution v12.0 CEP - Prêt</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="CSInterface.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+</html>
