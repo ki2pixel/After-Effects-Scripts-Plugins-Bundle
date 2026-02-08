@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{992A3057-2A33-4329-BA09-05C3F840DCA4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <ExternalIncludePath>C:\Program Files\Python312\include;C:\Users\tjerf\vcpkg\installed\x64-windows-static\include;$(ExternalIncludePath)</ExternalIncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgInstalledDir>..\..\..\vcpkg\installed</VcpkgInstalledDir>
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>$(ProjectDir)Headers\adobesdk\drawbotsuite;$(ProjectDir)Headers\adobesdk\config;$(ProjectDir)Headers\adobesdk;$(ProjectDir)Headers\SP;$(ProjectDir)Resources;$(ProjectDir)Util;$(ProjectDir)Headers;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>C:\Users\tjerf\vcpkg\installed\x64-windows-static\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>"C:\Users\tjerf\vcpkg\installed\x64-windows-static\debug\lib\icudtd.lib";"C:\Users\tjerf\vcpkg\installed\x64-windows-static\debug\lib\icuiod.lib";"C:\Users\tjerf\vcpkg\installed\x64-windows-static\debug\lib\icuind.lib";"C:\Users\tjerf\vcpkg\installed\x64-windows-static\debug\lib\icuucd.lib";%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="aetk\aegp\AEGP.hpp" />
+    <ClInclude Include="AETK\AEGP\App.hpp" />
+    <ClInclude Include="aetk\aegp\core\Allocator.hpp" />
+    <ClInclude Include="aetk\aegp\core\Core.hpp" />
+    <ClInclude Include="aetk\aegp\core\Enums.hpp" />
+    <ClInclude Include="aetk\aegp\core\Exception.hpp" />
+    <ClInclude Include="AETK\AEGP\Core\PyFx.hpp" />
+    <ClInclude Include="aetk\aegp\core\Types.hpp" />
+    <ClInclude Include="aetk\aegp\core\Suites.hpp" />
+    <ClInclude Include="aetk\aegp\core\Utility.hpp" />
+    <ClInclude Include="AETK\AEGP\Items.hpp" />
+    <ClInclude Include="AETK\AEGP\Layers.hpp" />
+    <ClInclude Include="aetk\aegp\memory\Memory.hpp" />
+    <ClInclude Include="AETK\AEGP\Project.hpp" />
+    <ClInclude Include="AETK\AEGP\Template\Collection.hpp" />
+    <ClInclude Include="AETK\AEGP\Template\ItemCollection.hpp" />
+    <ClInclude Include="AETK\AEGP\Template\LayerCollection.hpp" />
+    <ClInclude Include="AETK\AEGP\Template\Plugin.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Context.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Effects.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Factories.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\AssetManager.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Image.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Keyframe.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Masks.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\Properties.hpp" />
+    <ClInclude Include="AETK\AEGP\Util\TaskScheduler.hpp" />
+    <ClInclude Include="aetk\common\Common.hpp" />
+    <ClInclude Include="aetk\common\SuiteManager.h" />
+    <ClInclude Include="Header.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AETK\AEGP\Core\PyFx.cpp" />
+    <ClCompile Include="AETK\AEGP\Core\Utility.cpp" />
+    <ClCompile Include="AETK\src\AEGP\App.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Core\Suites.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Core\Types.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Items.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Layers.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Memory\ItemCollection.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Memory\LayerCollection.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Project.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Util\Effects.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Util\Masks.cpp" />
+    <ClCompile Include="AETK\src\AEGP\Util\Properties.cpp" />
+    <ClCompile Include="Util\AEGP_SuiteHandler.cpp" />
+    <ClCompile Include="Util\MissingSuiteError.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AETK\PyFx.i" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

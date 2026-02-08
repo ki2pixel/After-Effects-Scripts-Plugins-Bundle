@@ -69,7 +69,7 @@ def handle_entrypoint(entrypoint: str, args: Dict[str, Any]) -> Dict[str, Any]:
     if not _HANDLERS:
         _register_all_handlers()
     if entrypoint in _HANDLERS:
-        return _HANDLERS[entrypoint](args)
+        return _HANDLERS[entrypoint](#args)
     raise ValueError(f"Unknown entrypoint: {entrypoint}")
 ```
 

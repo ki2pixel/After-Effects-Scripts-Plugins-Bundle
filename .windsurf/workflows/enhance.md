@@ -11,7 +11,9 @@ description: Améliorer un Prompt avec le Contexte du Projet After Effects, Tech
      - Si **Python Automation** (PyShiftAE, threading, CEP bridge) : Charger immédiatement `.windsurf/skills/pyshiftae/SKILL.md`.
      - Si **ExtendScript/JSX Development** (ScriptUI, shape layers, panels) : Charger `.windsurf/skills/ae-scripting-expert/SKILL.md`.
      - Si **Debugging** (bug, crash, erreur, performance) : Charger immédiatement `.windsurf/skills/debugging-strategies/SKILL.md` et identifier le runtime (Python vs ExtendScript) pour adapter les techniques.
-     - Si **Architecture** : Analyser si besoin de PyShiftAE ou AE Scripting patterns, puis charger les docs d'architecture pertinentes.
+     - Si **Architecture** : Analyser si besoin de PyShiftAE, AE Scripting ou C++ SDK patterns, puis charger les docs d'architecture pertinentes.
+     - Si **AE C++ SDK / Plugins** (AETK, suites AEGP, TaskScheduler natif) : Charger `.windsurf/skills/ae-cpp-sdk-architecture/SKILL.md`.
+     - Si **C++ Templates / Métaprogrammation générique** (concepts, SFINAE, librairies génériques) : Charger `.windsurf/skills/cpp-templates-metaprogramming/SKILL.md`.
      - Si **Feature** : Identifier le runtime principal (Python vs ExtendScript) et charger le skill correspondant.
      - **Skills globaux en renfort** : Si aucun skill local ne correspond, vérifier les skills globaux pertinents (ex: `python-coding-standards`, `architecture-tools`, `frontend-design`, `media-ai-pipeline`).
 
@@ -32,6 +34,14 @@ description: Améliorer un Prompt avec le Contexte du Projet After Effects, Tech
      - **Rôle** : "Expert ExtendScript/JSX & After Effects Scripting".
      - **Méthodologie** : Imposer ES3 compatibility, undo groups, IIFE patterns.
      - **Contraintes** : var only, 1-based indexing, matchNames documentation.
+   - **Si AE C++ SDK détecté** :
+     - **Rôle** : "Expert AEGP / After Effects C++ SDK".
+     - **Méthodologie** : Appliquer Suite Handler + RAII, TaskScheduler pour exécuter sur le Main Thread.
+     - **Contraintes** : Pas d'AEGP hors thread principal, pas de `new/delete` sur handles, propagation stricte des `PF_Err`/`A_Err`.
+   - **Si C++ Templates / Métaprogramming détecté** :
+     - **Rôle** : "Expert Templates & Compile-Time Safety".
+     - **Méthodologie** : Utiliser concepts/SFINAE, `constexpr` et type traits pour exprimer les contraintes.
+     - **Contraintes** : Documenter les requirements des templates, éviter l'explosion d'instanciations, garder les messages de compilation lisibles.
    - **Si mode Debugging** :
      - **Rôle** : "Expert Debugging & Root Cause Analysis for After Effects".
      - **Méthodologie** : Appliquer la méthode scientifique du debugging-strategies SKILL.md (Observer → Hypothesize → Experiment → Analyze → Repeat) en adaptant au runtime détecté (Python vs ExtendScript).

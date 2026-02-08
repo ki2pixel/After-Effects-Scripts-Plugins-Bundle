@@ -23,14 +23,15 @@ Scripts AE (Windows) → Post-production créative
 |---|---|---|---|
 | **Media-Solution-v11.2-production.jsx** | Création automatisée de projets AE | `*_ae.json`, CSV scènes, vidéos | Projets AEP avec découpes |
 | **Analyse-Écart-X-depuis-JSON-et-Label-Vidéo36_good.jsx** | Recentrage intelligent basé sur tracking | `*_tracking.json` (prioritaire) ou `*.json` (STEP5) | Calques recentrés, analytics |
-| **media_solution_bridge.py** | Pont Python pour CSV cuts & analyzer | Manifestes `ms_cuts_*`, `ms_analyzer_*` | Segments, recentrage batch |
+| **PyShiftBridge/mediasolution/** | Ponts Python modernes (Hybrid 2.0) | Manifestes `ms_*`, handlers Python | Segments, recentrage batch via PyShiftAE |
+| **media_solution_bridge.py** | Pont Python legacy (system.callSystem) | Manifestes `ms_cuts_*`, `ms_analyzer_*` | Fallback si PyShiftBridge indisponible |
 
 ## 2. Prérequis & Environnement
 
 ### Système
 - **Windows uniquement** (After Effects non disponible sur Linux)
-- **After Effects CC** (version récente recommandée)
-- **Python 3.10+** (pour les ponts `system.callSystem()`)
+- **After Effects 2023+** (v24.0) - compatible v13.0+ (Hybrid 2.0)
+- **Python 3.11+** (pour ponts PyShiftBridge/PyShiftAE)
 
 ### Fichiers Requis
 - `*_ae.json` (sortie STEP7 optimisée pour AE)
@@ -50,8 +51,10 @@ STEP6_INCLUDE_TRACKING_ANALYTICS=1    # Histogrammes confidence
 STEP6_INCLUDE_EXPRESSION_SUMMARY=0    # Résumé expressions (défaut: désactivé)
 STEP6_EXPRESSION_KEYS=jawOpen         # Clés expressions si activé
 
-# Ponts Python
-PYTHON_EXECUTABLE=python3          # Chemin Python pour system.callSystem()
+# Ponts Python (Hybrid 2.0)
+PYTHON_EXECUTABLE=python3          # Chemin Python pour PyShiftBridge
+PYSHIFTBRIDGE_ENABLED=1           # Activer ponts modernes (prioritaire)
+DISABLE_UNDO_GROUP=0              # Désactiver undo groups pour batch (optionnel)
 ```
 
 ## 3. Procédures d'Opération
@@ -73,27 +76,31 @@ PYTHON_EXECUTABLE=python3          # Chemin Python pour system.callSystem()
 3. **Application** : Recentrage automatique sur les calques sélectionnés
 4. **Logs** : Vérifier la console AE pour les métriques `[PY]` et analytics
 
-### 3.3 Ponts Python (system.callSystem)
+### 3.3 Ponts Python (Hybrid 2.0)
 
-#### Mode Analyzer (recentrage batch)
+#### Mode PyShiftBridge (recommandé)
 ```javascript
-// Depuis Media-Solution.jsx
+// Depuis Media-Solution.jsx → PyShiftBridge → PyShiftAE
+function tryRunPythonAnalyzer(comp, layer, frameRate, videoJsonFile) {
+    // Via PyShiftBridge transport (voir docs/02-guides/cep-python-bridge.md)
+    const result = sendToPyShiftBridge('mediasolution_apply_analyzer', {
+        comp_name: comp.name,
+        layer_name: layer.name,
+        frame_rate: frameRate,
+        video_json: videoJsonFile
+    });
+    return parsePythonResult(result);
+}
+```
+
+#### Mode Legacy system.callSystem (fallback)
+```javascript
+// Fallback si PyShiftBridge indisponible
 var pythonResult = system.callSystem(
     'python3 workflow_scripts/step7/preprocess_ae_json.py ' +
     '--manifest_path "' + manifestPath + '" ' +
     '--output_path "' + outputPath + '" ' +
     '--mode analyzer'
-);
-```
-
-#### Mode Cuts (découpe CSV)
-```javascript
-// Depuis Media-Solution.jsx
-var cutsResult = system.callSystem(
-    'python3 scripts/after_effects/media_solution_bridge.py ' +
-    '--mode cuts ' +
-    '--manifest_path "' + cutsManifest + '" ' +
-    '--output_path "' + cutsOutput + '"'
 );
 ```
 
@@ -189,16 +196,35 @@ pytest -q tests/unit/test_step6_json_reducer.py
 - **Commentaires** dans les scripts pour les points d'entrée clés
 - **Metadata** : Conserver les versions des scripts dans les AEPs générés
 
-## 8. Références Techniques
+## 9. Dispatch Documentation (Labo → Guides)
+
+**TL;DR** : Ce skill utilise la documentation v2 comme source de vérité. Les patterns génériques sont dans `coding-patterns.md`, les données brutes dans `ae-internals.md`, et les preuves brutes dans `ae-script-audit.md`.
+
+### Flux Documentation
+1. **Labo** (`ae-script-audit.md`) : Preuves brutes des scripts analysés
+2. **Manuel de Chimie** (`coding-patterns.md`) : Patterns universels extraits du labo
+3. **Pharmacie** (`ae-internals.md`) : Données brutes (MatchNames, tags, registres)
+4. **Catalogue** (`capabilities.md`) : Capacités fonctionnelles et arbitrage 80/20
+
+### Golden Rule
+*Tout pattern script doit être validé dans `ae-script-audit.md` avant d'être dispatché dans les guides génériques.*
+
+## 10. Références Techniques
 
 ### Documentation Projet
-- `docs/legacy-adobe/` - Documentation Adobe originale
-- `docs/README.md` - Guide principal du projet
-- `codingstandards.md` - Règles de codage et architecture
+| Document | Rôle | Cible |
+|---|---|---|
+| **[docs/README.md](../../docs/README.md)** | Vue d'ensemble documentation v2 | Tous |
+| **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** | Patterns production (app.settings, parsing) | Développeurs |
+| **[docs/04-reference/ae-internals.md](../../docs/04-reference/ae-internals.md)** | Registres MatchNames, tags, contrôles | Scripts avancés |
+| **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** | Labo d'audit des scripts tiers | Références |
+| **[docs/04-reference/capabilities.md](../../docs/04-reference/capabilities.md)** | Arbitrage PyShiftAE vs ExtendScript (80/20) | Architecture |
+| **docs/legacy-adobe/** | Archive Adobe originale | Consultation historique |
 
 ### Scripts Clés
 - `workflow_scripts/step7/preprocess_ae_json.py` - Moteur STEP7
-- `scripts/after_effects/media_solution_bridge.py` - Pont Python
+- `PyShiftBridge/mediasolution/` - Ponts Python modernes (Hybrid 2.0)
+- `scripts/after_effects/media_solution_bridge.py` - Pont Python legacy
 - `scripts/after_effects/Media-Solution-v11.2-production.jsx` - Script principal
 - `scripts/after_effects/Analyse-Écart-X-depuis-JSON-et-Label-Vidéo36_good.jsx` - Recentrage
 

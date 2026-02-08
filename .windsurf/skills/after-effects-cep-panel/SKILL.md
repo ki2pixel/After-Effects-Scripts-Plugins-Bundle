@@ -10,14 +10,16 @@ Cette skill couvre le développement, le débogage et la maintenance des extensi
 ## 1. Architecture CEP & Positionnement
 
 ### Rôle dans l'Écosystème
-Les extensions CEP remplacent les scripts ExtendScript traditionnels par des panels modernes HTML/CSS/JS intégrés à After Effects :
+Les extensions CEP remplacent les scripts ExtendScript traditionnels par des panels modernes HTML/CSS/JS intégrés à After Effects. Dans l'architecture **Hybrid 2.0**, les panels CEP pilotent des ponts PyShiftBridge/PyShiftAE pour les opérations lourdes :
 
 ```
 Pipeline MediaPipe → STEP7 (fichiers *_ae.json)
 ↓
 Panel CEP (Media Solution v12.0) → Interface moderne dans AE
 ↓
-Ponts Python (system.callSystem) → Traitement optimisé
+Hybrid 2.0 Bridge (PyShiftBridge) → Transport adaptatif (pipes/sockets + mailbox)
+↓
+PyShiftAE (Python 3.11+) → Mutations AE optimisées
 ```
 
 ### Structure Technique
@@ -25,16 +27,17 @@ Ponts Python (system.callSystem) → Traitement optimisé
 |---|---|---|
 | **Client** | HTML/CSS/JS | Interface utilisateur moderne |
 | **Host** | ExtendScript (.jsx) | Logique métier côté After Effects |
-| **Communication** | CSInterface API | Bridge client ↔ host |
-| **Ponts** | Python scripts | Calculs lourds via system.callSystem() |
+| **Bridge** | PyShiftBridge (Python) | Transport adaptatif + registre handlers |
+| **Backend** | PyShiftAE (Python) | Mutations AE via SDK natif |
+| **Communication** | CSInterface + Hybrid 2.0 | Client ↔ Bridge ↔ PyShiftAE |
 
 ## 2. Prérequis & Environnement
 
 ### Système & Logiciels
 - **Windows 10+** (principal) ou **macOS 10.15+**
-- **After Effects 2020+** (v17.0) - compatible v13.0+
+- **After Effects 2023+** (v24.0) - compatible v13.0+ (Hybrid 2.0)
 - **CEP Runtime 6.0+** (manifest CEP 5.0 recommandé)
-- **Python 3.10+** (pour ponts Python)
+- **Python 3.11+** (pour ponts PyShiftBridge/PyShiftAE)
 
 ### Outils de Développement
 - **Éditeur de code** (VS Code avec dossier `.vscode/` inclus)
@@ -112,38 +115,38 @@ sendToClient('batchProgress', {
 });
 ```
 
-### 3.3 Ponts Python Intégrés
+### 3.3 Ponts PyShiftBridge/PyShiftAE (Hybrid 2.0)
+
+#### Architecture Recommandée
+Voir [**docs/02-guides/cep-python-bridge.md**](../../docs/02-guides/cep-python-bridge.md) pour le pattern complet :
+- **Transport adaptatif** : Named pipes/Unix sockets (prioritaire) + mailbox JSON (fallback)
+- **Registre dynamique** : `bridge_daemon.py` centralise les handlers de chaque panel CEP
+- **Single Daemon, Multi-Domain** : Chaque panel = package Python avec `register_handlers()`
 
 #### Auto-recentrage (STEP7 Analyzer)
 ```javascript
-// host/MediaSolution.jsx
+// host/MediaSolution.jsx → PyShiftBridge → PyShiftAE
 function tryRunPythonAnalyzerForLayer(comp, layer, frameRate, videoJsonFile) {
-    const pythonCmd = getPythonExecutable();
-    const analyzerScript = getAnalyzerScript();
-    
-    const command = `${pythonCmd} "${analyzerScript}" ` +
-                   `--manifest_path "${manifestPath}" ` +
-                   `--output_path "${outputPath}" ` +
-                   `--mode analyzer`;
-    
-    const result = system.callSystem(command);
+    // Via PyShiftBridge transport (pas direct system.callSystem)
+    const result = sendToPyShiftBridge('mediasolution_apply_analyzer', {
+        comp_name: comp.name,
+        layer_name: layer.name,
+        frame_rate: frameRate,
+        video_json: videoJsonFile
+    });
     return parsePythonResult(result);
 }
 ```
 
 #### Parsing CSV (Cuts Parser)
 ```javascript
-// host/MediaSolution.jsx
+// host/MediaSolution.jsx → PyShiftBridge → PyShiftAE
 function tryRunPythonCutsParserForCsv(comp, frameRate, csvFile) {
-    const pythonCmd = getPythonExecutable();
-    const cutsScript = getCutsScript();
-    
-    const command = `${pythonCmd} "${cutsScript}" ` +
-                   `--mode cuts ` +
-                   `--manifest_path "${manifestPath}" ` +
-                   `--output_path "${outputPath}"`;
-    
-    const result = system.callSystem(command);
+    const result = sendToPyShiftBridge('mediasolution_apply_cuts', {
+        comp_name: comp.name,
+        frame_rate: frameRate,
+        csv_path: csvFile
+    });
     return parseCutsResult(result);
 }
 ```
@@ -323,9 +326,10 @@ function testHostCommunication() {
 ## 9. Références Techniques
 
 ### Documentation Projet
-- `scripts/after_effects/MediaSolution-CEP/README.md` - Documentation complète
-- `scripts/after_effects/MediaSolution-CEP/DEBUG_CHECKLIST.md` - Checklist debug
-- `scripts/after_effects/MediaSolution-CEP/INSTALL.md` - Installation détaillée
+- **[docs/02-guides/cep-python-bridge.md](../../docs/02-guides/cep-python-bridge.md)** - Architecture Hybrid 2.0 complète
+- **[docs/04-reference/capabilities.md](../../docs/04-reference/capabilities.md)** - Matrice d'arbitrage PyShiftAE vs ExtendScript (80/20)
+- **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** - Audit des panels tiers (AEInfoGraphics, KBar, etc.)
+- **[docs/01-core/architecture.md](../../docs/01-core/architecture.md)** - Vue d'ensemble Hybrid 2.0
 
 ### Documentation Adobe
 - **CEP Documentation** : Adobe Developer Portal
@@ -333,11 +337,30 @@ function testHostCommunication() {
 - **CSInterface Reference** : Guide communication CEP
 
 ### Standards Projet
-- **codingstandards.md** : Règles de développement
-- **Architecture Services/State** : Patterns à respecter
+- **[.windsurf/rules/codingstandards.md](../../.windsurf/rules/codingstandards.md)** - Règles de développement
+- **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** - Patterns PyShiftAE production
 - **Tests Guidelines** : Stratégies de test
 
-## 10. Maintenance & Évolution
+## 11. Panels Tiers & Audit (Hybrid 2.0)
+
+### Analyse des Panels Existant
+L'audit **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** documente les patterns des panels CEP tiers :
+
+| Panel | Pattern observé | Payload CEP ↔ JSX | Risques |
+|---|---|---|---|
+| **AEInfoGraphics v2.0.3** | Génération comps via `transferData` | JSON avec `ADBE Color Control` multiples | Validation données requise |
+| **KBar3 v3.1.1** | Toolbar RPC via `_kbar.*` | `_kbar.getAllEffects`, `_kbar.runFile` | Exécution JS arbitraire |
+| **Social Importer** | Import projet + calques `CONTROL` | Mapping dossiers → effets | Dépendances externes |
+
+### Intégration Hybrid 2.0
+Pour chaque panel tiers, le pattern recommandé est :
+1. **Wrapper PyShiftBridge** : Créer un package Python avec `register_handlers()`
+2. **Validation** : Utiliser les handlers de validation PyShiftBridge
+3. **Fallback** : Conserver logique JSX native si PyShiftAE indisponible
+
+**Golden Rule** : *Tout panel CEP tiers doit être documenté dans ae-script-audit.md avant intégration Hybrid 2.0.*
+
+## 12. Maintenance & Évolution
 
 ### Monitoring Production
 - **Logs erreurs** : Collecte automatique des problèmes

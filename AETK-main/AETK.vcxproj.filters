@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header Files\AETK">
+      <UniqueIdentifier>{b339675a-0e0e-4726-bd6f-e531d6e40ef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AETK\AEGP">
+      <UniqueIdentifier>{5b541aac-7511-49ea-8ca1-c305011ce2b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AETK\Effect">
+      <UniqueIdentifier>{db5470a6-6e2a-4af9-8ffb-a4ad2fc1d7f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AETK\Common">
+      <UniqueIdentifier>{465b12e5-43a0-4e6d-955d-fe952e7f7ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AETK\AEGP\Core">
+      <UniqueIdentifier>{f6e75def-5000-4d18-aa69-380beea2a65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AETK\AEGP\Memory">
+      <UniqueIdentifier>{99be1185-eb1e-4080-9035-4c265b8a1bd6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="aetk\src\aegp\core\Suites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Core\Types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Items.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Layers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Memory\ItemCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Memory\LayerCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Project.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Util\Effects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Util\Masks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\src\AEGP\Util\Properties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AE\Util\AEGP_SuiteHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AE\Util\MissingSuiteError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\AEGP\Core\Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AETK\AEGP\Core\PyFx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="aetk\aegp\AEGP.hpp">
+      <Filter>Header Files\AETK\AEGP</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Allocator.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\memory\Memory.hpp">
+      <Filter>Header Files\AETK\AEGP\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Enums.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\common\Common.hpp">
+      <Filter>Header Files\AETK\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\common\SuiteManager.h">
+      <Filter>Header Files\AETK\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Core.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Exception.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Types.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Suites.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="aetk\aegp\core\Utility.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\App.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Items.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Layers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Project.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Template\Collection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Template\ItemCollection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Template\LayerCollection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Template\Plugin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Context.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Effects.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Factories.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\AssetManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Image.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Keyframe.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Masks.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\Properties.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Util\TaskScheduler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AETK\AEGP\Core\PyFx.hpp">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Header Files\AETK\AEGP\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AETK\PyFx.i">
+      <Filter>Header Files\AETK</Filter>
+    </None>
+  </ItemGroup>
+</Project>

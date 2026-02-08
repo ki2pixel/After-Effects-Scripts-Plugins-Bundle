@@ -19,6 +19,8 @@
       "repomix.md",
       "repomix-after-effects-output.md",
       ".idea/**",
+      "PyShiftAE/**",
+      "PyShiftBridge/**",
       "**/*.mp4",
       "**/*.mov",
       "**/*.mp3",

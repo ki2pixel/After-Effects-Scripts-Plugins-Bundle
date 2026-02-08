@@ -73,25 +73,34 @@ var firstProp = layer.property(1);  // NOT property(0)
 ## When to Read References
 
 ### UI and Dockable Panels
-**Read:** `references/ui-layout.md`
+**Read:** `references/ui-layout.md` (patterns internes au skill)
+**Voir aussi:** `docs/02-guides/coding-patterns.md` (patterns production consolidés)
 - Dockable vs palette patterns
 - Binary asset management (blobs → files)
 - Resilient layouts with tabbedpanel
 - Icon buttons and custom graphics
 
 ### Shape Layers and Vector Graphics
-**Read:** `references/vector-shapes.md`
+**Read:** `references/vector-shapes.md` (patterns internes au skill)
+**Voir aussi:** `docs/04-reference/ae-internals.md` (registres MatchNames consolidés)
 - ADBE Root Vectors Group hierarchy
 - Shape creation and manipulation
 - Shape ↔ Mask conversion
 - Transform stack management
 
 ### Advanced Internals and Production Patterns
-**Read:** `references/hacks-and-internals.md`
+**Read:** `references/hacks-and-internals.md` (patterns internes au skill)
+**Voir aussi:** `docs/02-guides/coding-patterns.md` (patterns production) + `docs/04-reference/ae-script-audit.md` (preuves brutes)
 - Binary preset files (.ffx)
 - Pseudo Effects bootstrapping
 - Hidden MatchNames and parameter IDs
 - Expression engineering patterns
+
+### Notes sur la Documentation v2
+Les fichiers `references/` internes à ce skill contiennent les patterns détaillés avec exemples de code. La documentation v2 dans `docs/` consolide ces patterns de manière générique :
+- `coding-patterns.md` : Patterns universels extraits des scripts réels
+- `ae-internals.md` : Registres de données (MatchNames, tags, contrôles)
+- `ae-script-audit.md` : Preuves brutes des analyses de scripts tiers
 
 ## Common Gotchas
 
