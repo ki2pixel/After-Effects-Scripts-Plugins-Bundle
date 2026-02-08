@@ -25,15 +25,21 @@ Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cible
       - *But* : Mesurer l'effort côté interface CEP (client) et hôte ExtendScript pour aligner la documentation MediaSolution.
     - **Python/C++ de référence** : `run_command "cloc 'PyShiftAE/Python/pyshiftae/ae.py' 'AETK-main/AETK/AEGP/Core/PyFx.hpp' 'AETK-main/AETK/src/AEGP/Core/Suites.cpp' 'AETK-main/AEGP/Grabba/Grabba.cpp' 'AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp' --md"`
       - *But* : Analyser les fichiers Python/C++ de référence identifiés dans la documentation PyShiftAE.
-    - **JSX de référence** : `run_command "cloc 'Scripts_AE/Aescripts-easyRulers 2 v2.01/easyRulers.jsx' 'Scripts_AE/Aescripts-Easy Clones v1.1/Easy Clones.jsx' 'Scripts_AE/Aescripts-Good Parents v1.4.1/goodParents.jsx' 'Scripts_AE/Aescripts-Origami v1.4.0/Origami.jsx' 'Scripts_AE/origami_fix.jsx' --md"`
-      - *But* : Analyser uniquement les scripts JSX de référence identifiés dans la documentation.
+    - **JSX — Batch par répertoire thématique** :
+      1. `run_command "cloc 'Scripts_AE/Aescripts-3D Primitives Generator v3' 'Scripts_AE/Aescripts-Crazy Shapes 1.1.1' 'Scripts_AE/Aescripts-Cloners + Effectors v1.2.6' --md"`
+         - *But* : Couvrir les rigs/procéduraux lourds (3D, generative, shape rigs) cités dans `ae-script-audit.md`.
+      2. `run_command "cloc 'Scripts_AE/Aescripts-AW Autosaver v2.1' 'Scripts_AE/Aescripts-Automation Toolkit v1.0.3.7' 'Scripts_AE/Aescripts-KBar3 v3.1.1' --md"`
+         - *But* : Mesurer les toolkits pipeline/licensing/support afin d’alimenter `coding-patterns.md` et `capabilities.md`.
+      3. `run_command "cloc 'Scripts_AE/Aescripts-AEInfoGraphics v2.0.3' 'Scripts_AE/Aescripts-Coco Color CoWorker v1.2.0' 'Scripts_AE/Aescripts-Infographics toolkit v1.04' --md"`
+         - *But* : Analyser les panels CEP/JSX hybrides pour aligner `cep-python-bridge.md` et les sections UI.
+      - *Astuce* : Adapter les répertoires à chaque cycle en sélectionnant 2-3 groupes issus des nouvelles lignes `ae-script-audit.md` (permet d’ajouter d’autres catégories sans lancer un `cloc` global sur 500+ scripts).
 
 3.  **Analyse par Type de Fichier** :
     - **Python** : `run_command "find PyShiftAE -name '*.py' | wc -l && find AETK-main -name '*.py' | wc -l"`
       - *But* : Compter les fichiers Python principaux.
     - **Python/C++ de référence** : `run_command "ls -la 'PyShiftAE/Python/pyshiftae/ae.py' 'AETK-main/AETK/AEGP/Core/PyFx.hpp' 'AETK-main/AETK/src/AEGP/Core/Suites.cpp' 'AETK-main/AEGP/Grabba/Grabba.cpp' 'AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp' | wc -l"`
       - *But* : Vérifier la présence des fichiers Python/C++ de référence.
-    - **JSX de référence** : `run_command "ls -la 'Scripts_AE/Aescripts-easyRulers 2 v2.01/easyRulers.jsx' 'Scripts_AE/Aescripts-Easy Clones v1.1/Easy Clones.jsx' 'Scripts_AE/Aescripts-Good Parents v1.4.1/goodParents.jsx' 'Scripts_AE/Aescripts-Origami v1.4.0/Origami.jsx' 'Scripts_AE/origami_fix.jsx' | wc -l"`
+    - **JSX de référence** : `run_command "ls -la 'Scripts_AE/Aescripts-easyRulers 2 v2.01/easyRulers.jsx' 'Scripts_AE/Aescripts-Easy Clones v1.1/Easy Clones.jsx' 'Scripts_AE/Aescripts-Good Parents v1.4.1/goodParents.jsx' 'Scripts_AE/Aescripts-Origami v1.4.0/Origami.jsx' | wc -l"`
       - *But* : Vérifier la présence des scripts JSX de référence.
     - **CEP MediaSolution** : `run_command "ls -la 'MédiaSolution/MediaSolution-CEP/host/MediaSolution.jsx' 'MédiaSolution/MediaSolution-CEP/client/main.js' 'MédiaSolution/MediaSolution-CEP/client/style.css' | wc -l"`
       - *But* : S'assurer que les scripts hôte et client MediaSolution sont pris en compte avant mise à jour de la documentation CEP.
@@ -158,4 +164,3 @@ Dans la proposition de mise à jour (Étape 4), ajouter :
 - [ ] Protocoles de communication documentés (PyShiftBridge daemon + transport CEP MediaSolution)
 - [ ] Guide d'installation (`CONFIGURATION_GUIDE.md`, scripts `install/`)
 - [ ] Exemples de code fonctionnels (`bridge_daemon.py`, `mediasolution_cuts_core.py`, `js/main.js`)
-- [ ] Dépannage commun (flux CEP MediaSolution ↔ PyShiftBridge ↔ PyShiftAE)

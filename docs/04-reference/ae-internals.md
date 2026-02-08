@@ -1,147 +1,109 @@
 # AE Internals Reference
 
-**TL;DR**: Automatise tout avec les MatchNames (`ADBE ...`) et la hiérarchie réelle des Shape Layers, sinon tes scripts cassent dès qu'After Effects change de langue, de version ou d'ordre des propriétés.
+**TL;DR**: Ce document est la "Base de Données" technique du projet. Il contient les tables de correspondance (MatchNames, IDs, Tags, Clés de registre) nécessaires pour implémenter les patterns génériques décrits dans `coding-patterns.md`.
 
-## Analogie carte aeronautique
+---
 
-Imagine que l'UI est un panneau touristique qui change selon la langue, alors que les MatchNames sont les coordonnées GPS gravées sur la carte aéronautique. Piloter un script sans ces coordonnées revient à voler à vue dans le brouillard.
+## 1. Proprietary MatchNames & Pseudo-Effects Registry
 
-## Le problème
+*Utilisé par le pattern "Gestion générique des Pseudo-Effets".*
 
-Tu cherches `layer.property("Effects")` parce que ça marche sur ta build anglaise. Tu déploies chez un client allemand, "Effects" devient "Effekte" et chaque appel retourne `null`. Même punition côté Shape Layers : la hiérarchie n'est pas visible dans l'UI, donc tu ajoutes des fills/strokes au mauvais endroit ou tu perds les tangentes en convertissant vers des masks. Bref, l'UI ment, les MatchNames seuls sont contractuels.
+Ces effets nécessitent l'installation préalable d'un preset `.ffx`.
 
-## La solution
+| Script Source | Pseudo-Effect MatchName (Prefix) | IDs Paramètres Clés | Permissions / Preset Path |
+| :--- | :--- | :--- | :--- |
+| **3D Primitives** | `Pseudo/3DPrimitiveControlsTop` | `-0002`...`-0015` | Requiert `applyPseudoEffect` dans précomp. |
+| **Create Nulls** | `Pseudo/ADBE Trace Path` | `Layer Control-0001` | Workflow natif AE (Path points). |
+| **Easy Clones** | `Pseudo/easyClones1.1` | - | `Folder.userData/Aescripts/Easy Clones/1.0` |
+| **Flex** | `Pseudo/Flex Line Control` | - | Génère rulers dynamiques. |
+| **Limber** | `Pseudo/Limber_16` | `-0002`...`-0033` | Nécessite copie preset JSON. |
+| **LoopMaster** | `Pseudo/LoopMaster_` | (Wiggle, Spin, Orbit) | Applique `.ffx` cachés via `PseudoEffect`. |
+| **Splash** | `Pseudo/aeSplashV1.03` | `-0001`...`-0042` | Presets `__BLOB__` en userData. |
+| **Text Chain** | `Pseudo/0.4433...` (Dyn) | - | Preset écrit dans `~/Documents/TextChain`. |
+| **Trails** | `OC Trails` (Dyn) | - | MatchName dynamique généré à la volée. |
 
-Tu t'appuies exclusivement sur :
+---
 
-1. **MatchNames stables** (`ADBE Effect Parade`, `ADBE Vector Graphic - Fill`, etc.) — invariants langue/version.
-2. **Hiérarchie Shape Layer documentée** — `ADBE Root Vectors Group` → `ADBE Vector Group` → `ADBE Vectors Group` → ...
-3. **DynamicStreamSuite/GetNewStreamRefByMatchname** côté PyShiftAE — accès direct aux streams internes sans parcourir l'UI.
-4. **Transform stack explicite** — pour convertir Shape ↔ Mask en préservant positions, anchors et scales.
+## 2. Data-driven Control Layers Registry
 
-## Implémentation
+*Utilisé par le pattern "Rigs pilotés par calque invisible".*
 
-### Cartographie des MatchNames essentiels
+Liste des calques "cerveau" qui doivent être préservés lors des migrations/duplications.
 
-| MatchName | UI label (EN) | Usage dominant | Notes |
-| --- | --- | --- | --- |
-| `ADBE Effect Parade` | Effects | Conteneur d'effets | Point d'entrée pour `addProperty()` |
-| `ADBE Slider Control` | Slider Control | Effets paramétriques | Toujours accéder à `ADBE Slider Control-0001` pour la valeur |
-| `ADBE Root Vectors Group` | Contents | Racine Shape Layer | Nécessaire avant tout ajout |
-| `ADBE Vectors Group` | Group Contents | Sous-groupes shape | Imbriqué dans chaque `Vector Group` |
-| `ADBE Vector Graphic - Fill` | Fill | Style | Expose `ADBE Vector Fill Color/Opacity` |
-| `ADBE Vector Graphic - Stroke` | Stroke | Outline | Width, Color, Line Cap/Join |
-| `ADBE Vector Filter - Trim` | Trim Paths | Animations | `ADBE Vector Trim End/Start/Offset` |
-| `ADBE Mask Parade` | Masks | Gestion des masks | Conteneur `ADBE Mask Atom` |
-| `ADBE Mask Shape` | Mask Path | Valeur du mask | Reçoit `Shape` transformé |
+| Script Source | Nom du Layer Contrôle | Effets de Contrôle (MatchNames) | Notes de comportement |
+| :--- | :--- | :--- | :--- |
+| **Talking Head** | `Talking Head CTRL` | `ADBE Slider Control` (visèmes), `Checkbox` | Pilote la bouche et les yeux via expressions. |
+| **Splash** | `Splash Control` | `Pseudo/aeSplashV1.03` | Le script vérifie ce nom exact avant action. |
+| **Social Importer** | `CONTROL - Social Importer` | `Social Importer` (custom) + Sliders | Inséré lors de l'import de projet. |
+| **Boxcam** | `Boxcam Guide` | `ADBE Slider Control` | Solide masqué servant de repère spatial. |
+| **FX StrokeSetter** | `FX_StrokeSetter CTRL` | `ADBE Slider Control` (Taper, Wave) | Pilote les strokes de multiples shapes. |
 
-### MatchNames non documentés mais critiques
+---
 
-| MatchName | Pourquoi tu en as besoin |
-| --- | --- |
-| `ADBE Slider Control-0001` | Valeur numérique réelle du slider (OneDProperty) |
-| `ADBE Color Control-0001` | RGBA du Color Control |
-| `ADBE Point Control-0001` | Coordonnées 2D pour sampling |
-| `ADBE Layer Control-0001` | Référence de calque (Layer Control) |
-| `ADBE easyRulers` | Effet tiers très utilisé (3616 occurrences dans 376 scripts) |
+## 3. Metadata Tag Prefixes Registry
 
-### Hiérarchie Shape Layer (structure réelle)
+*Utilisé par le pattern "Tags métadonnées comme RAM".*
+
+Préfixes réservés dans `layer.comment` ou `marker.comment`.
+
+| Préfixe | Utilisé par (Outil) | Cible (Layer/Marker) | Description de la donnée |
+| :--- | :--- | :--- | :--- |
+| `MS_` | Magic Switcher | Layer | État (Locked, Shy, Hidden) pour restore. |
+| `RH_` | RenderHogs | Marker | Statut de rendu, version de preset. |
+| `BOXCAM_` | Boxcam | Layer | Résolution trial, ID liaison caméra. |
+| `SOCIAL_` | Social Importer | Effect | Dossiers sources importés. |
+| `FP_S` | Faux Parent | Marker | Clés de parenting bakées. |
+| `[VR-*]` | VR Comp Editor | Comment | Rôle de la comp (Creator, Edit, Output). |
+| `\|Structures\|`| Set Parent To Struct | Comment | Délimite la zone de parenting auto. |
+
+---
+
+## 4. Registre app.settings & Préférences
+
+*Utilisé par le pattern "Stratégie app.settings".*
+
+Namespace et clés utilisés pour la persistance.
+
+| Namespace | Clé(s) | Script Source | Usage / Fallback |
+| :--- | :--- | :--- | :--- |
+| `AddEditMarkers` | `UI_split_toggle`, `last_scope` | Add Edit Markers | Mémorise l'état UI du panel. |
+| `AnchorSniper` | `bitdepth`, `progressBar` | Anchor Sniper | Config sampling sourceRect. |
+| `Ola_Keyboard` | `<shortcut_id>` | KEYboard | Mapping raccourcis (Fallback JSON). |
+| `Ripple Edit` | `Orientation`, `Licence` | Ripple Edit | UI et DRM Trial. |
+| `Autosaver` | `supportTicketSKU`, `diagnostic` | AW Autosaver | Payload pour tickets support. |
+| `RayDynamicColor`| `LastPalette`, `License` | Ray Dynamic Color | Dernière palette active. |
+| `mamoworld` | `TextExplode` | TextExploder | Options de découpe RegEx. |
+
+---
+
+## 5. Shape Layer Hierarchy & MatchNames (Standard)
+
+Rappel de la structure native (ne change pas, contrairement aux scripts tiers).
 
 ```
 ShapeLayer
-└─ ADBE Root Vectors Group                # Contents racine
-   └─ ADBE Vector Group                   # Groupe principal
-      └─ ADBE Vectors Group               # Contents interne
-         ├─ ADBE Vector Shape - Group     # Wrapper du path
-         │  └─ ADBE Vector Shape          # Vertices
+└─ ADBE Root Vectors Group                # Racine
+   └─ ADBE Vector Group                   # Groupe
+      └─ ADBE Vectors Group               # Contents
+         ├─ ADBE Vector Shape - Group     # Path
          ├─ ADBE Vector Graphic - Fill    # Fill
          ├─ ADBE Vector Graphic - Stroke  # Stroke
          └─ ADBE Vector Filter - Trim     # Trim Paths
 ```
 
-### Pattern PyShiftAE : navigation fiable
+### MatchNames Utilitaires (Expression Controls)
 
-```python
-import pyshiftae as ae
+Ces noms sont utilisés pour scanner les rigs génériques.
 
-def _try_get_by_matchname(group: ae.PropertyGroup, match_name: str):
-    stream = group._dyn_suite.GetNewStreamRefByMatchname(group.property, match_name)
-    if not stream:
-        return None
-    return ae.PropertyFactory.create_property(stream)
+| MatchName | Usage Typique | Propriété Valeur (Suffixe) |
+| :--- | :--- | :--- |
+| `ADBE Slider Control` | Valeur flottante animable | `-0001` |
+| `ADBE Checkbox Control`| Booléen (Switch) | `-0001` |
+| `ADBE Color Control` | Couleur (Array[4]) | `-0001` |
+| `ADBE Point Control` | Position 2D | `-0001` |
+| `ADBE Layer Control` | Référence Layer | `-0001` |
+| `ADBE Effect Parade` | Conteneur d'effets | N/A |
 
-def set_first_fill_opacity(value: float) -> None:
-    layer = ae.Layer.active_layer()
-    if layer is None:
-        raise RuntimeError("Sélectionne un Shape Layer d'abord")
+---
 
-    root = _try_get_by_matchname(layer, "ADBE Root Vectors Group")
-    if root is None:
-        raise RuntimeError("Pas de Root Vectors Group : ce n'est pas un Shape Layer")
-
-    stack = [root]
-    while stack:
-        node = stack.pop()
-        if isinstance(node, ae.PropertyGroup):
-            if node.match_name == "ADBE Vector Graphic - Fill":
-                opacity = _try_get_by_matchname(node, "ADBE Vector Fill Opacity")
-                if isinstance(opacity, ae.OneDProperty):
-                    before = opacity.get_value(ae.LTimeMode.CompTime, 0.0, False)
-                    opacity.set_value(max(0.0, min(100.0, value)))
-                    after = opacity.get_value(ae.LTimeMode.CompTime, 0.0, False)
-                    print(f"Fill Opacity: {before} → {after}")
-                    return
-            stack.extend(child for child in node if isinstance(child, ae.PropertyGroup))
-
-    raise RuntimeError("Aucun Fill trouvé dans ce Shape Layer")
-```
-
-### ❌ UI labels vs ✅ MatchNames
-
-```jsx
-// ❌ Fragile, dépend de la langue
-var sliderEffect = layer.property("Effects").property("Slider Control");
-
-// ✅ Invariant, toutes langues / versions
-var sliderEffect = layer.property("ADBE Effect Parade").property("ADBE Slider Control");
-```
-
-### Conversion Shape → Mask (respecter les transforms)
-
-```jsx
-function applyTransforms(vertices, transformStack) {
-  var out = vertices.slice();
-  for (var i = transformStack.length - 1; i >= 0; i--) {
-    var t = transformStack[i];
-    var pos = t.property("ADBE Vector Position").value;
-    var anchor = t.property("ADBE Vector Anchor").value;
-    var scale = t.property("ADBE Vector Scale").value;
-    var offset = [pos[0] - anchor[0], pos[1] - anchor[1]];
-    for (var j = 0; j < out.length; j++) {
-      out[j][0] = (out[j][0] + offset[0]) * (scale[0] / 100);
-      out[j][1] = (out[j][1] + offset[1]) * (scale[1] / 100);
-    }
-  }
-  return out;
-}
-```
-
-## Pièges (Trade-offs)
-
-| Sujet | Avantage | Inconvénient | Mitigation |
-| --- | --- | --- | --- |
-| MatchNames | Portables, stables | Peu documentés (`-0001`) | Conserver un tableau interne et logguer les inconnus |
-| Shape Layers | GPU, expressions natives | Hiérarchie profonde, transforms imbriqués | Helpers récursifs + transform stack |
-| Masks | Simples, visibles | CPU-only, pas de Trim Paths | Convertir uniquement quand nécessaire |
-| DynamicStreamSuite | Accès direct | Exceptions du SDK si stream introuvable | Toujours vérifier `None` et typer la propriété |
-| Conversion Shape → Mask | Recyclage des shapes | Complexe à cause des transforms | Appliquer chaque transform dans l'ordre inverse |
-
-## Mauvaises interprétations fréquentes
-
-1. **« Les labels UI suffisent, surtout en anglais. »** Première localisation et tout tombe; seules les coordonnées (MatchNames) sont stables.
-2. **« On peut convertir Shape → Mask sans tenir compte des transforms. »** Sans stack complète, les vertices dérivent et tes masques ne collent plus à l'image.
-3. **« DynamicStreamSuite renvoie toujours un stream valide. »** Si le matchName n'existe pas, tu récupères `None` et tu crashe dès la première méthode; vérifie et typpe avant d'utiliser.
-
-## Golden Rule
-
-**UI pour les humains, MatchNames pour le code.** Dès que tu automatises After Effects, verrouille tout sur les identifiants internes et sur la hiérarchie documentée, sinon ta stack explose au prochain changement de langue ou d'UI.
+**Golden Rule**: Si tu dois scripter une interaction avec un outil tiers, cherche d'abord ses identifiants dans ce fichier. Si tu crées un nouvel outil, enregistre tes préfixes et MatchNames ici.

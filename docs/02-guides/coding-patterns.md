@@ -1,5 +1,3 @@
-# Coding Patterns — PyShiftAE Recipes
-
 **TL;DR**: Garde trois réflexes : sépare calculs et mutations via Worker + TaskScheduler, parcours l'arbre des Shape Layers par MatchName, et traite chaque handle AE comme une ressource jetable.
 
 ## Analogie architecte / maçon / intendant
@@ -16,33 +14,17 @@ Centraliser les recettes critiques dans un guide unique :
 3. **Mémoire maîtrisée** : Re-valide chaque handle et applique Lock → Use → Unlock → Free.
 
 ## Implémentation
+
 ### 1. Threading & Scheduler Discipline
-- Worker thread = architecte, AE main thread = maçon. Tu ne mélanges jamais leurs tâches.
-- Pas d'appels SDK hors main thread. Si tu n'es pas déjà dans bridge_daemon ou un callback TaskScheduler, tu prépares des données pures et tu les rejoues côté AE.
-- Découpe les opérations longues en micro-tâches pour que l'UI reste fluide.
+*Worker thread = architecte, AE main thread = maçon. Tu ne mélanges jamais leurs tâches.*
 
 | Étape | ❌ Mauvais réflexe | ✅ Geste sûr |
 | --- | --- | --- |
 | Worker | Appelle `layer.add_solid` ou lit des suites | Prépare uniquement des données pures (keyframes, tableaux) |
 | Main thread | Inexistant (tout reste côté worker) | `ae.schedule_task` ou code déjà sur AE thread |
-| Impact | Deadlocks, AE gelé | UI stable, erreurs localisées |
 
 ```python
-import pyshiftae as ae
-import threading
-
-def calculs_lourds():
-    return [(i / 24.0, (i, i * 1.5, 0)) for i in range(1000)]
-
-def appliquer(donnees):
-    comp = ae.Item.active_item()
-    if not comp:
-        return
-    layer = comp.layers.add_solid("Solid_IA", (0, 1, 0, 1), 1920, 1080, 10)
-    for temps, valeur in donnees:
-        idx = layer.position.add_key(temps)
-        layer.position.set_value_at_key(idx, valeur)
-
+# Voir implementation complète dans architecture.md
 threading.Thread(target=lambda: (
     data := calculs_lourds(),
     ae.schedule_task(lambda: appliquer(data))
@@ -50,74 +32,23 @@ threading.Thread(target=lambda: (
 ```
 
 ### 2. Shape Layers sans tâtonner
-- Toujours chercher `ADBE Root Vectors Group`, puis naviguer récursivement par MatchName.
-- Arrête-toi sur les groupes `ADBE Vector Graphic - Fill`, `Stroke`, etc., pour un accès stable.
-- Utilise PropertyFactory pour obtenir des objets typés (OneDProperty, ColorProperty) et évite les conversions maison.
+*Utilise PropertyFactory pour obtenir des objets typés (OneDProperty, ColorProperty) et évite les conversions maison.*
 
 | Sujet | ❌ Mauvais réflexe | ✅ Geste sûr |
 | --- | --- | --- |
 | Sélection | Indices (`property(1)`) dépendants de l'ordre | MatchName (`ADBE Vector Graphic - Fill`) |
 | Types | Conversion manuelle des tuples | `PropertyFactory.create_property` |
-| Navigation | Boucle while sur `numProperties` | DFS récursif + filtre MatchName |
 
 ```python
-import pyshiftae as ae
-
-def _stream(group, match):
-    stream = group._dyn_suite.GetNewStreamRefByMatchname(group.property, match)
-    return ae.PropertyFactory.create_property(stream) if stream else None
-
-def toggle_fill():
-    layer = ae.Layer.active_layer()
-    if layer is None:
-        raise RuntimeError("Sélectionne un Shape Layer")
-
-    root = _stream(layer, "ADBE Root Vectors Group")
-    if root is None:
-        raise RuntimeError("Pas de Root Vectors Group")
-
-    fill = next((node for _, node in iter_tree(root)
-                 if isinstance(node, ae.PropertyGroup) and node.match_name == "ADBE Vector Graphic - Fill"), None)
-    if fill is None:
-        raise RuntimeError("Aucun Fill trouvé")
-
-    opacity = _stream(fill, "ADBE Vector Fill Opacity")
-    if isinstance(opacity, ae.OneDProperty):
-        before = opacity.get_value(ae.LTimeMode.CompTime, 0.0, False)
-        opacity.set_value(25.0 if before > 25.0 else 75.0)
-        return
-
-    color = _stream(fill, "ADBE Vector Fill Color")
-    if isinstance(color, ae.ColorProperty):
-        color.set_value((1.0, 0.2, 0.2, 1.0))
-        return
-
-    raise RuntimeError("Fill trouvé mais aucune propriété modifiable")
+# Navigation fiable par MatchName (voir ae-internals.md pour la liste)
+root = _stream(layer, "ADBE Root Vectors Group")
+fill = next((node for _, node in iter_tree(root) if node.match_name == "ADBE Vector Graphic - Fill"), None)
 ```
 
 ### 3. Handles & Mémoire
-- Ne garde jamais un handle AE longtemps : stocke un ID ou une position, puis re-récupère le handle juste avant usage.
-- Applique systématiquement `try/finally` pour Lock → Use → Unlock → Free.
-- Revalide tes collections : vérifie `layer_id <= comp.layers.num_layers` avant de manipuler.
-
-| Sujet | ❌ Mauvais réflexe | ✅ Geste sûr |
-| --- | --- | --- |
-| Cache | Conserver un handle global entre deux frames | Stocker un ID puis re-récupérer le handle |
-| Lifetime | Oublier `free()` ou `unlock()` | `try/finally` systématique |
-| Validation | Supposer que le calque existe toujours | Vérifier `layer_id <= comp.layers.num_layers` |
+*Ne garde jamais un handle AE longtemps : stocke un ID ou une position, puis re-récupère le handle juste avant usage.*
 
 ```python
-layer_id = 1
-
-def apply_safe():
-    comp = ae.Item.active_item()
-    if not comp or layer_id > comp.layers.num_layers:
-        return
-
-    layer = comp.layers[layer_id]
-    with ae.UndoGroup("Safe move"):
-        layer.position.set_value((100, 100, 0))
-
 handle = ae.get_some_handle()
 try:
     locked = handle.lock()
@@ -127,19 +58,116 @@ finally:
     handle.free()
 ```
 
-## Mauvaises interprétations fréquentes
+## Patterns d'Architecture Scripts (Universels)
 
-1. **« Un worker hybride ira plus vite. »** Dès qu'il touche AE, la tour de contrôle (TaskScheduler) perd la main et tu déclenches un gel.
-2. **« Les indices suffisent pour cibler un Shape Layer. »** Le premier designer qui réordonne les groupes casse ton script; seuls les MatchNames survivent.
-3. **« Garder les handles en cache optimise les performances. »** Les handles expirent dès que la ressource meurt; re-récupération + Lock→Use→Unlock→Free reste obligatoire.
+### Rigs pilotés par calque invisible (Data-Driven Rigs)
 
-## Trade-offs
+**TL;DR**: Pour les rigs complexes, masque les sliders/checkbox sur un Null « Control » (guidé par des expressions) plutôt que sur les calques de rendu.
 
-| Pattern | ✅ Avantage | ❌ Coût | Quand l'appliquer |
-| --- | --- | --- | --- |
-| Worker + Scheduler | UI fluide, pas de freeze | Discipline micro-tâches, code en deux fonctions | Toujours dès que l'opération dépasse 10 ms |
-| Shape Navigator MatchName | Accès stable aux propriétés vectorielles | Boilerplate récursif | Dès que tu touches un Shape Layer |
-| Lock→Use→Unlock→Free | Pas de crash ni fuite mémoire | Verbosité + try/finally obligatoire | Toute interaction avec les suites mémoire |
+#### Le problème
+Les scripts avancés (Talking Head, Splash, Social Importer) créent des calques guides remplis d'effets `Control`. Si on copie-colle les calques de rendu sans ce "cerveau", les expressions cassent.
 
-## Golden Rule
-Chaque fois que tu écris du PyShiftAE, vérifie ce trio : Worker + Scheduler, navigation par MatchName, handles jetables. Si l'un des trois manque, ton script finira par crasher AE.
+#### La solution
+1. **Détecter** les layers taggés (masqués, nommés `CTRL` ou `GUIDE`).
+2. **Inventorier** leurs effets `ADBE Slider/Color/Point Control`.
+3. **Consulter** le registre `Data-driven Control Layers` dans `ae-internals.md` pour connaître les mappings spécifiques.
+
+```python
+def collect_control_layers(comp):
+    # Scan générique des Nulls de contrôle
+    result = []
+    for layer in comp.layers:
+        if "CTRL" not in layer.name.upper(): continue
+        # ... Logique d'extraction des effets ...
+    return result
+```
+
+#### Golden Rule
+**Aucun rig data-driven ne quitte une comp sans que son Null de contrôle (référencé dans `ae-internals.md`) ne soit dupliqué avec lui.**
+
+### Gestion générique des Pseudo-Effets
+
+**TL;DR**: Traite chaque pseudo-effet (`Pseudo/...`) comme une DLL manquante. Vérifie la présence du preset `.ffx` sur le disque avant toute tentative d'application.
+
+#### Le problème
+Les scripts tiers (LoopMaster, Flex) s'appuient sur des définitions XML invisibles. Sans vérification préalable, l'application via PyShiftAE échoue silencieusement ou crée des propriétés corrompues.
+
+#### La solution
+Utiliser un helper universel qui prend le matchName et le chemin du preset (stockés dans la matrice `ae-internals.md`).
+
+```python
+def ensure_pseudo_effect(layer, match_name, preset_path):
+    if layer.effects.has(match_name): return
+    if not Path(preset_path).exists(): raise FileNotFoundError(preset_path)
+    layer.app.apply_preset(preset_path)
+```
+
+#### Golden Rule
+**Pas de pseudo-effet sans triptyque vérifié : matchName exact, preset disponible, permissions disque (voir `ae-internals.md` pour les chemins).**
+
+### Tags métadonnées comme RAM (Stateless Scripting)
+
+**TL;DR**: AE ne persiste aucun état JS/Python. Utilise des tags standardisés dans les commentaires (`MS_LOCKED`, `RH_TAKE=3`) pour simuler une mémoire persistante.
+
+#### Le problème
+Comment savoir si un calque a été "locké par mon script" ou "locké par l'utilisateur" ? Comment savoir quelle version de preset est appliquée ?
+
+#### La solution
+Standardiser les préfixes (voir tableau `Metadata Tag Prefixes` dans `ae-internals.md`) et utiliser des accesseurs.
+
+```python
+def read_tag(layer, prefix):
+    # Lit le commentaire et extrait la valeur après le préfixe
+    pass
+
+def write_tag(layer, prefix, value):
+    # Ajoute ou met à jour le tag sans écraser les commentaires utilisateur
+    pass
+```
+
+#### Golden Rule
+**Ce qui doit survivre au redémarrage d'AE vit dans un tag documenté (voir `ae-internals.md`), jamais dans une variable globale.**
+
+### Stratégie `app.settings` & Préférences
+
+**TL;DR**: Pour stocker des configurations UI, utilise toujours un namespace explicite (`Vendor_Tool`) et prévois un fallback JSON si l'écriture est interdite.
+
+#### Le problème
+Les scripts écrivent souvent à la racine de `app.settings` ou échouent si l'utilisateur n'a pas coché "Allow Scripts to Write Files".
+
+#### La solution
+Une fonction wrapper qui tente d'écrire dans les préférences AE, et bascule sur un fichier dans `Folder.userData` en cas d'échec.
+
+**Référence** : Consulte le "Registre app.settings" dans `ae-internals.md` pour la liste des clés existantes afin d'éviter les collisions.
+
+#### Golden Rule
+**Chaque préférence a un namespace explicite, un fallback disque et est référencée dans le registre central.**
+
+### Virtual Camera Solids & Cross-Comp Linking
+
+**TL;DR**: Pour simuler des caméras virtuelles ou lier des compositions (pattern *Boxcam*), utilise un solide guide masqué comme référence spatiale.
+
+#### Le problème
+Synchroniser une caméra entre une précomp et une comp principale est mathématiquement complexe et fragile lors du scaling.
+
+#### La solution
+Créer un solide guide (souvent masqué) dans la comp source. Utiliser ce solide comme parent ou référence pour les expressions `toComp`/`toWorld` dans la comp cible. Cela permet de manipuler la "vue" sans toucher à la caméra réelle d'AE.
+
+**Référence** : Voir la section "Virtual camera solids" dans `ae-internals.md` pour les implémentations spécifiques (Boxcam, etc.).
+
+### Sampling Précis (sourceRectAtTime)
+
+**TL;DR**: Mesure toujours via `sourceRectAtTime`/`sampleImage` entouré de duplication temporaire pour éviter les biais (effets, parents, temps).
+
+#### Le problème
+Calculer la taille d'un calque texte ou shape échoue si le calque est parenté, a des effets de distorsion ou n'est pas à l'instant T.
+
+#### La solution
+Pattern "Isolation Temporaire" :
+1. Dupliquer le calque.
+2. Retirer parents et effets non-génératifs.
+3. Mesurer `sourceRectAtTime(t, false)`.
+4. Supprimer le duplicata.
+
+#### Golden Rule
+**Ne déplace jamais un anchor ou un stroke sans recalcul frais dans un contexte isolé ; tout cache devient une dette.**

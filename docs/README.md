@@ -44,6 +44,7 @@ La métaphore tour de contrôle revient dans chaque section: si un guide manque 
 ### `04-reference/` — Données techniques
 - **[ae-internals.md](04-reference/ae-internals.md)** — MatchNames, hiérarchie Shape Layers, conversions
 - **[capabilities.md](04-reference/capabilities.md)** — Matrice PyShiftAE vs ExtendScript, arbitrage 80/20
+- **[ae-script-audit.md](04-reference/ae-script-audit.md)** — Journal d'audit des scripts tiers servant de preuve brute avant dispatch dans les guides
 
 ### `legacy-adobe/` — Archive Adobe originale
 - Copie brute de `docs/official/` pour référence historique
@@ -73,10 +74,20 @@ La métaphore tour de contrôle revient dans chaque section: si un guide manque 
 
 ## 📊 Métriques clés
 
-- **Total LOC projet** : 373k (C++ dominant, Python émergent)
+- **Total LOC projet** : 360 119 LOC (audit 2026-02-08)
+- **Ventilation détaillée** :
+  - C/C++ Headers : 202 k LOC
+  - C++ : 73 k LOC  
+  - Markdown : 13 k LOC
+  - Python : 9 k LOC (PyShiftAE: 7 fichiers, AETK-main: 40 fichiers)
+  - XML : 55 k LOC
+  - JSX : 22 k LOC (scripts analysés)
+  - JavaScript : 1 k LOC (CEP MediaSolution)
+- **CEP MediaSolution** : 3 162 LOC (JSX 1 790, JS 1 007)
 - **Documents fusionnés** : 20+ → 8 majeurs
 - **Couverture API** : PyShiftAE ~70%, ExtendScript 100%
 - **Transport** : Named pipe/Unix socket + mailbox JSON fallback
+- **Date d'audit** : 2026-02-08
 
 ---
 

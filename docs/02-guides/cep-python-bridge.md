@@ -100,6 +100,67 @@ Tout se passe côté daemon (déjà sur le thread AE), donc aucune gymnastique T
 
 `tests/test_bridge_daemon_pure.py` stubbe `pyshiftae` et `PyFx`, ce qui permet de valider les handlers (arg missings, fallback, undo groups) sans lancer After Effects. Ajoute systématiquement un case ID dans le tableau de perspectives quand tu crées un nouvel entrypoint pour garder la couverture alignée (@PyShiftBridge/tests/test_bridge_daemon_pure.py#1-101).
 
+## Panels tiers ↔ bridge : AEInfoGraphics, KBar, Social Importer
+
+**TL;DR**: Les panels commerciaux utilisent leurs propres conventions CEP↔JSX (`transferData`, `_kbar.*`, `Social Importer`). Cartographie-les ici pour réutiliser le bridge Hybrid 2.0 sans réécrire de colle à chaque audit.@docs/04-reference/ae-script-audit.md#34-35 @docs/04-reference/ae-script-audit.md#74-75 @docs/04-reference/ae-script-audit.md#101-102
+
+### Le problème
+Chaque panel audité implémente un protocole maison : AEInfoGraphics envoie des datasets shape via `transferData`, KBar expose des RPC `_kbar.runFile/_kbar.applyEffect`, Social Importer duplique des comps entières depuis des projets importés. Sans standard, chaque intégration doit reverse-engineer ces flux avant de les migrer vers PyShiftAE.@docs/04-reference/ae-script-audit.md#34-35 @docs/04-reference/ae-script-audit.md#74-75 @docs/04-reference/ae-script-audit.md#101-102
+
+### La solution
+Décrire comment ces panels échangent leurs données, puis brancher leur logique dans `bridge_daemon.py` via des handlers dédiés :
+1. **Adapter les payloads** à `{entrypoint, args}` en documentant les clés (datasets, commandes toolbar, import dossiers).
+2. **Valider les risques** (execution arbitraire `_kbar.runFile`, import massif Social Importer) avant de les exposer côté PyShiftAE.
+3. **Normaliser l’observabilité** : chaque commande renvoie `{ok, warnings, meta}` pour être monitorée comme les handlers maison.
+
+### Implémentations ciblées
+
+| Panel | Flux CEP → JSX | Ce qu’il faut documenter pour Hybrid 2.0 |
+| --- | --- | --- |
+| AEInfoGraphics v2.0.3 | `panel/jsx/main.jsx` appelle `transferData` qui génère des comps et instancie des `ADBE Color Control`/rigs shape. Les datasets transitent sous forme d’objets JavaScript sérialisés.@docs/04-reference/ae-script-audit.md#34-35 | Ajouter un handler `aeinfographics_apply_dataset` qui valide la payload (chart type, naming `PARENT`, compteurs) puis délègue à PyShiftAE pour éviter les scripts JSX bloquants. |
+| KBar 3.1.1 | Toolbar CEP appelle `_kbar.getAllEffects`, `_kbar.runFile`, `_kbar.applyEffect` côté JSX; l’état est persistant via `aeq.settings` → `app.settings` (`kbar.json`).@docs/04-reference/ae-script-audit.md#74-75 | Définir un bridge `kbar_dispatch_command` qui whitelist les actions (pas de `$.evalFile` arbitraire) et stocke les prefs via un handler PyShiftAE sécurisé pour éviter l’exécution non contrôlée. |
+| Social Importer 1.0.3 | CEP importe des projets via `ImportOptions(ImportAsType.PROJECT)`, duplique `CONTROL layer` et applique l’effet « Social Importer » dans la comp active.@docs/04-reference/ae-script-audit.md#101-102 | Créer `social_importer_ingest` qui réceptionne une structure `folders[], prefix, controlLayer` et appelle PyShiftAE pour insérer les comps/layers (gère import massif + naming unique). |
+
+### ❌ / ✅
+
+```text
+❌ Brancher directement `transferData` ou `_kbar.runFile` sur le main thread JSX sans bridge
+✅ Sérialiser la même payload dans `{entrypoint, args}` et laisser PyShiftBridge appliquer/monitorer les mutations via handlers dédiés
+```
+
+### Trade-offs
+
+| Sujet | Avantage | Limite | Mitigation |
+| --- | --- | --- | --- |
+| Handler dédié par panel | Rendu prévisible, logs centralisés | Doit suivre les mises à jour du panel | Surveiller les versions et rafraîchir la table ci-dessus à chaque audit `/enhance` |
+| Validation côté Python | Protège contre l’exécution arbitraire (`_kbar.runFile`) | Nécessite mapping complet des commandes | Exposer uniquement une liste blanche documentée |
+| Import controlé Social Importer | Garantit des comps cohérentes dans AE | Peut être lourd (ImportAsType.PROJECT) | Lancer depuis PyShiftAE (main thread) pour éviter les gels CEP |
+
+### Golden Rule
+**Toute intégration CEP tierce doit passer par un handler Hybrid 2.0 documenté (payload, permissions, warnings) avant de toucher PyShiftAE; jamais d’appel direct `_kbar.*`/`transferData` sans ce garde-fou.**
+
+## Checklist des handlers PyShiftAE (capabilities audit)
+
+**TL;DR**: Chaque capacité documentée (imports Blenderae, exports Bodymovin, etc.) doit correspondre à un handler Hybrid 2.0 prêt à l’emploi. Utilise la checklist ci-dessous pour valider les entrées/sorties, warnings et permissions avant de coder.@docs/04-reference/capabilities.md#88-494
+
+| Handler recommandé | Capacité ciblée | Payload attendu | Résultat attendu | Warnings / Permissions |
+| --- | --- | --- | --- | --- |
+| `blenderae_import_scene` | Import JSON Blenderae | `{aep_path, json_path, license_tier}` | Crée comp `BlenderAe_*`, lights/cams/solids alignés sur JSON | Vérifier dossier `Documents/BlenderAe`, limite 1 s en trial.@docs/04-reference/capabilities.md#88-116 |
+| `bodymovin_export_bundle` | Exports AVD/SMIL/Rive/Standalone | `{comp_name, formats[], pretty_json, copy_assets}` | Génère chaque format + rapport export | Requiert polyfill JSON; logguer options pretty/minifié.@docs/04-reference/capabilities.md#117-151 |
+| `circusmonkey_render_page` | Preset XML + MonkeyCam | `{preset_xml_path, page_id, deobfuscate=true}` | Recrée la page + caméras | Utiliser `circus_deobfuscate.py`, vérifier version schema.@docs/04-reference/capabilities.md#153-179 |
+| `cloners_sync_effectors` | Slider `aecdata` Cloners + Effectors | `{controller_layer, action:"read|update", payload}` | Lit ou met à jour JSON `aecdata` | Parser/valider JSON, ne jamais écrire brut.@docs/04-reference/capabilities.md#181-215 |
+| `automation_toolkit_execute` | Actions Render Queue | `{action, args, allowExternalCode}` | Exécute start/pause/render actions | Whitelist actions, journalisation obligatoire.@docs/04-reference/capabilities.md#217-240 |
+| `expression_universalizer_batch` | Batch universalize | `{targets[], remove_disabled, ignore_pseudo}` | Lance batch + retourne log path | Vérifier `Allow Scripts…`, extraction ZIP préalable.@docs/04-reference/capabilities.md#242-265 |
+| `gifgun_render_gif` | Pipeline FFmpeg/GifExtras | `{comp_name, quality, loop, size}` | Exporte GIF via binaires GifGun | Vérifier binaires `(gifGun)/static_libs`, utiliser `scheduleTask`.@docs/04-reference/capabilities.md#267-293 |
+| `mazefx_generate_layers` | MazeFX Fill/Masks | `{mode, guide_layer, settings}` | Crée layers murs/chemins/null | Vérifier version AE (null suiveur), respecter naming `MazeFX_*`.@docs/04-reference/capabilities.md#295-318 |
+| `proio_split_export` | Pro IO AEPX→AME | `{comp_names[], output_dir}` | Crée `_compname.aepx` + `_Assets`, déclenche AME | Ne pas supprimer `_Assets` avant succès AME.@docs/04-reference/capabilities.md#320-343 |
+| `ray_dynamic_sync_palettes` | Ray Dynamic Color/Texture | `{palette_comp, action:"export|cleanup", ase_path}` | Export/import ASE ou vérifie textures | Respecter limitations trial, sauvegarder ASE avant nettoyage.@docs/04-reference/capabilities.md#345-368 |
+| `social_importer_ingest` | Social Importer CONTROL layer | `{project_path, prefix, target_comp}` | Importe comps + applique effet CONTROL | Créer dossiers `Social Importer/<prefix>`, vérifier effet présent.@docs/04-reference/capabilities.md#370-393 |
+| `typemonkey_preset_apply` | TypeMonkey presets | `{preset_path, tokenizer_mode}` | Charge preset, applique tokens | Utiliser `typemonkey_preset_inspect.py`, conserver tokens.|@docs/04-reference/capabilities.md#395-418 
+| `freqreact_manage_profiles` | FreqReact profils audio | `{action:"list|remove", profile_id}` | Liste ou supprime profils `#ReactPro` | Archiver assets, respecter nommage profils.@docs/04-reference/capabilities.md#420-444 |
+| `super_resize_batch` | Super Resize Me! scaling | `{mode:"recursive|single", target_size, comps[]}` | Scale comps + cameras, relock layers | Vérifier limites 4–30000 px, caméras, locks.@docs/04-reference/capabilities.md#445-468 |
+| `vr_comp_editor_sync` | VR Comp Editor tags | `{workflow:"Creator|Extractor|Composer", comps[]}` | Met à jour comps VR + tags `[VR-*]` | Vérifier plugins Mettle, ne pas enlever tags.@docs/04-reference/capabilities.md#470-493 |
+
 ## ❌ / ✅ Patterns
 
 ### ❌ Appel synchrone depuis CEP

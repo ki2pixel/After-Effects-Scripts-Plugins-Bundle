@@ -6,7 +6,7 @@
 - **Status**: Ready
 
 ## Recent Changes
-[2026-02-07 17:45:00] - Session completed - docs-updater workflow appliqué avec succès - ✅ Audit structurel/volumétrique (376k LOC totaux, CEP MediaSolution 3.1k LOC avec 48k commentaires JSX legacy) - ✅ Diagnostic triangulé (dette JSX vs Hybrid 2.0) - ✅ Section "CEP Workload Snapshot" ajoutée dans docs/mediasolution/README.md avec TL;DR, problem-first, ❌/✅ comparaison, trade-offs table et Golden Rule - ✅ Application skill documentation respectée (ponctuation corrigée, pas d'artefacts AI) - Memory Bank synchronisée
+[2026-02-08 19:32:00] - Session terminée - capabilities.md refait en v3 avec matrice d'arbitrage enrichie basée sur audit SDK AEGP - ✅ Section "Matrice d'arbitrage rapide" remplacée par version détaillée avec audit C++ - ✅ Section "Limites du SDK AEGP (C++)" ajoutée expliquant angles morts (.ffx, layer.comment) et stratégies hybrides - ✅ Architecture hybride clarifiée avec batching C++ et règles d'or - ✅ Documentation alignée avec standards SKILL (TL;DR, problème, solution, Golden Rule) - Memory Bank synchronisée
 
 ## Open Questions/Issues
 - None pending

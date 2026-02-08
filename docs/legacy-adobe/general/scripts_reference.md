@@ -185,48 +185,6 @@ var fold = Origami.createFold({
 
 ---
 
-## origami_fix.jsx
-
-**Description**: Patch de compatibilité pour script Origami v1.4.0 sur AE 2023+.
-
-### Requête d'application
-
-```jsx
-var fix = OrigamiFix.apply({
-  targetVersion: "2024",
-  preserveSettings: true
-});
-```
-
-### Paramètres
-
-| Nom | Type | Requis | Description |
-|-----|------|--------|-------------|
-| targetVersion | String | Non | Version AE cible ("2023", "2024") |
-| preserveSettings | Boolean | Non | Conserver paramètres existants |
-| backupOriginal | Boolean | Non | Sauvegarder script original |
-
-### Retour
-
-```jsx
-{
-  status: "success",
-  fixes: [
-    {issue: "transform_matrix", resolved: true},
-    {issue: "keyframe_interpolation", resolved: true}
-  ],
-  compatibility: "AE 2024+"
-}
-```
-
-### Cas d'erreur
-
-- **ORIGAMI_NOT_FOUND**: Script Origami v1.4.0 non installé
-- **VERSION_MISMATCH**: Version incompatible détectée
-- **INSUFFICIENT_PERMISSIONS**: Permissions d'écriture insuffisantes
-
----
-
 ## Référence rapide
 
 | Script | Méthode principale | Paramètres requis | Retour typique |
@@ -235,7 +193,6 @@ var fix = OrigamiFix.apply({
 | Easy Clones | `duplicate()` | source, count | `{clones: Array}` |
 | Good Parents | `assign()` | parent, child | `{hierarchy: Object}` |
 | Origami | `createFold()` | shape, angle | `{fold: Object}` |
-| origami_fix | `apply()` | (aucun) | `{fixes: Array}` |
 
 ---
 

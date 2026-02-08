@@ -1,5 +1,15 @@
 # Progress Tracking
 
+[2026-02-08 19:32:00] - capabilities.md refait en v3 - matrice d'arbitrage enrichie avec audit SDK AEGP, section "Limites du SDK AEGP (C++)" ajoutée, architecture hybride clarifiée, documentation alignée standards SKILL.
+
+[2026-02-08 13:35:00] - ae-internals.md enrichi avec matrice pseudo-effects + sections Boxcam/circuitFX/Crazy Shapes conformément au plan « Prochaines actions recommandées ». Citations croisées vers ae-script-audit.md et respect du skill documentation.
+
+[2026-02-08 13:55:00] - coding-patterns.md étendu avec sections app.settings/licensing, sourceRectAtTime sampling, préservation strokes/anchors, pipelines couleur/palettes et instrumentation autosave/support. Références croisées vers ae-script-audit.md et structure SKILL documentation respectée.
+
+[2026-02-08 14:05:00] - cep-python-bridge.md complété avec section "Panels tiers" (AEInfoGraphics, KBar, Social Importer) détaillant payloads CEP↔JSX, risques d'exécution et mapping vers handlers Hybrid 2.0. Sources: ae-script-audit.md citations et garde-fous documentaires respectés.
+
+[2026-02-08 14:20:00] - capabilities.md enrichi avec nouvelles fiches (Blenderae import JSON, Bodymovin multi-export, CircusMonkey + utilitaire de déobfuscation, Cloners+Effectors, Automation Toolkit, ExpressionUniversalizer, GifGun, MazeFX, Pro IO, Ray Dynamic Color/Texture, Social Importer, TypeMonkey, FreqReact, Super Resize Me!, VR Comp Editor). Citations ae-script-audit.md ajoutées et Golden Rules formulées.
+
 ## Current Tasks
 - Phase 2 migration : consolidation guides docs/v2
 
@@ -7,12 +17,19 @@
 - Follow integration guide section 7 for future enhancements (STEP7 → PyShiftAE, health UI, extended tests, transport consolidation, deployment docs)
 
 ## Completed Tasks
+
 [2026-02-08 01:40:00] - Skills .windsurf/ alignés avec nouvelle structure docs/ - ✅ Audit des références brisées (docs/internal/, docs/mediasolution/) - ✅ Mis à jour pyshiftae/SKILL.md (références vers docs/01-core/, 02-guides/, 04-reference/, legacy-adobe/) - ✅ Mis à jour ae-scripting-expert/SKILL.md (docs/04-reference/ae-internals.md) - ✅ Mis à jour after-effects-scripts/SKILL.md (docs/legacy-adobe/, docs/README.md) - ✅ Vérifié tous les liens internes fonctionnels - Skills maintenant cohérents avec documentation unifiée.
+
 [2026-02-08 01:35:00] - Restructuration docs/ terminée - ✅ Déplacé contenu v2/ vers racine docs/ (01-core/, 02-guides/, 03-api/, 04-reference/, README.md, legacy-adobe/) - ✅ Supprimé docs/index.md, DOCS_PLAYBOOK.md, CONTRIBUTING_DOCS.md (obsolètes après v2) - ✅ Supprimé docs/official/ (déplacé vers legacy-adobe/) - ✅ Préservé docs/WIP/ (travail en cours) - Structure docs/ finale nette et unifiée.
+
 [2026-02-08 01:30:00] - Phase 5 Nettoyage final terminé - ✅ Supprimé internal/ et mediasolution/ (contenu fusionné dans v2) - ✅ Nettoyé docs/ racine (architecture_overview.md, bridge_communication.md) - ✅ Vérifié les références externes (risques minimes, workflows .windsurf/ mis à jour) - ✅ docs/v2/README.md validé comme table des matières complète - Migration MIGRATION_PLAN.md exécutée 100%.
+
 [2026-02-08 01:25:00] - Phase 2 Migration - Référence "Capabilities" créée (docs/v2/04-reference/capabilities.md) en synthétisant pyshiftae_capabilities_matrix.md avec structure SKILL complète (TL;DR, problème, solution, implémentation, trade-offs, Golden Rule) - matrice arbitrage PyShiftAE vs ExtendScript ajoutée + snippets CEP polling.
+
 [2026-02-08 01:05:00] - Phase 2 Migration - Référence API unifiée créée (docs/v2/03-api/api-reference.md) en fusionnant mediasolution_pyshiftae_api.md + aetk_bindings.md avec structure SKILL (TL;DR, problème, solution, implémentation, trade-offs, Golden Rule) - endpoints CEP/Python détaillés, métriques TaskScheduler/AETK intégrées.
+
 [2026-02-08 00:45:00] - Phase 2 Migration - Guide "Coding Patterns" créé (docs/v2/02-guides/coding-patterns.md) en fusionnant safe patterns checklist + shape navigator + annexes PyShiftAE - sections SKILL complètes (TL;DR, problème, solution, implémentation, trade-offs, Golden Rule) - références croisées maintenues.
+
 [2026-02-08 00:25:00] - Phase 2 Migration - Guide "CEP ↔ Python Bridge" créé (docs/v2/02-guides/cep-python-bridge.md) en fusionnant bridge_communication.md + pyshiftae_bridge_daemon_strategy.md - structure SKILL appliquée (TL;DR, problème, solution, trade-offs) - Contenu couvre Hybrid 2.0, registre de handlers, diagnostics.
 
 [2026-02-07 17:45:00] - Session completed - docs-updater workflow appliqué - ✅ Audit structurel/volumétrique (376k LOC totaux, CEP MediaSolution 3.1k LOC avec 48k commentaires JSX legacy) - ✅ Diagnostic triangulé (dette JSX vs Hybrid 2.0) - ✅ Section "CEP Workload Snapshot" ajoutée dans docs/mediasolution/README.md avec TL;DR, problem-first, ❌/✅ comparaison, trade-offs table et Golden Rule - ✅ Application skill documentation respectée (ponctuation corrigée, pas d'artefacts AI) - Memory Bank synchronisée
