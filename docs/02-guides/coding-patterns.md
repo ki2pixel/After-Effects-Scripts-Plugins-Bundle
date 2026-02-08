@@ -17,9 +17,9 @@ Centraliser les recettes critiques dans un guide unique :
 
 ## Implémentation
 ### 1. Threading & Scheduler Discipline
-- Worker thread = architecte, AE main thread = maçon. Tu ne mélanges jamais leurs tâches.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#17-72
-- Pas d'appels SDK hors main thread. Si tu n'es pas déjà dans bridge_daemon ou un callback TaskScheduler, tu prépares des données pures et tu les rejoues côté AE.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#135-200
-- Découpe les opérations longues en micro-tâches pour que l'UI reste fluide.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#172-200
+- Worker thread = architecte, AE main thread = maçon. Tu ne mélanges jamais leurs tâches.
+- Pas d'appels SDK hors main thread. Si tu n'es pas déjà dans bridge_daemon ou un callback TaskScheduler, tu prépares des données pures et tu les rejoues côté AE.
+- Découpe les opérations longues en micro-tâches pour que l'UI reste fluide.
 
 | Étape | ❌ Mauvais réflexe | ✅ Geste sûr |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ threading.Thread(target=lambda: (
 ### 2. Shape Layers sans tâtonner
 - Toujours chercher `ADBE Root Vectors Group`, puis naviguer récursivement par MatchName.
 - Arrête-toi sur les groupes `ADBE Vector Graphic - Fill`, `Stroke`, etc., pour un accès stable.
-- Utilise PropertyFactory pour obtenir des objets typés (OneDProperty, ColorProperty) et évite les conversions maison.@docs/internal/pyshiftae/pyshiftae_implementation_shape_navigator_cep_bridge.md#7-99
+- Utilise PropertyFactory pour obtenir des objets typés (OneDProperty, ColorProperty) et évite les conversions maison.
 
 | Sujet | ❌ Mauvais réflexe | ✅ Geste sûr |
 | --- | --- | --- |
@@ -96,8 +96,8 @@ def toggle_fill():
 ```
 
 ### 3. Handles & Mémoire
-- Ne garde jamais un handle AE longtemps : stocke un ID ou une position, puis re-récupère le handle juste avant usage.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#75-131
-- Applique systématiquement `try/finally` pour Lock → Use → Unlock → Free.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#110-131
+- Ne garde jamais un handle AE longtemps : stocke un ID ou une position, puis re-récupère le handle juste avant usage.
+- Applique systématiquement `try/finally` pour Lock → Use → Unlock → Free.
 - Revalide tes collections : vérifie `layer_id <= comp.layers.num_layers` avant de manipuler.
 
 | Sujet | ❌ Mauvais réflexe | ✅ Geste sûr |
@@ -142,4 +142,4 @@ finally:
 | Lock→Use→Unlock→Free | Pas de crash ni fuite mémoire | Verbosité + try/finally obligatoire | Toute interaction avec les suites mémoire |
 
 ## Golden Rule
-Chaque fois que tu écris du PyShiftAE, vérifie ce trio : Worker + Scheduler, navigation par MatchName, handles jetables. Si l'un des trois manque, ton script finira par crasher AE.@docs/internal/pyshiftae/pyshiftae_safe_patterns_checklist.md#341-377
+Chaque fois que tu écris du PyShiftAE, vérifie ce trio : Worker + Scheduler, navigation par MatchName, handles jetables. Si l'un des trois manque, ton script finira par crasher AE.

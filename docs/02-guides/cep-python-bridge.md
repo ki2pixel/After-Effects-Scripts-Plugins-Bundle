@@ -14,7 +14,7 @@ Tu appuies sur un bouton CEP, AE ne répond plus pendant 30 secondes. Chaque pan
 
 1. **Transport adaptatif** : le panel teste les pipes/sockets au runtime, sinon tombe sur la mailbox JSON automatique (@PyShiftBridge/js/main.js#45-205,280-360).
 2. **Contrat de message stable** : CEP écrit des commandes `{id, entrypoint, args}` dans `cep_to_py.json` tandis que le daemon répond dans `py_to_cep.json`; le même schéma est sérialisé sur les sockets named pipe/Unix (@PyShiftBridge/js/main.js#255-365, @PyShiftBridge/bridge_daemon.py#223-257,297-399,411-448).
-3. **Single daemon, multi-domain** : `bridge_daemon.py` expose un registre central `_HANDLERS`; chaque panel s’y branche via `register_handlers()` et profite immédiatement des transports, des helpers PyFx et de la batterie de tests (@docs/internal/pyshiftae/pyshiftae_bridge_daemon_strategy.md#1-89).
+3. **Single daemon, multi-domain** : `bridge_daemon.py` expose un registre central `_HANDLERS`; chaque panel s’y branche via `register_handlers()` et profite immédiatement des transports, des helpers PyFx et de la batterie de tests ().
 
 ## Implémentation
 
