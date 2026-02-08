@@ -33,6 +33,9 @@ globs:
 - **Undo Groups:** Always wrap operations in `app.beginUndoGroup()` / `app.endUndoGroup()`
 - **Indexing:** Remember 1-based indexing for AE collections
 
+### Documentation Updates
+- Any time you create or modify documentation (README, docs/, Markdown guides), you **must** apply the methodology defined in `.windsurf/skills/documentation/SKILL.md` (TL;DR first, problem-first opening, ❌/✅ blocks, trade-offs, Golden Rule). Treat this skill file as the authoritative checklist before writing.
+
 ## Patterns
 
 ### PyShiftAE: Worker Thread + Scheduler Pattern

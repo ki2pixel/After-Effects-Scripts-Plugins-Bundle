@@ -37,7 +37,7 @@ Scripts AE (Windows) → Post-production créative
 - `*_tracking.json` (sortie STEP6, source primaire)
 - `*_audio.json` (données diarisation STEP4)
 - CSV des scènes (STEP3) pour Media-Solution
-- Vidéos sources dans `docs/` du projet
+- Vidéos sources dans `docs/legacy-adobe/` du projet
 
 ### Variables d'Environnement Clés
 ```bash
@@ -192,8 +192,8 @@ pytest -q tests/unit/test_step6_json_reducer.py
 ## 8. Références Techniques
 
 ### Documentation Projet
-- `docs/workflow/post_production/AFTER_EFFECTS_SCRIPTS_ANALYSIS.md` - Analyse complète
-- `docs/workflow/pipeline/STEP7_PREPROCESSING_AE.md` - Spécifications STEP7
+- `docs/legacy-adobe/` - Documentation Adobe originale
+- `docs/README.md` - Guide principal du projet
 - `codingstandards.md` - Règles de codage et architecture
 
 ### Scripts Clés

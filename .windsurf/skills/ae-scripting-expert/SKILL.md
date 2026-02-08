@@ -580,7 +580,7 @@ Use the templates in `assets/` as starting points:
 
 ### Production Script Analysis
 For real-world patterns and undocumented matchNames, see:
-- `docs/internal/matchname_cartography.md` - Analysis of 376 production scripts
+- `docs/04-reference/ae-internals.md` - Analysis of 376 production scripts and MatchNames reference
 - Binary asset lifecycle patterns from Easy Clones, Anchor Sniper
 - Expression templating patterns from easyRulers
 
@@ -633,4 +633,4 @@ Based on analysis of 376 production scripts, these high-usage matchNames are mis
 - `ADBE Ambient` - Ambient material property
 - `ADBE Diffuse` - Diffuse material property
 
-For complete MatchName reference, see the individual reference files and `docs/internal/matchname_cartography.md` for real-world usage patterns.
+For complete MatchName reference, see the individual reference files and `docs/04-reference/ae-internals.md` for real-world usage patterns.

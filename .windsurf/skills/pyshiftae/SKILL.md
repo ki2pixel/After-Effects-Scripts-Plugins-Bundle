@@ -5,7 +5,7 @@ description: Expert guidance for automating Adobe After Effects with PyShiftAE (
 
 # PyShiftAE (Python for After Effects)
 
-> **Sources** : [Guide principal](../../docs/internal/pyshiftae/pyshiftae_guide.md) + annexes A–D (faisabilité, installation Windows, CEP bridge, checklist safe patterns). Les infos C++ manquantes proviennent des extractions Repomix (`docs/internal/repomix/`).
+> **Sources** : [Guide principal](../../docs/01-core/architecture.md) + guides spécialisés ([installation](../../docs/02-guides/installation-deployment.md), [bridge CEP](../../docs/02-guides/cep-python-bridge.md), [patterns](../../docs/02-guides/coding-patterns.md), [références](../../docs/04-reference/)). Les infos C++ manquantes proviennent des extractions Repomix (`docs/legacy-adobe/`).
 
 ## Quick Start
 
@@ -151,6 +151,15 @@ Use `QuietErrors` (or `@quiet_errors`) when probing optional streams/effects and
 - CEP pilote l’UI, Python exécute les ops AE, latence <10 ms via pipe (sliders, interactions temps réel).
 - Configurer `localStorage.setItem('pyshift_pipe_name', '...')` dans la console CEP, scripts de diagnostic fournis.
 
+#### Architecture recommandée : Single Daemon, Multi-Domain
+- **Un seul `bridge_daemon.py`** centralise les transports (pipes + mailbox) et la boucle de polling.
+- **Chaque panel CEP** est un package Python (ex: `PyShiftBridge/mediasolution/`) avec :
+  - `core.py` : logique métier PyShiftAE pure
+  - `handlers.py` : validation + `register_handlers()` pour injecter les entrypoints
+- **Registre dynamique** : `bridge_daemon.py` utilise `_HANDLERS` et `register_handlers()` de chaque module.
+- **Avantages** : maintenance centralisée, tests partagés, pas de duplication IPC.
+- Voir [guide CEP bridge](../../docs/02-guides/cep-python-bridge.md) pour le pattern complet.
+
 ## Common gotchas
 
 ### MatchName vs display name
@@ -218,6 +227,6 @@ PyShiftAE in this repo targets **Windows 10/11 x64**, **After Effects 2023+**, *
 ## When to read code in this repo
 
 - Read `PyShiftAE/Python/pyshiftae/ae.py` to confirm class names, method signatures, and supported operations.
-- Read `docs/internal/pyshiftae/pyshiftae_guide.md` for architecture, safe patterns, workflows.
+- Read [architecture & patterns](../../docs/02-guides/coding-patterns.md) for threading, memory management, and production workflows.
 - Read the annexes (A: faisabilité shapes/hooks, B: installation Windows, C: CEP bridge, D: checklist) for deeper dives.
-- Review Repomix outputs in `docs/internal/repomix/` for CEPy/PyFx native references when required.
+- Review legacy Adobe docs in `docs/legacy-adobe/` for CEPy/PyFx native references when required.
