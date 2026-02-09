@@ -18,11 +18,15 @@ if _THIS_DIR not in sys.path:
     sys.path.insert(0, _THIS_DIR)
 
 try:
+    from PyShiftBridge.gridcloner import core as gridcloner_core
+    from PyShiftBridge.gridcloner import register_handlers as register_gridcloner_handlers
     from PyShiftBridge.mediasolution import core as mediasolution_core
-    from PyShiftBridge.mediasolution import register_handlers
+    from PyShiftBridge.mediasolution import register_handlers as register_mediasolution_handlers
 except Exception:
+    from gridcloner import core as gridcloner_core
+    from gridcloner import register_handlers as register_gridcloner_handlers
     from mediasolution import core as mediasolution_core
-    from mediasolution import register_handlers
+    from mediasolution import register_handlers as register_mediasolution_handlers
 
 
 @dataclass(frozen=True)
@@ -212,6 +216,32 @@ def mediasolution_apply_cuts_active_layer(
     )
 
 
+def gridcloner_apply(
+    rows: int,
+    columns: int,
+    depth: int,
+    spacing: Dict[str, Any],
+    enable_3d: bool,
+    link_opacity_to_null: bool,
+    link_scale_to_null: bool,
+    controller_name: str,
+    max_clones: int,
+    disable_undo_group: bool,
+) -> Dict[str, Any]:
+    return gridcloner_core.gridcloner_apply(
+        rows=rows,
+        columns=columns,
+        depth=depth,
+        spacing=spacing,
+        enable_3d=enable_3d,
+        link_opacity_to_null=link_opacity_to_null,
+        link_scale_to_null=link_scale_to_null,
+        controller_name=controller_name,
+        max_clones=max_clones,
+        disable_undo_group=disable_undo_group,
+    )
+
+
 def _resolve(name: str) -> Callable[..., Dict[str, Any]]:
     return globals()[name]
 
@@ -221,7 +251,8 @@ _HANDLERS: Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]] = {}
 
 
 def _register_all_handlers() -> None:
-    register_handlers(_HANDLERS, _resolve)
+    register_mediasolution_handlers(_HANDLERS, _resolve)
+    register_gridcloner_handlers(_HANDLERS, _resolve)
 
 
 def handle_entrypoint(entrypoint: str, args: Dict[str, Any]) -> Dict[str, Any]:

@@ -16,6 +16,7 @@
 - **PyShiftAE/**: Python automation framework
 - **PyShiftBridge/**: Bridge for Python-AE integration
 - **AETK-main/**: After Effects Toolkit
+- **GridCloner-CEP/**: New CEP panel for grid cloning with Hybrid 2.0 architecture
 - **docs/**: Documentation and guides
 
 ## Organization
@@ -30,4 +31,4 @@
 - Modular architecture for script organization
 
 ---
-*Last updated: 2025-02-06*
+*Last updated: 2026-02-08*

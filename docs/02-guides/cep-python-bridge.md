@@ -139,6 +139,80 @@ Décrire comment ces panels échangent leurs données, puis brancher leur logiqu
 ### Golden Rule
 **Toute intégration CEP tierce doit passer par un handler Hybrid 2.0 documenté (payload, permissions, warnings) avant de toucher PyShiftAE; jamais d’appel direct `_kbar.*`/`transferData` sans ce garde-fou.**
 
+## GridCloner CEP Panel — Exemple complet Hybrid 2.0
+
+**TL;DR**: GridCloner montre comment câbler un panel CEP complet (UI + transport adaptatif) à un handler PyShiftBridge qui valide/coerce les arguments avant d’appeler un core PyShiftAE pur, le tout avec UndoGroup unique et observabilité temps réel.
+
+### Le problème
+Tu veux générer des grilles 3D (200 clones max) sans retomber dans les scripts JSX bloquants audités dans `ae-script-audit.md`. Sans Hybrid 2.0, chaque tentative de grille massive gèle AE, brise la sélection active ou laisse des calques orphelins.
+
+### Architecture en 3 étages
+
+| Couche | Rôle | Fichiers clés |
+| --- | --- | --- |
+| **CEP Panel** | UI lignes/colonnes/profondeur, spacing XYZ, toggles (3D, link opacity/scale), transport adaptatif | `GridCloner-CEP/client/main.js` (UI + pipe/mailbox), `GridCloner-CEP/client/index.html` |
+| **PyShiftBridge Handler** | Validation JSON, coercition types/limites, logging, résolution vers le core PyShiftAE | `PyShiftBridge/gridcloner/handlers.py` (`register_handlers`, `gridcloner_apply`) |
+| **PyShiftAE Core** | Calcul grilles pure Python + mutations AE via UndoGroup | `PyShiftBridge/gridcloner/core.py` (`compute_grid_positions`, `gridcloner_apply`) |
+
+### Flux UI → Handler → Core
+
+```javascript
+// CEP: readFormArgs() → callGridcloner(args)
+var args = {
+  rows: 4, columns: 6, depth: 1,
+  spacing: {x: 120, y: 90, z: 0},
+  enable3D: true,
+  linkOpacityToNull: true,
+  linkScaleToNull: false,
+  controllerName: "Grid CTRL"
+};
+callGridcloner(args); // détecte pipe → fallback mailbox auto
+```
+
+```python
+# PyShiftBridge: _handle_gridcloner_apply() → gridcloner_apply()
+rows = _coerce_int(args.get("rows"), 1)           # validation + bornes
+spacing = _coerce_spacing(args.get("spacing"))   # max 5000px absolu
+return fn(resolve("gridcloner_apply"), rows, columns, depth, spacing, ...)
+```
+
+```python
+# PyShiftAE: gridcloner_apply() → duplication AE
+coords = compute_grid_positions(rows, columns, depth, spacing, max_clones=200)
+with ae.UndoGroup("GridCloner Apply"):
+    for (dx, dy, dz) in coords:
+        dup = base.duplicate()
+        dup.position.set_value((base_pos[0]+dx, base_pos[1]+dy, base_pos[2]+dz))
+```
+
+### Observabilité intégrée
+
+- **CEP**: badge latence, logs `OK (pipe) - 24 clones (124ms)` ou `fallback mailbox`
+- **Handler**: notes `max_clones_reached`, `cannot_force_3d_base`, `expressions_not_supported`
+- **Core**: UndoGroup unique, handles éphémères, 3D forcé si `depth>1` ou toggle
+
+### ❌ / ✅ GridCloner
+
+```text
+❌ Dupliquer directement dans le handler CEP (risque de gel AE)
+✅ Calculer la matrice en Python pur, puis appliquer via UndoGroup unique
+❌ Stocker des handles AE globaux (péremption)
+✅ Ré-récupérer `base_layer` juste avant duplication
+```
+
+### Trade-offs GridCloner
+
+| Choix | Avantage | Risque | Mitigation |
+| --- | --- | --- | --- |
+| Null contrôleur unique | Contrôle global simple | Collision nom existant | Suffixe `Grid CTRL (2)` si trouvé |
+| Expressions vs direct | Réactivité live | Lourdeur sur centaines de clones | Mode `linkScaleToNull=false` pour limiter |
+| Matrice brute Python | Tests rapides, pas d’AE tant qu’on ne mute pas | Double parcours (calcul + application) | Générateur pour limiter mémoire |
+
+### Golden Rule GridCloner
+**Grille d’abord sur papier (Python pur), duplication ensuite sur dalle AE via UndoGroup unique.**
+
+---
+
 ## Checklist des handlers PyShiftAE (capabilities audit)
 
 **TL;DR**: Chaque capacité documentée (imports Blenderae, exports Bodymovin, etc.) doit correspondre à un handler Hybrid 2.0 prêt à l’emploi. Utilise la checklist ci-dessous pour valider les entrées/sorties, warnings et permissions avant de coder.@docs/04-reference/capabilities.md#88-494

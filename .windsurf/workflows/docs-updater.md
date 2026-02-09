@@ -16,13 +16,13 @@ Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cible
 
 1.  **Cartographie (Filtre Bruit)** :
     - `run_command "tree -L 2 -I '__pycache__|.git|*.idea|blob_manifest*.json|regenerated_manifests|repomix*'"`
-    - *But* : Visualiser l'architecture AE (JSX dans Scripts_AE/, Python dans PyShiftAE/, Bridge dans PyShiftBridge/, C++/Python dans AETK-main/, docs/, CEP dans MédiaSolution/MediaSolution-CEP).
+    - *But* : Visualiser l'architecture AE (JSX dans Scripts_AE/, Python dans PyShiftAE/, Bridge dans PyShiftBridge/, C++/Python dans AETK-main/, docs/, CEP dans MédiaSolution/MediaSolution-CEP et GridCloner-CEP).
 
 2.  **Volumétrie (Code Source)** :
     - **Python & C++** : `run_command "cloc PyShiftAE PyShiftBridge AETK-main docs --md --exclude-dir=__pycache__,node_modules,.git"`
       - *But* : Quantifier le code Python (PyShiftAE) et C++/Python (AETK-main) sans les manifests.
-    - **CEP (HTML/CSS/JS + ExtendScript)** : `run_command "cloc 'MédiaSolution/MediaSolution-CEP/client' 'MédiaSolution/MediaSolution-CEP/host' --md --exclude-ext=png,jpg,svg"`
-      - *But* : Mesurer l'effort côté interface CEP (client) et hôte ExtendScript pour aligner la documentation MediaSolution.
+    - **CEP (HTML/CSS/JS + ExtendScript)** : `run_command "cloc 'MédiaSolution/MediaSolution-CEP/client' 'MédiaSolution/MediaSolution-CEP/host' 'GridCloner-CEP/client' 'GridCloner-CEP/host' --md --exclude-ext=png,jpg,svg"`
+      - *But* : Mesurer l'effort côté interface CEP (client) et hôte ExtendScript pour aligner la documentation MediaSolution et GridCloner.
     - **Python/C++ de référence** : `run_command "cloc 'PyShiftAE/Python/pyshiftae/ae.py' 'AETK-main/AETK/AEGP/Core/PyFx.hpp' 'AETK-main/AETK/src/AEGP/Core/Suites.cpp' 'AETK-main/AEGP/Grabba/Grabba.cpp' 'AETK-main/AEGP/TaskScheduler/TaskScheduler.cpp' --md"`
       - *But* : Analyser les fichiers Python/C++ de référence identifiés dans la documentation PyShiftAE.
     - **JSX — Batch par répertoire thématique** :
@@ -43,6 +43,8 @@ Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cible
       - *But* : Vérifier la présence des scripts JSX de référence.
     - **CEP MediaSolution** : `run_command "ls -la 'MédiaSolution/MediaSolution-CEP/host/MediaSolution.jsx' 'MédiaSolution/MediaSolution-CEP/client/main.js' 'MédiaSolution/MediaSolution-CEP/client/style.css' | wc -l"`
       - *But* : S'assurer que les scripts hôte et client MediaSolution sont pris en compte avant mise à jour de la documentation CEP.
+    - **CEP GridCloner** : `run_command "ls -la 'GridCloner-CEP/host/GridCloner.jsx' 'GridCloner-CEP/client/main.js' 'GridCloner-CEP/client/index.html' 'GridCloner-CEP/CSXS/manifest.xml' | wc -l"`
+      - *But* : Vérifier la présence des scripts critiques du panel GridCloner (hôte JSX, client JS/HTML, manifest CEP) pour aligner la documentation CEP.
     - **PyShiftBridge MediaSolution** : `run_command "ls -la 'PyShiftBridge/bridge_daemon.py' 'PyShiftBridge/js/main.js' 'PyShiftBridge/mediasolution_cuts_core.py' | wc -l"`
       - *But* : Vérifier la présence des scripts critiques du pont MediaSolution (daemon, transport JS, cœur Python) pour aligner la documentation Bridge.
 
@@ -73,7 +75,7 @@ Choisir le modèle approprié pour l'écosystème AE :
 - **Documentation Bridge** (`PyShiftBridge/`) :
   - **Communication** : Protocoles (named pipes, sockets, mailbox) illustrés via `bridge_daemon.py`.
   - **Configuration** : Installation et setup (scripts `install/*.sh`, `CONFIGURATION_GUIDE.md`).
-  - **Exemples** : Cas d'usage concrets, notamment MediaSolution (`mediasolution_cuts_core.py`, `js/main.js`, intégration CEP).
+  - **Exemples** : Cas d'usage concrets, notamment MediaSolution (`mediasolution_cuts_core.py`, `js/main.js`, intégration CEP) et GridCloner (`GridCloner.jsx`, transport mailbox fallback).
 
 - **Architecture Globale** :
   - Diagrammes textuels (Mermaid) des interactions.
@@ -161,6 +163,6 @@ Dans la proposition de mise à jour (Étape 4), ajouter :
 - [ ] Exemples de plugins
 
 ### Bridge & Communication
-- [ ] Protocoles de communication documentés (PyShiftBridge daemon + transport CEP MediaSolution)
+- [ ] Protocoles de communication documentés (PyShiftBridge daemon + transport CEP MediaSolution + GridCloner)
 - [ ] Guide d'installation (`CONFIGURATION_GUIDE.md`, scripts `install/`)
-- [ ] Exemples de code fonctionnels (`bridge_daemon.py`, `mediasolution_cuts_core.py`, `js/main.js`)
+- [ ] Exemples de code fonctionnels (`bridge_daemon.py`, `mediasolution_cuts_core.py`, `js/main.js`, `GridCloner.jsx`)

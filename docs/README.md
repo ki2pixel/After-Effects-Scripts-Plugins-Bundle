@@ -74,20 +74,23 @@ La métaphore tour de contrôle revient dans chaque section: si un guide manque 
 
 ## 📊 Métriques clés
 
-- **Total LOC projet** : 360 119 LOC (audit 2026-02-08)
+- **Total LOC projet** : 360 610 LOC (audit 2026-02-09 14:20 CET)
 - **Ventilation détaillée** :
-  - C/C++ Headers : 202 k LOC
-  - C++ : 73 k LOC  
-  - Markdown : 13 k LOC
-  - Python : 9 k LOC (PyShiftAE: 7 fichiers, AETK-main: 40 fichiers)
-  - XML : 55 k LOC
-  - JSX : 22 k LOC (scripts analysés)
-  - JavaScript : 1 k LOC (CEP MediaSolution)
-- **CEP MediaSolution** : 3 162 LOC (JSX 1 790, JS 1 007)
+  - C/C++ Headers : 202 209 LOC
+  - C++ : 73 310 LOC  
+  - XML : 55 673 LOC
+  - Markdown : 13 549 LOC
+  - Python : 10 309 LOC (PyShiftAE: 7 fichiers, AETK-main: 40 fichiers)
+- **Audits ciblés Scripts_AE** (cloc dédiés pour suivre les familles critiques) :
+  - **Rigs procéduraux** (`3D Primitives`, `Crazy Shapes`, `Cloners + Effectors`) : 22 990 LOC — `3D Primitives Generator v3.jsx` dépasse toujours la fenêtre `cloc`, donc légère sous-estimation persistante.
+  - **Toolkits pipeline/licensing** (`AW Autosaver`, `Automation Toolkit`, `KBar3`) : 11 299 LOC — `aw_Autosaver.jsx` continue de déclencher l'avertissement timeout.
+  - **Panels CEP hybrides** (`AEInfoGraphics`, `Coco Color CoWorker`, `Infographics Toolkit`) : 9 547 LOC — `Coco Color CoWorker` embarque des blobs JSXBIN/binaire, `cloc` ignore encore ~230 lignes côté panel.
+- **CEP MediaSolution + GridCloner** : 3 713 LOC (JSX 1 892, JavaScript 1 266, CSS 362, HTML 193)
+- **GridCloner handler complet** : L’UI CEP ci-dessus pilote `gridcloner_apply` (validation PyShiftBridge + core PyShiftAE) pour générer jusqu’à 200 clones avec UndoGroup unique; voir [02-guides/cep-python-bridge.md](02-guides/cep-python-bridge.md#gridcloner-cep-panel) pour le pipeline UI → handler → AE.
 - **Documents fusionnés** : 20+ → 8 majeurs
 - **Couverture API** : PyShiftAE ~70%, ExtendScript 100%
 - **Transport** : Named pipe/Unix socket + mailbox JSON fallback
-- **Date d'audit** : 2026-02-08
+- **Date d'audit** : 2026-02-09
 
 ---
 
