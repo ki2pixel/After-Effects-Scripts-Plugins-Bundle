@@ -2,17 +2,6 @@
 
 Collection of Adobe After Effects automation tools and scripts with modern development workflows.
 
-## Development Environment
-
-This project uses **Sixth** with enhanced Windsurf compatibility:
-
-- **Rules**: `.sixthrules/` - Coding standards and governance
-- **Workflows**: `.sixthworkflows/` - Slash commands for automation
-- **Skills**: `.sixthskills/` - Specialized expertise integration
-- **Memory**: `memory-bank/` - Context persistence
-
-See [docs/sixth-integration.md](docs/sixth-integration.md) for complete setup.
-
 ## Project Overview
 
 - **Scripts_AE/**: Main collection of AE scripts (405+ items)
