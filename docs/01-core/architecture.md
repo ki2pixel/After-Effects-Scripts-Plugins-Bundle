@@ -32,7 +32,7 @@ Pense au TaskScheduler comme à une tour de contrôle: les workers Python sont l
 | Tests | Pas de séparation, impossible à isoler | Handlers unitaires + workers testables |
 
 ```mermaid
-graph TB
+flowchart TD
     subgraph UI
         CEP[CEP Panel]
         JSX[ExtendScript]
