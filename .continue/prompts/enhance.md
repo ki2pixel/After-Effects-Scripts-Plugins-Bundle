@@ -1,5 +1,7 @@
 ---
+name: enhance
 description: Améliorer un Prompt avec le Contexte du Projet After Effects, Techniques Avancées et Skills Spécialisés
+invokable: true
 ---
 
 ### `/enhance` — Optimisation Avancée de Prompt pour After Effects
@@ -8,19 +10,19 @@ description: Améliorer un Prompt avec le Contexte du Projet After Effects, Tech
    - Lire la requête brute de l'utilisateur.
    - Charger le contexte global via `mcp0_read_text_file` sur les fichiers de la Memory Bank (`activeContext.md`, `progress.md`, `productContext.md`).
    - **Détection de Skill** : Analyser la nature de la tâche :
-     - Si **Python Automation** (PyShiftAE, threading, CEP bridge) : Charger immédiatement `.windsurf/skills/pyshiftae/SKILL.md`.
-     - Si **ExtendScript/JSX Development** (ScriptUI, shape layers, panels) : Charger `.windsurf/skills/ae-scripting-expert/SKILL.md`.
-     - Si **Debugging** (bug, crash, erreur, performance) : Charger immédiatement `.windsurf/skills/debugging-strategies/SKILL.md` et identifier le runtime (Python vs ExtendScript) pour adapter les techniques.
+     - Si **Python Automation** (PyShiftAE, threading, CEP bridge) : Charger immédiatement `.continue/rules/pyshiftae.md`.
+     - Si **ExtendScript/JSX Development** (ScriptUI, shape layers, panels) : Charger `.continue/rules/ae-scripting-expert.md`.
+     - Si **Debugging** (bug, crash, erreur, performance) : Charger immédiatement `.continue/rules/debugging-strategies.md` et identifier le runtime (Python vs ExtendScript) pour adapter les techniques.
      - Si **Architecture** : Analyser si besoin de PyShiftAE, AE Scripting ou C++ SDK patterns, puis charger les docs d'architecture pertinentes.
-     - Si **AE C++ SDK / Plugins** (AETK, suites AEGP, TaskScheduler natif) : Charger `.windsurf/skills/ae-cpp-sdk-architecture/SKILL.md`.
-     - Si **C++ Templates / Métaprogrammation générique** (concepts, SFINAE, librairies génériques) : Charger `.windsurf/skills/cpp-templates-metaprogramming/SKILL.md`.
+     - Si **AE C++ SDK / Plugins** (AETK, suites AEGP, TaskScheduler natif) : Charger `.continue/rules/ae-cpp-sdk-architecture.md`.
+     - Si **C++ Templates / Métaprogrammation générique** (concepts, SFINAE, librairies génériques) : Charger `.continue/rules/cpp-templates-metaprogramming.md`.
      - Si **Feature** : Identifier le runtime principal (Python vs ExtendScript) et charger le skill correspondant.
      - **Skills globaux en renfort** : Si aucun skill local ne correspond, vérifier les skills globaux pertinents (ex: `python-coding-standards`, `architecture-tools`, `frontend-design`, `media-ai-pipeline`).
 
 2. **Recherche Active de Documentation**
-   - Identifier les règles spécifiques au projet via `mcp0_read_text_file` sur `.windsurf/rules/codingstandards.md`.
+   - Identifier les règles spécifiques au projet via `mcp0_read_text_file` sur `.continue/rules/codingstandards.md`.
    - Utiliser `mcp1_search` dans `docs/` pour trouver la documentation pertinente (ex: `docs/internal/pyshiftae/`, `docs/internal/after_effects/`).
-   - Si mode **Debugging** activé : Appliquer la méthode scientifique du debugging-strategies SKILL.md et vérifier via `mcp1_search` si les outils de debugging (logs, profileurs) sont déjà présents selon le runtime.
+   - Si mode **Debugging** activé : Appliquer la méthode scientifique du debugging-strategies.md et vérifier via `mcp1_search` si les outils de debugging (logs, profileurs) sont déjà présents selon le runtime.
    - Si mode **Python Automation** : Vérifier via `mcp1_search` si les patterns PyShiftAE (TaskScheduler, threading) sont déjà présents.
    - Si mode **ExtendScript** : Vérifier la présence de patterns ES3, undo groups, ScriptUI panels.
 
@@ -44,7 +46,7 @@ description: Améliorer un Prompt avec le Contexte du Projet After Effects, Tech
      - **Contraintes** : Documenter les requirements des templates, éviter l'explosion d'instanciations, garder les messages de compilation lisibles.
    - **Si mode Debugging** :
      - **Rôle** : "Expert Debugging & Root Cause Analysis for After Effects".
-     - **Méthodologie** : Appliquer la méthode scientifique du debugging-strategies SKILL.md (Observer → Hypothesize → Experiment → Analyze → Repeat) en adaptant au runtime détecté (Python vs ExtendScript).
+     - **Méthodologie** : Appliquer la méthode scientifique du debugging-strategies.md (Observer → Hypothesize → Experiment → Analyze → Repeat) en adaptant au runtime détecté (Python vs ExtendScript).
      - **Contraintes** : Utiliser les outils de debugging appropriés selon le runtime, reproduire systématiquement les problèmes.
    - **Mode Standard** :
      - **Persona** : Définir le rôle exact selon le runtime détecté.
@@ -57,7 +59,7 @@ description: Améliorer un Prompt avec le Contexte du Projet After Effects, Tech
    - Demander confirmation à l'utilisateur ("Voulez-vous exécuter ce prompt optimisé pour After Effects ?").
    - Une fois validé :
      - Exécuter le prompt.
-     - Si Debugging : Appliquer rigoureusement la méthode scientifique du debugging-strategies SKILL.md et adapter les techniques au runtime (Python vs ExtendScript).
+     - Si Debugging : Appliquer rigoureusement la méthode scientifique du debugging-strategies.md et adapter les techniques au runtime (Python vs ExtendScript).
      - Si Python Automation : Appliquer rigoureusement les patterns PyShiftAE (worker threads, TaskScheduler).
      - Si ExtendScript : Appliquer ES3 compatibility, undo groups, IIFE patterns.
      - Utiliser systématiquement les outils (`mcp0_read_text_file`, `mcp0_edit_file`) pour réaliser la tâche.

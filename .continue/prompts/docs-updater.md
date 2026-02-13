@@ -1,5 +1,7 @@
 ---
+name: docs-updater
 description: Docs Updater for After Effects Scripts & Plugins Bundle - Standard Tools, Cloc Radon, Quality Context
+invokable: true
 ---
 
 # Workflow: Docs Updater — After Effects Scripts & Plugins Bundle
@@ -109,11 +111,11 @@ Générer un plan de modification avant d'appliquer :
 4.  **Validation AE** :
     - Vérifier que la documentation respecte les conventions AE (matchNames, versions, patterns).
 
-### Sous-protocole Rédaction — Application de documentation/SKILL.md
+### Sous-protocole Rédaction — Application de documentation.md
 
 #### 5.1 Point d'Entrée Explicite
 - **Mode Rédaction** : Déclenché après validation du plan de mise à jour
-- **Lecture obligatoire** : `.windsurf/skills/documentation/SKILL.md`
+- **Lecture obligatoire** : `.continue/rules/documentation.md`
 - **Modèle à appliquer** : Spécifié dans le plan (article deep-dive, README, etc.)
 
 #### 5.2 Checkpoints Obligatoires
@@ -138,7 +140,7 @@ Dans la proposition de mise à jour (Étape 4), ajouter :
 - **Éléments appliqués** : TL;DR ✔, Problem-First ✔, Comparaison ✔, Trade-offs ✔, Golden Rule ✔
 
 #### 5.4 Hook d'Automation
-- **Validation Git** : Commentaire de commit "Guidé par documentation/SKILL.md — sections: [list]"
+- **Validation Git** : Commentaire de commit "Guidé par documentation.md — sections: [list]"
 - **Blocking** : Le workflow ne peut pas se terminer si les checkpoints ne sont pas cochés
 - **Audit trail** : Chaque fichier modifié contient une note de validation interne
 
