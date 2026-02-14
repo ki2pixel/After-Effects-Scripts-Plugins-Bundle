@@ -10,19 +10,19 @@ Créer un bundle optimisé du codebase pour analyse par LLMs externes (Claude, C
 ## Étapes
 
 1. **Vérification de la configuration**
-   - Confirmer que `repomix.config.json` existe et est à jour
+   - Confirmer que `repomix.config.json` existe et est à jour avec `read_file`
    - Vérifier les patterns d'inclusion/exclusion
 
 2. **Génération du bundle**
    // turbo
    ```bash
-   npx repomix --config repomix.config.json
+   run_command "npx repomix --config repomix.config.json"
    ```
 
 3. **Vérification du résultat**
-   - Contrôler que `repomix-output.md` a été généré
+   - Contrôler que `repomix-output.md` a été généré avec `read_file`
    - Vérifier la taille et le compte de tokens
-   - Valider que les fichiers critiques sont inclus
+   - Valider que les fichiers critiques sont inclus avec `search_files`
 
 ## Résultat attendu
 

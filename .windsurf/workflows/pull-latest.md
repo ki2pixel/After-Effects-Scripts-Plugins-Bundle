@@ -41,3 +41,4 @@ Processus standard pour mettre à jour la branche locale depuis `origin/main` lo
 - Préférer `--ff-only` pour éviter les merges indésirables; passer à `--rebase` uniquement si nécessaire.
 - Sous VS Code, l'extension GitLens affiche directement les flèches "Incoming/Outgoing" pour repérer les changements avant le fetch.
 - Après synchronisation, poursuivre le flux habituel (`/commit-push`) pour publier vos changements.
+- Use `run_command` for git operations when executing from within the IDE environment.

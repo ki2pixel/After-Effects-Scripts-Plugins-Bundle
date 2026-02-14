@@ -25,8 +25,9 @@ You **MUST** route requests to the specialized skills in `.sixthskills/` to hand
 | **UI Panel / CEP / Bridge** | `.sixthskills/after-effects-cep-panel/SKILL.md` | HTML/JS, `PyShiftBridge` (Pipes/Sockets), Manifests. |
 | **Legacy Scripting / JSX / UI** | `.sixthskills/ae-scripting-expert/SKILL.md` | **ES3 ONLY**. `var`, UndoGroups, ScriptUI, Shape layers. |
 | **C++ / Plugin / SDK** | `.sixthskills/ae-cpp-sdk-architecture/SKILL.md` | AEGP Suites, Memory Suites, `PF_Err` handling. |
-| **Templates / Metaprogramming** | `.sixthskills/cpp-templates-metaprogramming/SKILL.md` | SFINAE, Concepts (C++17), Type Traits. |
+| **Templates / Métaprogrammation** | `.sixthskills/cpp-templates-metaprogramming/SKILL.md` | SFINAE, Concepts (C++17), Type Traits. |
 | **Debugging / Crash / 48::72** | `.sixthskills/debugging-strategies/SKILL.md` | Logs `[PY]`, Console CEP, `psc-install`. |
+| **Legacy Scripts / STEP7** | `.sixthskills/after-effects-scripts/SKILL.md` | Legacy ExtendScript scripts, system.callSystem() bridges, STEP7 preprocessing. |
 | **Documentation / Audit** | `.sixthskills/documentation/SKILL.md` | Standard de documentation technique. |
 
 **Protocol:** If the user asks "Create a panel to rename layers", prefer **CEP + Python** (`after-effects-cep-panel` + `pyshiftae`) over legacy ScriptUI unless explicitly asked for a `.jsx` script.
@@ -76,15 +77,19 @@ You **MUST** route requests to the specialized skills in `.sixthskills/` to hand
   - Python: `print()` goes to the AE console window (if open) or `bridge_daemon` logs.
   - CEP: `console.log()` requires Debug Mode enabled in registry/plist.
 
+### Testing Standards
+- **PyShiftAE**: `pytest` for pure Python logic, manual tests for UI/Rendering, logs to AE console or bridge_daemon.
+- **ExtendScript**: Test scenarios (project closed, layer deleted, comp inactive), manual testing for UI interactions, `console.log()` requires Debug Mode.
+
 ## 🚫 Anti-Patterns (Never Do)
 
-### PyShiftAE
+### ❌ PyShiftAE Don'ts
 - Blocking UI operations on main thread
 - Long-term handle caching (stale references)
 - Native UI (PyQt/Tkinter) in AE process
 - Silent failures without user feedback
 
-### ExtendScript
+### ❌ ExtendScript Don'ts
 - Modern JavaScript (const/let, arrow functions, template literals)
 - Missing undo groups
 - Silent failures without user feedback
@@ -113,18 +118,6 @@ psc-install
   `python PyShiftBridge/tests/test_bridge_daemon_pure.py`
 - **Lint JSX**:
   `node --check Scripts_AE/MyScript.jsx` (check syntax errors only)
-
-## 🧪 Testing Standards
-
-### PyShiftAE
-- **Unit Tests**: `pytest` for logic that doesn't touch AE directly.
-- **Integration**: Manual tests required inside AE for UI/Rendering.
-- **Logs**: `print()` goes to AE console window (if open) or `bridge_daemon` logs.
-
-### ExtendScript
-- **Test Scenarios**: project closed, layer deleted, comp inactive, undo groups.
-- **Manual Testing**: Required for UI/Rendering interactions.
-- **Logs**: `console.log()` requires Debug Mode enabled in registry/plist.
 
 ## 📋 Ready-to-Use Patterns (Reference)
 

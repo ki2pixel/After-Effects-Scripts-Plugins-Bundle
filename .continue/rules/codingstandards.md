@@ -207,7 +207,30 @@ Test scenarios: project closed, layer deleted, comp inactive, undo groups
 - Binary asset management
 - ES3 compatibility
 
-### Decision Flow
+### Use AE CPP SDK Architecture Skill (@.continue/rules/ae-cpp-sdk-architecture.md)
+- Writing C++ code for After Effects plugins (AETK)
+- Creating wrappers for AEGP Suites
+- Managing memory/threading in AE
+
+### Use After Effects CEP Panel Skill (@.continue/rules/after-effects-cep-panel.md)
+- Developing CEP extensions (Common Extensibility Platform) for Adobe After Effects
+- Debugging and maintaining HTML/CSS/JS panels integrated with ExtendScript bridges
+
+### Use After Effects Scripts Skill (@.continue/rules/after-effects-scripts.md)
+- Handling After Effects scripts (ExtendScript) and Python bridges for MediaPipe post-production
+- Operating AE scripts, system.callSystem() bridges, and STEP7 preprocessing
+
+### Use CPP Templates Metaprogramming Skill (@.continue/rules/cpp-templates-metaprogramming.md)
+- Creating generic and type-safe C++ libraries with templates
+- SFINAE, concepts, and compile-time metaprogramming
+
+### Use Debugging Strategies Skill (@.continue/rules/debugging-strategies.md)
+- Systematic debugging techniques and profiling tools
+- Root cause analysis for bugs, performance issues, and unexpected behavior
+
+### Use Documentation Skill (@.continue/rules/documentation.md)
+- Technical writing and README guidelines
+- Punctuation rules for AI-free documentation
 ```
 Python automation? → PyShiftAE skill
 Traditional scripting? → AE Scripting Expert skill

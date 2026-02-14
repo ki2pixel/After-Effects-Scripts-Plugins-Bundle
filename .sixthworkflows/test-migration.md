@@ -13,11 +13,11 @@ description: Test migration integrity
 ## Validation Commands
 ```bash
 # Test skills integration
-grep -c "SKILL.md" .sixthrules/02-skills-integration.md
+run_command "grep -c \"SKILL.md\" .sixthrules/02-skills-integration.md"
 
 # Test workflow references
-find .sixthworkflows -name "*.md" -exec grep -l "\.sixth" {} \;
+run_command "find .sixthworkflows -name \"*.md\" -exec grep -l \"\\.sixth\" {} \\;"
 
 # Test memory bank
-ls -la memory-bank/
+run_command "ls -la memory-bank/"
 ```

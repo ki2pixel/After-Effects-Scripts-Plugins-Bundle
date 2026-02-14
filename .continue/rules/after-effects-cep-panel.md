@@ -1,8 +1,7 @@
 ---
 description: Expert spécialisé dans les extensions CEP (Common Extensibility Platform) pour Adobe After Effects. Développe, débogue et maintient les panels HTML/CSS/JS intégrés avec ponts ExtendScript.
-globs: 
-  - "**/*.{py,js,md}"
-alwaysApply: true
+globs: ["**/CSXS/**", "**/client/**/*.js", "**/client/**/*.html"]
+alwaysApply: false
 ---
 
 

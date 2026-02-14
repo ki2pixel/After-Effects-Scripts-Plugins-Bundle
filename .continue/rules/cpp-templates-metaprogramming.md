@@ -1,8 +1,7 @@
 ---
 description: Use when creating generic and type-safe C++ libraries with templates, SFINAE, concepts, and compile-time metaprogramming.
-globs: 
-  - "**/*.{py,js,md}"
-alwaysApply: true
+globs: ["**/*.cpp", "**/*.h", "**/*.hpp"]
+alwaysApply: false
 ---
 
 

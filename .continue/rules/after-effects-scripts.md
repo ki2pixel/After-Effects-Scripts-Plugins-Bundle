@@ -1,8 +1,6 @@
 ---
 description: Expert spécialisé dans les scripts After Effects (ExtendScript) et les ponts Python pour la post-production MediaPipe. Opère les scripts AE, les ponts system.callSystem() et le pré-traitement STEP7.
-globs: 
-  - "**/*.{py,js,md}"
-alwaysApply: true
+alwaysApply: false
 ---
 
 

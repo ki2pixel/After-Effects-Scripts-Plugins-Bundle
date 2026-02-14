@@ -1,8 +1,7 @@
 ---
 description: Use when writing C++ code for After Effects plugins (AETK), creating wrappers for AEGP Suites, or managing memory/threading in AE.
-globs: 
-  - "**/*.{py,js,md}"
-alwaysApply: true
+globs: ["**/*.cpp", "**/*.h", "**/*.hpp"]
+alwaysApply: false
 ---
 
 

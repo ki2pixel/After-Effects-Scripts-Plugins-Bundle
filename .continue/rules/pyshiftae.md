@@ -1,8 +1,7 @@
 ---
 description: Expert guidance for automating Adobe After Effects with PyShiftAE (Python) via the native PyShiftAE.aex / PyFx bridge (C++ SDK). Use this skill when asked to write, debug, or design Python automation that manipulates AE projects, comps, layers, properties, effects, masks, or when troubleshooting installation (wheel + psc-install) and version alignment (Python 3.11-3.13). Covers core API objects (Project/Item/CompItem/Layer/Property/Effect/Mask), common gotchas, production-safe patterns, and Hybrid 2.0 CEP bridge workflows décrits dans docs/internal/pyshiftae/.
-globs: 
-  - "**/*.{py,js,md}"
-alwaysApply: true
+globs: ["**/*.py"]
+alwaysApply: false
 ---
 
 

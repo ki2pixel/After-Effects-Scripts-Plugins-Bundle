@@ -1,6 +1,6 @@
 ---
 description: Applied when implementing or modifying test code. Rules for creating test perspective tables (equivalence partitioning/boundary values), Given/When/Then format, and coverage targets
-alwaysApply: true
+alwaysApply: false
 ---
 
 ## Test Strategy Rules

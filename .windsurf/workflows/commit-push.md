@@ -13,10 +13,11 @@ Commits changes and pushes to remote.
 
 ## Execution Steps (Non-Interactive)
 
-1. Run quality checks as needed (lint / test / build, etc.)
-2. Stage changes (`git add -A`)
-3. Commit (use message from argument or environment variable)
-4. Push (`git push -u origin <current-branch>`)
+1. **Verify changes**: Use `read_file` or `grep_search` to review modifications if needed
+2. Run quality checks as needed (lint / test / build, etc.)
+3. Stage changes (`git add -A`)
+4. Commit (use message from argument or environment variable)
+5. Push (`git push -u origin <current-branch>`)
 
 ## Usage
 
@@ -64,3 +65,4 @@ git push -u origin "$BRANCH"
 
 - Follow the commit message format and message generation principles in `.windsurf/rules/commit-message-format.md`.
 - Recommended to run `git status` or `git diff` to review diffs before execution.
+- Use `run_command` for git operations when executing from within the IDE environment.
