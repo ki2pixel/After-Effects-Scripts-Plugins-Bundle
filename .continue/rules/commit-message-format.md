@@ -1,4 +1,5 @@
 ---
+name: commit-message-format
 description: Applied when creating Git commit messages. Format rules for Conventional Commits-based Prefix + English summary + bulleted body
 alwaysApply: false
 ---

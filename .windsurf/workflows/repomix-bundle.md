@@ -37,3 +37,9 @@ Créer un bundle optimisé du codebase pour analyse par LLMs externes (Claude, C
 - La configuration utilise `.gitignore` et patterns par défaut pour la sécurité
 - Le header inclut référence aux `codingstandards.md` obligatoires
 - Régénérer après modifications significatives du codebase
+
+## Technical Lockdown
+
+Utilisez les outils fast-filesystem (mcp0_fast_*) pour accéder aux fichiers memory-bank avec des chemins absolus.
+
+Windsurf is now in 'Token-Saver' mode. Minimize context usage by using tools instead of pre-loading.

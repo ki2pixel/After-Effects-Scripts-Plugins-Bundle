@@ -1,142 +1,87 @@
 ---
-name: Memory Bank Protocol
-description: Protocol for managing memory bank system and context initialization
+name: memorybankprotocol
+description: Memory Bank Protocol (Version Fast-Filesystem MCP-Optimized)
 alwaysApply: true
 ---
 
-# Memory Bank Protocol
+# Memory Bank Protocol (Version Fast-Filesystem MCP-Optimized)
 
 ## Overview
+This protocol defines the mandatory cycle of life for project context. It uses the `fast-filesystem` MCP server to minimize token noise while maintaining surgical precision in documentation.
 
-This protocol defines how the AI agent should interact with the memory bank system for maintaining context across conversations.
+**Windsurf is now in 'Token-Saver' mode. Minimize context usage by using tools instead of pre-loading.**
 
-## System Rules
+## 1. Selective Initialization Protocol
+### Trigger: `first_interaction` | Priority: `immediate` | Required: `true`
 
-### Primary System
-- **Memory Bank**: Use `memory-bank` as the primary system for context management
-
-### Initialization Protocol
-
-#### Trigger
-- **When**: `first_interaction` 
-- **Priority**: `immediate`
-- **Required**: `true`
-
-#### Actions Required
-1. **Read and Internalize**: Before doing ANYTHING else, read and fully internalize ALL rules in this file.
-2. **Check Directory**: Verify if `memory-bank/` directory exists in the workspace.
-3. **Active State**: If memory-bank exists:
-   - Read all core files: `productContext.md`, `activeContext.md`, `systemPatterns.md`, `decisionLog.md`, `progress.md`
-   - Set status to `[MEMORY BANK: ACTIVE]`
-   - Load context from memory-bank files
-4. **Inactive State**: If memory-bank does NOT exist:
-   - Inform user about missing memory bank
-   - Ask to create with yes/no response choices
-   - If yes: Create directory and core files with basic structure using available information
-   - If no: Set status to `[MEMORY BANK: INACTIVE]`
-5. **Proceed**: Continue with task execution or suggest 2-4 tasks based on memory-bank content if no specific task given
-
-### Validation Requirements
-- **Status Check**: Verify memory-bank status (ACTIVE/INACTIVE)
-- **File Confirmation**: If ACTIVE, confirm all core files were successfully read
-- **Context Loading**: Ensure memory-bank context is properly integrated
-
-## System Validation
-
-### Startup Checklist
-- **Rules Loading**: Verify `.continue/rules/` are loaded and accessible
-- **Memory Bank Access**: Check memory-bank directory availability if expected
-- **Initialization Complete**: Confirm the entire initialization sequence completed successfully
-
-## File Structure Standards
-
-### Core Memory Bank Files
-- `productContext.md`: Project scope, components, organization, standards
-- `activeContext.md`: Current session state, goals, decisions, questions, blockers
-- `systemPatterns.md`: Recurring patterns and standards (coding, architecture, testing)
-- `decisionLog.md`: Technical decisions, architecture, implementation, alternatives
-- `progress.md`: Work status tracking (completed, current, next, issues)
-
-### Update Protocols
-
-#### Memory Bank Updates
-- **Frequency**: Update throughout chat session when significant changes occur
-- **Decision Log**: Append new information with timestamp when architectural decisions are made
-- **Progress**: Track task completion status and blockers
-- **Context**: Update current focus and recent changes
-
-#### Retention Policy
-- **90-day retention**: Keep full detail for last 90 days in `decisionLog.md` and `progress.md`
-- **Archive older**: Summarize older entries in active files and move to `memory-bank/archives/*.md`
-- **Traceability**: Preserve complete traceability while keeping primary files concise
-
-## Usage Guidelines
-
-### When to Update Memory Bank
-- **Significant Changes**: Architecture decisions, major refactors, technology choices
-- **Context Changes**: When current focus changes or significant progress is made
-- **Decision Recording**: When making important technical decisions with alternatives considered
-- **Progress Tracking**: When tasks begin, complete, or change status
-
-### Quality Standards
-- **Timestamp Format**: `[YYYY-MM-DD HH:MM:SS] - [Summary]`
-- **Concise Entries**: Keep descriptions focused and actionable
-- **Cross-References**: Link related entries across files when relevant
-- **Consistent Structure**: Maintain established file organization and formatting
-
-### Status Prefix Requirement
-- **Response Format**: Begin EVERY response with either `[MEMORY BANK: ACTIVE]` or `[MEMORY BANK: INACTIVE]`, according to the current state of the Memory Bank.
-
-## Integration with Continue
-
-### Automatic Application
-- This rule is automatically applied due to `alwaysApply: true`
-- Context from memory bank files is available during all AI interactions
-- Protocol ensures consistent context management across sessions
-
-### Manual Invocation
-- Can be referenced explicitly: "Check memory bank for current project status"
-- Useful for context refresh or when switching between different project aspects
-- Supports targeted queries about specific memory bank sections
-
-## Special Commands
-
-### Update Memory Bank Command (UMB)
-- **Trigger**: When user inputs `^(Update Memory Bank|UMB)$`
-- **Instructions**:
-  - **Halt Current Task**: Stop current activity
-  - **Acknowledge Command**: Respond with `[MEMORY BANK: UPDATING]`
-  - **Review Chat History**: Analyze the complete current chat session
-- **Core Update Process**:
-  1. **Current Session Review**: Analyze chat history for relevant decisions, context changes, progress updates, clarifications etc.
-  2. **Comprehensive Updates**: Update relevant memory bank files based on the review, following the rules defined in memory bank updates section
-  3. **Memory Bank Synchronization**: Ensure consistency across updated files
-- **Task Focus**: During UMB, focus ONLY on capturing information explicitly present in the current chat session (clarifications, decisions, progress). Do NOT summarize the entire project or perform actions outside this scope.
-- **Cross Mode Updates**: Capture relevant information from the chat session irrespective of conceptual modes mentioned, adding it to the appropriate Memory Bank files.
-- **Post UMB Actions**:
-  - State: Memory Bank fully synchronized based on current chat session
-  - State: Session context preserved for continuation
-
-## Context-Specific Rules
-
-### Documentation Context
-- **Trigger**: When the user's prompt explicitly asks a question about the project's 'documentation', 'docs', 'doc', 'guide', 'guidelines', 'API reference', or how a specific feature is documented
-- **Instructions**:
-  - Acknowledge that the user is asking a question specifically about the project's own documentation
-  - Before answering, state clearly: "I will consult the project's internal documentation to answer your question."
-  - Prioritize reading and analyzing the content of all files located in the `docs/` and root-level markdown files of the workspace. Pay special attention to `ARCHITECTURE_COMPLETE_FR.md`, `GUIDE_DEMARRAGE_RAPIDE.md`, and `REFERENCE_RAPIDE_DEVELOPPEURS.md`.
-  - Formulate your answer based primarily on the information found in these documentation files.
-  - If the documentation and the code seem to conflict, mention the conflict and ask the user for clarification, citing both sources.
-
-### Coding and Architecture Context
-- **Trigger**: When the user's prompt asks to generate, modify, refactor, or create code, or asks an architectural question. Keywords: create, write, implement, change, update, fix, debug, refactor, class, function, script, service, route, component, style, test, architecture, créer, crée, écrire, écris, implémenter, implémente, changer, change, modifier, modifie, mettre à jour, mets à jour, actualiser, actualise, corriger, corrige, réparer, répare, résoudre, résous, déboguer, débogue, refactoriser, refactorise, classe, fonction, composant, tester, teste
-- **Instructions**:
-  - Acknowledge that the user's request involves writing or changing code or discussing architecture
-  - Before generating any code, state clearly: "I will adhere to the project's mandatory architectural and coding standards."
-  - Prioritize reading and fully internalizing the content of the `.continue/rules/codingstandards.md` file. This file contains MANDATORY rules.
-  - Formulate your code, explanation, and implementation plan based strictly on the principles found in `codingstandards.md`.
-  - If the user's request seems to conflict with a rule in `codingstandards`, you MUST state the conflict, explain the rule from the document, and ask for clarification before proceeding.
+**Actions Required:**
+1. **Start with MCP Pull:** Call `mcp0_fast_read_file(path="/home/kidpixel/kimi-proxy/memory-bank/activeContext.md")`.
+2. **Internalize Status:** Verify blockers, current focus, and next steps.
+3. **Strict Constraint:** Do NOT load `productContext.md` or `systemPatterns.md` unless the task specifically requires architectural or strategic depth.
+4. **Prefix Requirement:** Begin the response with `[MEMORY BANK: ACTIVE (MCP-PULL)]`.
+5. **Fault Tolerance (Fallback):** If `mcp0_fast_read_file` fails ("server not found"), state that the fast-filesystem MCP is unavailable and proceed without context.
+6. **Prohibition:** Never load more than one file at a time.
+7. **Locking Instruction:** ALWAYS use absolute paths for memory-bank files in `/home/kidpixel/kimi-proxy/memory-bank/`. Use EXCLUSIVELY the fast-filesystem MCP tools (mcp0_fast_*). Do NOT attempt to read memory-bank files via regular filesystem tools (read_file).
 
 ---
 
-**Note**: This protocol replaces the complex YAML structure with standard Continue rules format while maintaining all functionality and adding improved documentation clarity.
+## 2. File Structure & Responsibilities
+Access these via `mcp0_fast_read_file`, `mcp0_fast_edit_block`, or `mcp0_fast_list_directory` using absolute paths in `/home/kidpixel/kimi-proxy/memory-bank/`.
+
+-   **`productContext.md`**: Project scope, goals, and standards.
+-   **`activeContext.md`**: Current session state, active decisions, and blockers.
+-   **`systemPatterns.md`**: Recurring patterns (coding, architecture, testing).
+-   **`decisionLog.md`**: Technical decisions, implementations, and alternatives.
+-   **`progress.md`**: Work status tracking (completed, current, next, issues).
+
+---
+
+## 3. Update & Quality Standards (Mandatory)
+
+### Update Protocol
+-   **Frequency:** Update at the end of a task or via the `UMB` command.
+-   **Timestamp Format:** `[YYYY-MM-DD HH:MM:SS] - [Summary]` (Required for every log entry).
+-   **Conciseness:** Keep entries focused and actionable.
+-   **Cross-References:** Link related entries across files to maintain a logical web.
+
+### Retention Policy
+-   **90-day Detail:** Keep full details for the last 90 days in `decisionLog.md` and `progress.md`.
+-   **Archiving:** Summarize older entries and move them to `memory-bank/archives/*.md`.
+-   **Archiving Tool:** Use `mcp0_fast_write_file(path="/home/kidpixel/kimi-proxy/memory-bank/archives/...")` to archive old entries. Never delete data without archiving via this tool first.
+-   **Creation Restriction:** `mcp0_fast_write_file` is only for initialization (creation of the 5 base files) or archiving. Interdiction de créer de nouveaux types de fichiers à la racine de `memory-bank/` sans autorisation.
+-   **Traceability:** Ensure the archive path is mentioned in the active file.
+
+---
+
+## 4. Context-Specific Rules
+
+### A. Documentation Context
+-   **Trigger:** Questions about 'docs', 'guides', 'guidelines', or 'API reference'.
+-   **Instruction:** Before answering, state: *"I will consult the project's internal documentation."*
+-   **Priority Pull:** Read `docs/` and root markdown files (e.g., `README.md`).
+-   **Conflict Resolution:** If code and docs conflict, cite both and ask for clarification.
+
+### B. Coding & Architecture Context
+-   **Trigger:** Requests to generate, modify, refactor code, or architectural questions.
+-   **Instruction:** State: *"I will adhere to the project's mandatory architectural and coding standards."*
+-   **Selective Pull:** Immediately call `read_file` for `.windsurf/rules/codingstandards.md`.
+-   **Constraint:** Formulate the plan based **strictly** on the principles found in the standards.
+
+---
+
+## 5. Special Command: Update Memory Bank (UMB)
+-   **Trigger:** User inputs `^(Update Memory Bank|UMB)$`.
+-   **Process:**
+    1.  **Halt:** Stop current activity.
+    2.  **Acknowledge:** Respond with `[MEMORY BANK: UPDATING]`.
+    3.  **Audit:** Review current chat for decisions, changes, or clarifications.
+    4.  **Sync:** Call `mcp0_fast_edit_block` on relevant files (usually `progress.md` and `activeContext.md`).
+    5.  **Clean:** Do NOT summarize the entire project history, only the *current session's* deltas.
+
+---
+
+## 6. Observability & Dashboard Triggers
+To assist the Kimi Proxy monitoring, explicitly state your intent during pulls:
+-   *"Initiating Pre-Flight Validation (Pulling activeContext)..."*
+-   *"Pulling architectural patterns for coding task..."*
+-   *"Synchronizing memory bank (UMB mode)..."*

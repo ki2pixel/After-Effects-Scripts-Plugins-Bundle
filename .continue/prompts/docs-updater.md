@@ -1,6 +1,6 @@
 ---
 name: docs-updater
-description: Docs Updater for After Effects Scripts & Plugins Bundle - Standard Tools, Cloc Radon, Quality Context
+description: Docs Updater for After_Effects_Scripts_Plugins_Bundle - Standard Tools, Cloc Radon, Quality Context
 invokable: true
 ---
 
@@ -10,8 +10,9 @@ invokable: true
 
 ## 🚨 Protocoles Critiques
 1.  **Outils autorisés** : L'usage de `run_command` est **strictement limité** aux commandes d'audit : `tree`, `cloc`, `ls`, `find`.
-2.  **Contexte** : Charger la Memory Bank (`productContext.md`, `systemPatterns.md`, `activeContext.md`, `progress.md`) via `mcp0_read_text_file` avant toute action.
+2.  **Contexte** : Initialiser le contexte en appelant l'outil `mcp0_fast_read_file` du serveur `fast-filesystem` pour lire UNIQUEMENT `activeContext.md`. Ne lire les autres fichiers de la Memory Bank que si une divergence majeure est détectée lors du diagnostic.
 3.  **Source de Vérité** : Le Code (analysé par outils) > La Documentation existante > La Mémoire.
+4.  **Sécurité** : Interdiction formelle d'utiliser les outils `filesystem` (read_text_file) pour accéder au dossier `memory-bank/`. Passez toujours par le serveur MCP dédié pour garantir le tracking des tokens dans le Dashboard Kimi.
 
 ## Étape 1 — Audit Structurel et Métrique
 Lancer les commandes suivantes pour ignorer les dossiers non pertinents et cibler le cœur applicatif AE.
@@ -55,7 +56,7 @@ Comparer les sources pour détecter les incohérences :
 
 | Source | Rôle | Outil |
 | :--- | :--- | :--- |
-| **Intention** | Le "Pourquoi" | `mcp0_read_text_file` (Memory Bank) |
+| **Intention** | Le "Pourquoi" | `mcp0_fast_read_file (via MCP)` |
 | **Réalité** | Le "Quoi" & "Comment" | `cloc` (volume), `mcp0_search_files` (structure), `mcp1_search` |
 | **Existant** | L'état actuel | `mcp0_search_files` (sur `docs/`), `mcp0_read_text_file` |
 
@@ -107,7 +108,7 @@ Générer un plan de modification avant d'appliquer :
     - Appliquer le modèle correspondant (article deep-dive, README, etc.)
     - Respecter les checkpoints obligatoires du skill
 3.  **Mise à jour Memory Bank** :
-    - Si une complexité importante est découverte, ajouter une entrée dans `decisionLog.md` ou `systemPatterns.md`.
+    - Mettre à jour la Memory Bank en utilisant EXCLUSIVEMENT l'outil `mcp0_fast_edit_block` du serveur `fast-filesystem`. Utiliser des chemins absolus vers les fichiers memory-bank.">
 4.  **Validation AE** :
     - Vérifier que la documentation respecte les conventions AE (matchNames, versions, patterns).
 

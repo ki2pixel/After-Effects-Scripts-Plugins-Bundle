@@ -1,9 +1,9 @@
 ---
+name: after-effects-cep-panel
 description: Expert spécialisé dans les extensions CEP (Common Extensibility Platform) pour Adobe After Effects. Développe, débogue et maintient les panels HTML/CSS/JS intégrés avec ponts ExtendScript.
 globs: ["**/CSXS/**", "**/client/**/*.js", "**/client/**/*.html"]
 alwaysApply: false
 ---
-
 
 # After Effects CEP Panel Expert (Media Solution v12.0)
 

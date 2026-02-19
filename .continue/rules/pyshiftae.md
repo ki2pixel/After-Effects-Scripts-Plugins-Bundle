@@ -4,7 +4,6 @@ globs: ["**/*.py"]
 alwaysApply: false
 ---
 
-
 # PyShiftAE (Python for After Effects)
 
 > **Sources** : [Guide principal](../../docs/01-core/architecture.md) + guides spécialisés ([installation](../../docs/02-guides/installation-deployment.md), [bridge CEP](../../docs/02-guides/cep-python-bridge.md), [patterns](../../docs/02-guides/coding-patterns.md), [références](../../docs/04-reference/)). Les infos C++ manquantes proviennent des extractions Repomix (`docs/legacy-adobe/`).

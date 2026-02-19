@@ -1,8 +1,8 @@
 ---
+name: after-effects-scripts
 description: Expert spécialisé dans les scripts After Effects (ExtendScript) et les ponts Python pour la post-production MediaPipe. Opère les scripts AE, les ponts system.callSystem() et le pré-traitement STEP7.
 alwaysApply: false
 ---
-
 
 # After Effects Scripts Expert (Post-Production MediaPipe v4.3)
 

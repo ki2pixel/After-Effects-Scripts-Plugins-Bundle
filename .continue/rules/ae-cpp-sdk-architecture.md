@@ -1,9 +1,9 @@
 ---
+name: ae-cpp-sdk-architecture
 description: Use when writing C++ code for After Effects plugins (AETK), creating wrappers for AEGP Suites, or managing memory/threading in AE.
 globs: ["**/*.cpp", "**/*.h", "**/*.hpp"]
 alwaysApply: false
 ---
-
 
 # After Effects C++ SDK Architecture
 

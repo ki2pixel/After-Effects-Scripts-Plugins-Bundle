@@ -1,9 +1,10 @@
 ---
+name: codingstandards
 description: After Effects development standards covering PyShiftAE runtime patterns, ExtendScript/JSX conventions, CEP bridge, shape layers, ScriptUI panels, and production-ready patterns
 alwaysApply: true
 ---
 
-# After Effects Development - Windsurf Rules
+# After Effects Development
 
 ## Tech Stack
 

@@ -337,7 +337,7 @@ function testHostCommunication() {
 - **CSInterface Reference** : Guide communication CEP
 
 ### Standards Projet
-- **[.windsurf/rules/codingstandards.md](../../.windsurf/rules/codingstandards.md)** - Règles de développement
+- **[.sixthrules/01-codingstandards.md](../../.sixthrules/01-codingstandards.md)** - Règles de développement
 - **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** - Patterns PyShiftAE production
 - **Tests Guidelines** : Stratégies de test
 

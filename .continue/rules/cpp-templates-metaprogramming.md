@@ -1,9 +1,9 @@
 ---
+name: cpp-templates-metaprogramming
 description: Use when creating generic and type-safe C++ libraries with templates, SFINAE, concepts, and compile-time metaprogramming.
 globs: ["**/*.cpp", "**/*.h", "**/*.hpp"]
 alwaysApply: false
 ---
-
 
 # C++ Templates and Metaprogramming
 

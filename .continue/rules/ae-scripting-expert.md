@@ -1,9 +1,9 @@
 ---
+name: ae-scripting-expert
 description: Expert guidance for Adobe After Effects ExtendScript/JSX development including ScriptUI panels, shape layers manipulation, expression engineering, and production-ready patterns. Use this skill when asked to write, debug, or analyze Adobe After Effects scripts (ExtendScript/JSX), create ScriptUI panels, or manipulate shape layers. Covers ES3 compatibility, dockable UI patterns, binary asset management, pseudo-effects, matchNames, and advanced shape layer architecture.
 globs: ["**/*.jsx", "**/*.js"]
 alwaysApply: false
 ---
-
 
 # After Effects Scripting Expert
 
