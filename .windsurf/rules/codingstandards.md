@@ -25,7 +25,8 @@ globs:
 - **Memory:** Short-lived AE handles, lock→use→unlock→free pattern
 - **Error Handling:** try/except with contextual messages (comp/layer/prop), never silent failures
 - **Dependencies:** Pure Python libraries only, document version strategy
-- **⚠️ NOTE:** Current PyShiftAE runtime does NOT expose `ae.schedule_task()` helper. Use direct PyFx calls when already on AE main thread (e.g., bridge_daemon.py) or implement TaskScheduler wrapper in C++.
+- **TaskScheduler Implementation:** All AE mutations go through C++ TaskScheduler (AETK wrapper) which queues tasks for execution on AE's main thread via idle hooks. Direct PyFx calls only when already on main thread (e.g., bridge_daemon.py).
+- **⚠️ NOTE:** `ae.schedule_task()` helper is conceptual only - current PyShiftAE runtime uses direct C++ TaskScheduler integration. Worker threads compute data, then schedule C++ tasks for main thread execution.
 
 ### ExtendScript/JSX
 - **ES3 Compatibility:** Use `var` only, no `const`/`let`, no arrow functions, no template literals
@@ -40,27 +41,23 @@ globs:
 
 ### PyShiftAE: Worker Thread + Scheduler Pattern
 
-> **⚠️ CURRENT LIMITATION:** `ae.schedule_task()` helper not yet exposed in PyShiftAE runtime. Pattern below is conceptual - use direct PyFx calls when on AE main thread (e.g., bridge_daemon.py) or implement TaskScheduler wrapper.
+> **ACTUAL IMPLEMENTATION:** Bridge daemon runs on AE main thread. Worker computations happen in CEP/JavaScript, mutations via synchronous handlers. C++ TaskScheduler queues operations for idle-time execution.
 
 ```python
-import pyshiftae as ae
-import threading
-
-def heavy_computation():
-    """Pure Python - no AE calls"""
-    return [(i/24.0, (i, i*1.5, 0)) for i in range(1000)]
-
-def apply_changes(data):
-    """Executed in AE main thread via scheduler - FAST"""
+# Bridge daemon pattern (actual implementation)
+def handle_gridcloner_apply(args):
+    # Already on AE main thread - direct AE operations
     comp = ae.Item.active_item()
-    if not comp: return
-    layer = comp.layers.add_solid("Solid_IA", (0,1,0,1), 1920, 1080, 10)
+    if not comp: return {"error": "No active comp"}
+    
+    # Core logic executed synchronously
+    # C++ TaskScheduler handles any deferred operations via idle hooks
+    return gridcloner_core.apply_grid_cloner(comp, args)
 
-# TODO: Replace with actual ae.schedule_task() when available
-# threading.Thread(target=lambda: (
-#     data := heavy_computation(),
-#     ae.schedule_task(lambda: apply_changes(data))
-# )).start()
+# CEP side async pattern
+function applyGridCloner(args) {
+  return sendCommand('gridcloner_apply', args); // Returns Promise
+}
 ```
 
 ### ExtendScript: Dockable Panel Pattern
@@ -136,11 +133,11 @@ def handle_command(command):
 ## Common Tasks
 
 ### PyShiftAE Operations
-1. **Thread boundary**: Pure Python vs AE SDK calls
-2. **Worker function**: Implement computation without AE calls
-3. **Scheduler function**: Apply results via `ae.schedule_task()` *(TODO: not yet exposed)*
-4. **Error handling**: Wrap in try/except with context
-5. **Main thread context**: Direct PyFx calls when already on AE thread (e.g., bridge_daemon.py)
+1. **Thread boundary**: CEP/JavaScript for UI, Python bridge handlers for AE operations (already on main thread)
+2. **Worker function**: Heavy computation in CEP/JavaScript or pure Python functions
+3. **Scheduler function**: Direct AE operations in bridge handlers, C++ TaskScheduler for deferred tasks via idle hooks
+4. **Error handling**: Wrap in try/except with context, return structured error responses to CEP
+5. **Main thread context**: Bridge daemon runs in AE process - all operations are main thread by default
 
 ### ExtendScript UI Panels
 1. **Dockable detection**: Test `thisObj instanceof Panel`
@@ -185,7 +182,7 @@ Test scenarios: project closed, layer deleted, comp inactive, undo groups
 - Version alignment: CPython ↔ .aex compatibility
 - Performance: Batch writes, avoid N+1 queries
 - IPC: Pipes/sockets preferred, mailbox fallback
-- **TODO:** Implement `ae.schedule_task()` wrapper for TaskScheduler C++ integration
+- TaskScheduler: C++ implementation (AETK/TaskScheduler.hpp) queues operations via AE idle hooks
 
 ### ExtendScript
 - File encoding: UTF-8, avoid BOM

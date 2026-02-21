@@ -28,6 +28,9 @@ Desktop.ini
 *.exe
 *.msi
 
+# env
+.env
+
 # Generated manifests / large exports
 blob_manifest.json
 blob_manifest_fresh.json

@@ -78,10 +78,10 @@ Task Master génère automatiquement des priorités basées sur :
 
 ### Integration avec Memory Bank
 
-Utilise `mcp0_fast_read_file` pour charger le contexte avant analyse :
+Utilise `fast_read_file` pour charger le contexte avant analyse :
 ```bash
 # Charger le contexte actif
-mcp0_fast_read_file(path="/home/kidpixel/kimi-proxy/memory-bank/activeContext.md")
+fast_read_file(path="/home/kidpixel/kimi-proxy/memory-bank/activeContext.md")
 
 # Lancer l'analyse
 task-master parse-prd current_request.md
