@@ -15,7 +15,7 @@ description: Docs Updater for After_Effects_Scripts_Plugins_Bundle - Standard To
 ## Étape 1 — Audit Structurel et Métrique
 
 1. **Cartographie** :
-    - `run_command "tree -L 2 -I '__pycache__|.git|*.idea|blob_manifest*.json|regenerated_manifests|repomix*'"`
+    - `run_command "tree -L 2 -I '__pycache__|.git|*.idea|blob_manifest*.json|regenerated_manifests|repomix*|*.shrimp_task_manager'"`
     - *But* : Architecture AE (JSX, Python, Bridge, C++, docs, CEP).
 
 2. **Volumétrie** :

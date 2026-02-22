@@ -255,9 +255,9 @@ Utilise `fast_edit_block` pour les modifications après localisation avec `json_
 
 Utilise `sequentialthinking_tools` pour valider la logique des transformations JSON.
 
-### Avec Task Master
+### Avec Shrimp Task Manager
 
-Utilise pour manipuler les fichiers de configuration générés par Task Master.
+Utilise pour manipuler les fichiers de configuration générés par Shrimp Task Manager.
 
 ## File type specific strategies
 

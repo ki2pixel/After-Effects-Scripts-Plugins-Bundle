@@ -225,9 +225,9 @@ fast_read_multiple_files target.py --lines 100-120  # Risque d'erreur
 
 Utilise `sequentialthinking_tools` pour valider la logique des modifications avant édition.
 
-### Avec Task Master
+### Avec Shrimp Task Manager
 
-Utilise pour implémenter les tâches générées par Task Master de manière optimisée.
+Utilise pour implémenter les tâches générées par Shrimp Task Manager de manière optimisée.
 
 ### Avec JSON Query
 

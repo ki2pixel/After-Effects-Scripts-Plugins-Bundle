@@ -2,7 +2,7 @@
 name: skills-integration
 description: Skills integration system for automatic detection and loading
 globs: ["**/*.md"]
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Skills Integration Matrix
@@ -11,7 +11,7 @@ alwaysApply: false
 
 | Pattern Détecté (FR/EN) | Skill / MCP Cible | Priorité |
 | :--- | :--- | :--- |
-| `tâche`, `task`, `backlog`, `planification`, `roadmap` | task-master-manager | 1 |
+| `tâche`, `task`, `backlog`, `planification`, `roadmap` | shrimp-task-manager | 1 |
 | `réflexion`, `think`, `logique`, `architecture`, `analyser` | sequentialthinking-logic | 1 |
 | `gros fichier`, `massive file`, `chirurgical`, `edit block` | fast-filesystem-ops | 2 |
 | `json`, `path`, `structure`, `inspect`, `valeur`, `clé` | json-query-expert | 2 |
@@ -28,7 +28,7 @@ alwaysApply: false
 
 When patterns detected, automatically load:
 ```
-read_file(".continue/rules/[SKILL_NAME].md")
+fast_read_file(".continue/rules/[SKILL_NAME].md")
 ```
 
 ## Multi-Skill Support

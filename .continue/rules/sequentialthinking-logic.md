@@ -176,9 +176,9 @@ sequentialthinking_tools resolve-dependencies "[composants]"
 
 ## Integration patterns
 
-### Avec Task Master
+### Avec Shrimp Task Manager
 
-Utilise après `task-master analyze-complexity` pour valider la décomposition logique des tâches.
+Utilise après `analyze_task` pour valider la décomposition logique des tâches.
 
 ### Avec Fast Filesystem
 

@@ -15,18 +15,18 @@ This protocol defines the mandatory cycle of life for project context. It uses t
 ### Trigger: `first_interaction` | Priority: `immediate` | Required: `true`
 
 **Actions Required:**
-1. **Start with MCP Pull:** Call `fast_read_file(path="/home/kidpixel/kimi-proxy/memory-bank/activeContext.md")`.
+1. **Start with MCP Pull:** Call `fast_read_file(path="/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/activeContext.md")`.
 2. **Internalize Status:** Verify blockers, current focus, and next steps.
 3. **Strict Constraint:** Do NOT load `productContext.md` or `systemPatterns.md` unless the task specifically requires architectural or strategic depth.
 4. **Prefix Requirement:** Begin the response with `[MEMORY BANK: ACTIVE (MCP-PULL)]`.
 5. **Fault Tolerance (Fallback):** If `fast_read_file` fails ("server not found"), state that the fast-filesystem MCP is unavailable and proceed without context.
 6. **Prohibition:** Never load more than one file at a time.
-7. **Locking Instruction:** ALWAYS use absolute paths for memory-bank files in `/home/kidpixel/kimi-proxy/memory-bank/`. Use EXCLUSIVELY the fast-filesystem MCP tools (fast_*). Do NOT attempt to read memory-bank files via regular filesystem tools (read_file).
+7. **Locking Instruction:** ALWAYS use absolute paths for memory-bank files in `/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/`. Use EXCLUSIVELY the fast-filesystem MCP tools (fast_*). Do NOT attempt to read memory-bank files via regular filesystem tools (read_file).
 
 ---
 
 ## 2. File Structure & Responsibilities
-Access these via `fast_read_file`, `fast_edit_block`, or `fast_list_directory` using absolute paths in `/home/kidpixel/kimi-proxy/memory-bank/`.
+Access these via `fast_read_file`, `fast_edit_block`, or `fast_list_directory` using absolute paths in `/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/`.
 
 -   **`productContext.md`**: Project scope, goals, and standards.
 -   **`activeContext.md`**: Current session state, active decisions, and blockers.
@@ -47,7 +47,7 @@ Access these via `fast_read_file`, `fast_edit_block`, or `fast_list_directory` u
 ### Retention Policy
 -   **90-day Detail:** Keep full details for the last 90 days in `decisionLog.md` and `progress.md`.
 -   **Archiving:** Summarize older entries and move them to `memory-bank/archives/*.md`.
--   **Archiving Tool:** Use `fast_write_file(path="/home/kidpixel/kimi-proxy/memory-bank/archives/...")` to archive old entries. Never delete data without archiving via this tool first.
+-   **Archiving Tool:** Use `fast_write_file(path="/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/archives/...")` to archive old entries. Never delete data without archiving via this tool first.
 -   **Creation Restriction:** `fast_write_file` is only for initialization (creation of the 5 base files) or archiving. Interdiction de créer de nouveaux types de fichiers à la racine de `memory-bank/` sans autorisation.
 -   **Traceability:** Ensure the archive path is mentioned in the active file.
 
