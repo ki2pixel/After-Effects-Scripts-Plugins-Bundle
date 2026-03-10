@@ -100,6 +100,46 @@ Tout se passe côté daemon (déjà sur le thread AE), donc aucune gymnastique T
 
 `tests/test_bridge_daemon_pure.py` stubbe `pyshiftae` et `PyFx`, ce qui permet de valider les handlers (arg missings, fallback, undo groups) sans lancer After Effects. Ajoute systématiquement un case ID dans le tableau de perspectives quand tu crées un nouvel entrypoint pour garder la couverture alignée (@PyShiftBridge/tests/test_bridge_daemon_pure.py#1-101).
 
+## Bootstrap opérationnel stable (MediaSolution)
+
+**TL;DR**: En production, le startup JSX doit rester **config-only**; le lancement effectif du daemon se fait via `File > Run Script Python (.py)` pour garantir le préchargement DLL avant l'import de `PyShiftBridge`.
+
+### Le problème
+Quand on auto-exécute le bootstrap Python depuis le startup JSX (`scheduleTask` + `py.executePythonFile`), le timing de chargement peut dériver et casser l'initialisation `PyFx` (DLL non résolues au bon moment).
+
+### Séquence recommandée
+1. **Startup JSX** (`PyShiftBridge/bootstrap/PyShiftBridgeBootstrap.jsx`): définit uniquement
+   - `PYSHIFTBRIDGE_ALLOW_SYSTEM_FALLBACK`
+   - `PYSHIFTBRIDGE_PYTHON`
+   - `PYSHIFTBRIDGE_BOOTSTRAP_PY`
+   - `PYSHIFTBRIDGE_DIR`
+2. **Lancement in-AE**: exécuter `PyShiftBridge/bootstrap/bridge_bootstrap_mediasolution.py` via le menu Python d'After Effects.
+3. **Bootstrap Python**: appeler `os.add_dll_directory(...)` avant `from PyShiftBridge import bridge_daemon`, démarrer un daemon unique (`is_running/start`) et maintenir le script vivant.
+
+### ❌ / ✅
+
+```text
+❌ Startup JSX qui lance immédiatement py.executePythonFile
+✅ Startup JSX qui ne fait que setenv + démarrage Python explicite in-AE
+
+❌ Import PyShiftBridge avant initialisation du chemin DLL
+✅ os.add_dll_directory(...) avant import bridge_daemon
+```
+
+### Trade-offs
+
+| Option | Avantage | Limite | Mitigation |
+| --- | --- | --- | --- |
+| Lancement in-AE (nominal) | Runtime cohérent, moins d'erreurs PyFx | Une étape opérateur en plus | Ajouter checklist d'ouverture panel dans SOP |
+| Fallback `system.callSystem` | Secours automatisé si nécessaire | Plus fragile (DLL/path externes) | Garder activé mais non prioritaire |
+
+### Golden Rule
+**Configure d'abord, exécute ensuite**: le JSX prépare l'environnement; le Python lancé dans AE initialise les DLL puis garde un daemon unique en vie.
+
+### Références croisées
+- `../01-core/architecture.md#bootstrap-stable-du-bridge-mediasolution`
+- `coding-patterns.md`
+
 ## Panels tiers ↔ bridge : AEInfoGraphics, KBar, Social Importer
 
 **TL;DR**: Les panels commerciaux utilisent leurs propres conventions CEP↔JSX (`transferData`, `_kbar.*`, `Social Importer`). Cartographie-les ici pour réutiliser le bridge Hybrid 2.0 sans réécrire de colle à chaque audit.@docs/04-reference/ae-script-audit.md#34-35 @docs/04-reference/ae-script-audit.md#74-75 @docs/04-reference/ae-script-audit.md#101-102
@@ -272,7 +312,7 @@ async function createLayer() {
 
 | Symptôme | Cause probable | Script à lancer |
 | --- | --- | --- |
-| Timeout CEP | Daemon non démarré | `"...\Support Files\Python\python.exe" PyShiftBridge/bridge_daemon.py --start` |
+| Timeout CEP | Daemon non démarré | `"...\Support Files\Python\python.exe" PyShiftBridge/bridge_daemon.py` |
 | `Connection refused` sur pipe | Pipe occupé ou nom incohérent | `localStorage.setItem('pyshift_pipe_name', 'PyShiftAE');` puis relance du panel |
 | Latence >300 ms | Mailbox fallback actif | Vérifie `initPipeTransport()` et permissions du socket UNIX |
 | Handler inconnu | `register_handlers` non appelé | Log `_HANDLERS` au démarrage et ajoute ton module dans `_register_all_handlers()` |

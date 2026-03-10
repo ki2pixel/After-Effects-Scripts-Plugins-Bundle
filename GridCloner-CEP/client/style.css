@@ -113,6 +113,30 @@ body {
 
 .transport { margin-top: 10px; font-size: 11px; color: #b0b0b0; }
 
+.bridge-health {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.daemon-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+    display: inline-block;
+}
+
+.daemon-dot.ready { background: #4caf50; }
+.daemon-dot.working { background: #ff9800; }
+.daemon-dot.error { background: #f44336; }
+
+.bridge-health-label {
+    font-size: 11px;
+    color: #b0b0b0;
+}
+
 .logs-controls { margin-bottom: 8px; }
 
 .logs-container {

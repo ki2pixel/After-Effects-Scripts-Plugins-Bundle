@@ -520,4 +520,4 @@ afterEach(() => {
 
 ## Resources
 
-- **.windsurf/skills/debugging-strategies/SKILL.md**: Complete debugging methodology and patterns
+- **ine/skills/debugging-strategies/SKILL.md**: Complete debugging methodology and patterns

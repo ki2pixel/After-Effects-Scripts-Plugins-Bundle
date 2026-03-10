@@ -95,7 +95,7 @@ Plan :
 ## Étape 5 — Application
 1. Exécution : edit_file après validation.
 2. Rédaction : Charger documentation.md, appliquer modèle, checkpoints.
-3. Memory Bank : fast_edit_block.
+3. Memory Bank : edit_file.
 4. Validation AE : Conventions (matchNames, versions).
 
 ### Sous-protocole Rédaction

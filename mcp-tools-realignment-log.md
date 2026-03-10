@@ -15,22 +15,22 @@ Completed the MCP tools realignment in the After Effects Scripts Plugins Bundle 
 Updated 17 files by replacing incorrect prefixes with real MCP tool names:
 
 ### Fast-Filesystem Server (mcp0_ → removed)
-- `.windsurf/rules/memorybankprotocol.md` (7 replacements)
+- `inerules/memorybankprotocol.md` (7 replacements)
 - `.continue/rules/memorybankprotocol.md` (7 replacements)
-- `.windsurf/rules/v5.md` (7 replacements)
+- `inerules/v5.md` (7 replacements)
 - `.continue/rules/v5.md` (7 replacements)
-- `.windsurf/workflows/end.md` (5 replacements)
+- `inerules/workflows/end.md` (5 replacements)
 - `.continue/prompts/end.md` (5 replacements)
-- `.windsurf/workflows/docs-updater.md` (4 replacements)
+- `inerules/workflows/docs-updater.md` (4 replacements)
 - `.continue/prompts/docs-updater.md` (4 replacements)
-- `.windsurf/workflows/enhance.md` (3 replacements)
-- `.windsurf/skills/task-master-manager/SKILL.md` (2 replacements)
+- `inerules/workflows/enhance.md` (3 replacements)
+- `ine/skills/task-master-manager/SKILL.md` (2 replacements)
 - `.continue/rules/task-master-manager.md` (2 replacements)
 - `.continue/prompts/enhance.md` (1 replacement)
 - `.continue/prompts/enhance_complex.md` (1 replacement)
-- `.windsurf/workflows/commit-push.md` (1 replacement)
-- `.windsurf/workflows/enhance_complex.md` (1 replacement)
-- `.windsurf/workflows/repomix-bundle.md` (1 replacement)
+- `inerules/workflows/commit-push.md` (1 replacement)
+- `inerules/workflows/enhance_complex.md` (1 replacement)
+- `inerules/workflows/repomix-bundle.md` (1 replacement)
 
 ### Other Servers
 - `.continue/prompts/docs-updater.md` (additional replacements for mcp1_, mcp9_)

@@ -92,7 +92,7 @@ Shrimp Task Manager génère automatiquement des priorités basées sur :
 Utilise `fast_read_file` pour charger le contexte avant analyse :
 ```bash
 # Charger le contexte actif
-fast_read_file path="/absolute/path/to/activeContext.md"
+fast_read_file path="/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/activeContext.md"
 
 # Lancer l'analyse
 analyze_task(summary="Contexte chargé", initialConcept="Solution", previousAnalysis="")
@@ -168,7 +168,7 @@ Utilise `process_thought` avec `sequentialthinking-tools` pour valider la logiqu
 
 ### Avec Fast Filesystem
 
-Utilise `fast_edit_block` pour implémenter les tâches générées par Shrimp Task Manager de manière chirurgicale.
+Utilise `edit_file` pour implémenter les tâches générées par Shrimp Task Manager de manière chirurgicale.
 
 ### Avec JSON Query
 

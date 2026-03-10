@@ -13,7 +13,7 @@ invokable: true
    - Suspendre la tâche en cours puis résumer la session.  
    - Utiliser `search` pour identifier les fichiers additionnels à consulter (ex. docs liés à la session).
 3. **Mettre à jour la Memory Bank**  
-   - Update the files using the 'fast_edit_block' tool.
+   - Update the files using the 'edit_file' tool.
    - Before each modification, read the relevant section with 'fast_read_file' to minimize changes.
    - Document decisions, progress and active context according to the protocol.
 4. **Clôturer la session**  

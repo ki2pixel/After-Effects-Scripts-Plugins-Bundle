@@ -87,7 +87,7 @@ Tableau honnête (latence, complexité, risques).
 Une phrase mémorisable.
 ```
 - Utilise ❌/✅ pour contraster.
-- Remplacement systématique des « - » flottants par `:` `;` ou `—` selon `.windsurf/skills/documentation/SKILL.md`.
+- Remplacement systématique des « - » flottants par `:` `;` ou `—` selon `ine/skills/documentation/SKILL.md`.
 - Pas de bullet lists vides: chaque point doit mener à une action.
 
 ### 3. Synchroniser Bridge + Docs

@@ -182,7 +182,7 @@ Utilise après `analyze_task` pour valider la décomposition logique des tâches
 
 ### Avec Fast Filesystem
 
-Utilise pour valider la logique avant les édition chirurgicales avec `fast_edit_block`.
+Utilise pour valider la logique avant les édition chirurgicales avec `edit_file`.
 
 ### Avec JSON Query
 

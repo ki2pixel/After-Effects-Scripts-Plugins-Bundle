@@ -1,27 +1,11 @@
-(function () {
-    $.global.runPyShiftBootstrap = function () {
-        if (typeof py === "undefined" || !py.executePythonFile) {
-            app.scheduleTask("runPyShiftBootstrap()", 1000, false);
-            return;
-        }
+(function() {
+    var supportFilesFolder = Folder.appPackage.parent;
+    var defaultPythonPath = supportFilesFolder.fsName + "\\python.exe";
+    var defaultBootstrapPath = Folder.myDocuments.fsName + "\\Scripts\\bridge_bootstrap_mediasolution.py";
+    var defaultBridgeDir = Folder.myDocuments.fsName + "\\PyShiftAE_CEP_Bridge";
 
-        var scriptPath = $.getenv("PYSHIFTBRIDGE_BOOTSTRAP_PY");
-        if (!scriptPath || scriptPath === "") {
-            scriptPath = Folder.myDocuments.fsName + "/Scripts/bridge_bootstrap_mediasolution.py";
-        }
-
-        var scriptFile = new File(scriptPath);
-        if (!scriptFile.exists) {
-            alert("Script Python introuvable : " + scriptFile.fsName);
-            return;
-        }
-
-        try {
-            py.executePythonFile(scriptFile);
-        } catch (e) {
-            alert("Erreur lors de l'exécution du script Python : " + e.toString());
-        }
-    };
-
-    app.scheduleTask("runPyShiftBootstrap()", 2000, false);
+    $.setenv("PYSHIFTBRIDGE_ALLOW_SYSTEM_FALLBACK", "1");
+    $.setenv("PYSHIFTBRIDGE_PYTHON", defaultPythonPath);
+    $.setenv("PYSHIFTBRIDGE_BOOTSTRAP_PY", defaultBootstrapPath);
+    $.setenv("PYSHIFTBRIDGE_DIR", defaultBridgeDir);
 })();

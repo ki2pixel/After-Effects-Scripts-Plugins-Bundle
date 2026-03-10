@@ -160,6 +160,39 @@ void TaskScheduler::ExecuteTask() {
 
 **Calculs dans les workers, mutations via TaskScheduler.** Dès qu'un appel touche AE, il passe par le scheduler C++ depuis le main thread.
 
+## Bootstrap stable du bridge (MediaSolution)
+
+**TL;DR**: Le startup JSX doit rester **config-only** (variables d'environnement uniquement), puis le bootstrap Python est lancé **dans After Effects** pour précharger les DLL `Support Files` avant l'import de `PyShiftBridge`.
+
+### Le problème
+
+Quand le startup JSX lance Python directement au démarrage, le chargement peut arriver trop tôt ou hors du bon runtime; les erreurs `PyFx`/DLL apparaissent et le daemon tombe avant que CEP puisse dialoguer.
+
+### ❌ / ✅
+
+```text
+❌ Startup JSX avec scheduleTask + py.executePythonFile (auto-run au boot)
+✅ Startup JSX qui définit uniquement PYSHIFTBRIDGE_ALLOW_SYSTEM_FALLBACK, PYSHIFTBRIDGE_PYTHON, PYSHIFTBRIDGE_BOOTSTRAP_PY, PYSHIFTBRIDGE_DIR
+
+❌ Importer PyShiftBridge avant d'initialiser le chemin DLL
+✅ Appeler os.add_dll_directory("...Support Files...") avant from PyShiftBridge import bridge_daemon
+```
+
+### Trade-offs
+
+| Choix | Avantage | Limite | Mitigation |
+| --- | --- | --- | --- |
+| Startup config-only | Démarrage déterministe, moins de race conditions | Nécessite un lancement Python in-AE | Procédure opératoire documentée dans `cep-python-bridge.md` |
+| Fallback `system.callSystem` autorisé | Secours si bridge in-AE indisponible | Plus fragile sur les DLL/PyFx | Le garder en secours, pas en chemin nominal |
+
+### Golden Rule
+
+**Startup configure, Python exécute**: le JSX prépare l'environnement; le script Python lancé in-AE démarre un daemon unique et reste vivant.
+
+### Références croisées
+- `../02-guides/cep-python-bridge.md`
+- `../02-guides/coding-patterns.md`
+
 ## Références
 - `../architecture_overview.md`
 - `../internal/pyshiftae/architecture_interne_pyshiftae.md`

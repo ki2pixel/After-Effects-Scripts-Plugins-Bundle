@@ -9,9 +9,20 @@
     CSInterface.prototype.evalScript = function (script, callback) {
         callback = callback || function () {};
         try {
-            window.__adobe_cep__.evalScript(String(script || ''), callback);
+            if (!window.__adobe_cep__ || typeof window.__adobe_cep__.evalScript !== 'function') {
+                callback('__CEP_RUNTIME_UNAVAILABLE__');
+                return;
+            }
+
+            window.__adobe_cep__.evalScript(String(script || ''), function (result) {
+                if (result === null || typeof result === 'undefined' || result === '') {
+                    callback('__EVALSCRIPT_EMPTY__');
+                    return;
+                }
+                callback(result);
+            });
         } catch (e) {
-            callback(null);
+            callback('__CSINTERFACE_THROW__:' + String(e));
         }
     };
 

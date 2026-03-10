@@ -50,7 +50,7 @@ validate_prefixes() {
     echo "📊 Analyse détaillée..."
     
     # fast-filesystem
-    fast_count=$(find "$dir" -name "*.md" -o -name "*.js" -o -name "*.py" | xargs grep -c "fast_read_file\|fast_write_file\|fast_edit_block" | wc -l)
+    fast_count=$(find "$dir" -name "*.md" -o -name "*.js" -o -name "*.py" | xargs grep -c "fast_read_file\|fast_write_file\|edit_file" | wc -l)
     echo "  - fast-filesystem: $fast_count occurrences"
     
     # task-master-ai

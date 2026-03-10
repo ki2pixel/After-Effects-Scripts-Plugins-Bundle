@@ -31,6 +31,37 @@ threading.Thread(target=lambda: (
 )).start()
 ```
 
+### 1.b Bootstrap Pattern (JSX config-only + Python keepalive)
+
+**TL;DR**: En Hybrid 2.0, le startup JSX configure l'environnement et s'arrête; le bootstrap Python lancé dans AE précharge les DLL puis garde le daemon en vie.
+
+#### Le problème
+Si le startup JSX exécute Python directement au boot, l'ordre de chargement peut casser `PyFx` (DLL non prêtes) et provoquer des daemons instables ou morts avant le premier appel CEP.
+
+#### ❌ / ✅
+
+```text
+❌ Startup JSX avec scheduleTask + py.executePythonFile au chargement d'AE
+✅ Startup JSX config-only avec variables PYSHIFTBRIDGE_* puis lancement explicite du bootstrap Python in-AE
+
+❌ Import PyShiftBridge avant initialisation DLL
+✅ os.add_dll_directory("...Support Files...") avant from PyShiftBridge import bridge_daemon
+```
+
+#### Trade-offs
+
+| Approche | Avantage | Limite | Mitigation |
+| --- | --- | --- | --- |
+| Config-only au startup | Réduit les races au boot | Nécessite une étape d'exécution Python in-AE | Documenter la procédure opératoire panel/bridge |
+| Keepalive Python (`while True`) | Daemon stable sur toute la session AE | Script long-vivant | Boucle légère `sleep(1.0)` + arrêt propre au KeyboardInterrupt |
+
+#### Golden Rule
+**Le JSX ne lance pas le daemon**: il prépare `PYSHIFTBRIDGE_*`; le Python lancé dans AE initialise les DLL et maintient un daemon unique.
+
+#### Références croisées
+- `../01-core/architecture.md#bootstrap-stable-du-bridge-mediasolution`
+- `cep-python-bridge.md#bootstrap-operationnel-stable-mediasolution`
+
 ### 2. Shape Layers sans tâtonner
 *Utilise PropertyFactory pour obtenir des objets typés (OneDProperty, ColorProperty) et évite les conversions maison.*
 

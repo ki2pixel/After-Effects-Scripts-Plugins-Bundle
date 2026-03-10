@@ -1,6 +1,6 @@
 ---
 name: fast-filesystem-ops
-description: Expert en édition chirurgicale. Obligation d'utiliser fast_edit_block pour préserver les tokens. Recherche globale via fast_search_code.
+description: Expert en édition chirurgicale. Obligation d'utiliser edit_file pour préserver les tokens. Recherche globale via fast_search_code.
 alwaysApply: false
 ---
 
@@ -13,7 +13,7 @@ alwaysApply: false
 ### Mental Model
 
 Fast Filesystem Ops optimise chaque opération fichier pour minimiser l'usage de tokens :
-- Édition ciblée avec `fast_edit_block`
+- Édition ciblée avec `edit_file`
 - Recherche intelligente avec `fast_search_code`
 - Lecture multiple avec `fast_read_multiple_files`
 - Évitement des chargements inutiles
@@ -22,7 +22,7 @@ Fast Filesystem Ops optimise chaque opération fichier pour minimiser l'usage de
 
 1. **Localisation** : `fast_search_code` pour trouver les cibles
 2. **Lecture minimale** : `fast_read_multiple_files` uniquement des sections nécessaires
-3. **Édition chirurgicale** : `fast_edit_block` pour modifications précises
+3. **Édition chirurgicale** : `edit_file` pour modifications précises
 4. **Validation** : Vérification minimale des changements
 
 ### Patterns d'utilisation
@@ -37,7 +37,7 @@ fast_search_code "function calculateTotal" --language python
 fast_read_multiple_files src/calculations.py --lines 45-67
 
 # 3. Éditer chirurgicalement
-fast_edit_block src/calculations.py --start 45 --end 67 --replacement "new_function_code"
+edit_file src/calculations.py --start 45 --end 67 --replacement "new_function_code"
 ```
 
 #### Pour refactoring multi-fichiers
@@ -50,8 +50,8 @@ fast_search_code "deprecated_function" --language javascript
 fast_read_multiple_files file1.js file2.js file3.js --context 3
 
 # 3. Éditer chaque occurrence chirurgicalement
-fast_edit_block file1.js --line 123 --replacement "new_function_call"
-fast_edit_block file2.js --line 45 --replacement "new_function_call"
+edit_file file1.js --line 123 --replacement "new_function_call"
+edit_file file2.js --line 45 --replacement "new_function_call"
 ```
 
 ## Production-safe patterns
@@ -86,13 +86,13 @@ fast_read_multiple_files src/*.js --pattern "export.*function"
 
 ```bash
 # Édition par ligne unique
-fast_edit_block src/app.js --line 234 --replacement "newCode"
+edit_file src/app.js --line 234 --replacement "newCode"
 
 # Édition par bloc
-fast_edit_block src/app.js --start 200 --end 250 --replacement "newBlock"
+edit_file src/app.js --start 200 --end 250 --replacement "newBlock"
 
 # Édition avec recherche automatique
-fast_edit_block src/app.js --search "oldPattern" --replacement "newPattern"
+edit_file src/app.js --search "oldPattern" --replacement "newPattern"
 ```
 
 ## Token optimization strategies
@@ -108,7 +108,7 @@ read_file large_project/src/entier_fichier.py  # 5000+ lignes
 ```bash
 fast_search_code "function targetFunction" --language python
 fast_read_multiple_files target_file.py --lines 100-150
-fast_edit_block target_file.py --line 125 --replacement "optimized code"
+edit_file target_file.py --line 125 --replacement "optimized code"
 ```
 
 ### Recherche avant lecture
@@ -122,7 +122,7 @@ fast_search_code "targetPattern" --language typescript
 fast_read_multiple_files results... --context 2
 
 # 3. Éditer
-fast_edit_block target_file.ts --line X --replacement "new code"
+edit_file target_file.ts --line X --replacement "new code"
 ```
 
 ### Lecture multiple optimisée
@@ -160,8 +160,8 @@ fast_read_multiple_files config.py --lines 50-60
 fast_read_multiple_files file1.js file2.js file3.js --pattern "oldFunction"
 
 # Puis éditer séquentiellement
-fast_edit_block file1.js --search "oldFunction" --replacement "newFunction"
-fast_edit_block file2.js --search "oldFunction" --replacement "newFunction"
+edit_file file1.js --search "oldFunction" --replacement "newFunction"
+edit_file file2.js --search "oldFunction" --replacement "newFunction"
 ```
 
 ### Contexte insuffisant
@@ -180,7 +180,7 @@ fast_read_multiple_files target.py --lines 100-120  # Risque d'erreur
 
 - `fast_search_code "<pattern>"` : Recherche intelligente avec options
 - `fast_read_multiple_files <files>` : Lecture optimisée multi-fichiers  
-- `fast_edit_block <file>` : Édition chirurgicale précise
+- `edit_file <file>` : Édition chirurgicale précise
 
 ### Options de recherche
 

@@ -75,7 +75,7 @@ var firstProp = layer.property(1);  // NOT property(0)
 ## When to Read References
 
 ### UI and Dockable Panels
-**Read:** `.windsurf/skills/ae-scripting-expert/references/ui-layout.md` (patterns internes au skill)
+**Read:** `ine/skills/ae-scripting-expert/references/ui-layout.md` (patterns internes au skill)
 **Voir aussi:** `docs/02-guides/coding-patterns.md` (patterns production consolidés)
 - Dockable vs palette patterns
 - Binary asset management (blobs → files)
@@ -83,7 +83,7 @@ var firstProp = layer.property(1);  // NOT property(0)
 - Icon buttons and custom graphics
 
 ### Shape Layers and Vector Graphics
-**Read:** `.windsurf/skills/ae-scripting-expert/references/vector-shapes.md` (patterns internes au skill)
+**Read:** `ine/skills/ae-scripting-expert/references/vector-shapes.md` (patterns internes au skill)
 **Voir aussi:** `docs/04-reference/ae-internals.md` (registres MatchNames consolidés)
 - ADBE Root Vectors Group hierarchy
 - Shape creation and manipulation
@@ -91,7 +91,7 @@ var firstProp = layer.property(1);  // NOT property(0)
 - Transform stack management
 
 ### Advanced Internals and Production Patterns
-**Read:** `.windsurf/skills/ae-scripting-expert/references/hacks-and-internals.md` (patterns internes au skill)
+**Read:** `ine/skills/ae-scripting-expert/references/hacks-and-internals.md` (patterns internes au skill)
 **Voir aussi:** `docs/02-guides/coding-patterns.md` (patterns production) + `docs/04-reference/ae-script-audit.md` (preuves brutes)
 - Binary preset files (.ffx)
 - Pseudo Effects bootstrapping
@@ -99,7 +99,7 @@ var firstProp = layer.property(1);  // NOT property(0)
 - Expression engineering patterns
 
 ### Notes sur la Documentation v2
-Les fichiers `.windsurf/skills/ae-scripting-expert/references/` internes à ce skill contiennent les patterns détaillés avec exemples de code. La documentation v2 dans `docs/` consolide ces patterns de manière générique :
+Les fichiers `ine/skills/ae-scripting-expert/references/` internes à ce skill contiennent les patterns détaillés avec exemples de code. La documentation v2 dans `docs/` consolide ces patterns de manière générique :
 - `coding-patterns.md` : Patterns universels extraits des scripts réels
 - `ae-internals.md` : Registres de données (MatchNames, tags, contrôles)
 - `ae-script-audit.md` : Preuves brutes des analyses de scripts tiers
@@ -582,7 +582,7 @@ function getAllPathsObjects(group, transformStack) {
 
 ## Asset Templates
 
-Use the templates in `.windsurf/skills/ae-scripting-expert/assets/` as starting points:
+Use the templates in `ine/skills/ae-scripting-expert/assets/` as starting points:
 - `basic-script-template.jsx` - Minimal script structure
 - `dockable-ui-template.jsx` - Complete dockable panel
 - `shape-layer-template.jsx` - Shape layer manipulation helpers
@@ -596,9 +596,9 @@ For real-world patterns and undocumented matchNames, see:
 - Expression templating patterns from easyRulers
 
 ### Core Documentation Areas
-- UI and Dockable Panels → `.windsurf/skills/ae-scripting-expert/references/ui-layout.md`
-- Shape Layers and Vector Graphics → `.windsurf/skills/ae-scripting-expert/references/vector-shapes.md`
-- Advanced Internals → `.windsurf/skills/ae-scripting-expert/references/hacks-and-internals.md`
+- UI and Dockable Panels → `ine/skills/ae-scripting-expert/references/ui-layout.md`
+- Shape Layers and Vector Graphics → `ine/skills/ae-scripting-expert/references/vector-shapes.md`
+- Advanced Internals → `ine/skills/ae-scripting-expert/references/hacks-and-internals.md`
 
 ## Essential MatchNames
 

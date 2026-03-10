@@ -337,11 +337,73 @@ function testHostCommunication() {
 - **CSInterface Reference** : Guide communication CEP
 
 ### Standards Projet
-- **[.sixthrules/01-codingstandards.md](../../.sixthrules/01-codingstandards.md)** - Règles de développement
+- **[.clinerules/codingstandards.md](../.rules/codingstandards.md)** - Règles de développement
 - **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** - Patterns PyShiftAE production
 - **Tests Guidelines** : Stratégies de test
 
-## 11. Panels Tiers & Audit (Hybrid 2.0)
+## 11. Panel GridCloner-CEP (Hybrid 2.0)
+
+### Architecture GridCloner
+Le panel **GridCloner-CEP** est une extension CEP moderne utilisant le stack Hybrid 2.0 complet :
+
+| Composant | Chemin | Rôle |
+|-----------|--------|------|
+| **Host JSX** | `GridCloner-CEP/host/GridCloner.jsx` | Logique ExtendScript + mailbox transport |
+| **Handlers Python** | `PyShiftBridge/gridcloner/handlers.py` | Validation/coercition des arguments |
+| **Core Logic** | `PyShiftBridge/gridcloner/core.py` | Logique métier PyShiftAE pure |
+
+### Handler Pattern avec Validation/Coercition
+
+Les handlers GridCloner implémentent un pattern de validation robuste :
+
+```python
+# PyShiftBridge/gridcloner/handlers.py
+
+def register_handlers(registry: Dict[str, HandlerFn], resolve: ResolveFn) -> None:
+    registry["gridcloner_apply"] = _handle_gridcloner_apply(resolve)
+
+def _coerce_int(value: Any, default: int) -> int:
+    try:
+        return int(value)
+    except Exception:
+        return int(default)
+
+def _coerce_bool(value: Any, default: bool = False) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        v = value.strip().lower()
+        return v in ("1", "true", "yes", "on")
+    return bool(default)
+
+def _coerce_spacing(value: Any) -> Dict[str, float]:
+    # Validation avec limites explicites
+    x = _coerce_float(value.get("x"), 0.0)
+    y = _coerce_float(value.get("y"), 0.0)
+    z = _coerce_float(value.get("z"), 0.0)
+    if abs(x) > MAX_SPACING or abs(y) > MAX_SPACING or abs(z) > MAX_SPACING:
+        raise ValueError(f"Invalid args.spacing (max abs {MAX_SPACING})")
+    return {"x": x, "y": y, "z": z}
+```
+
+### Entrypoints GridCloner
+
+| Entrypoint | Description | Paramètres |
+|------------|-------------|------------|
+| `gridcloner_apply` | Création grille de clones | `rows`, `columns`, `depth`, `spacing`, `enable3D`, `linkOpacityToNull`, `linkScaleToNull` |
+
+### Configuration CEP GridCloner
+
+```xml
+<!-- GridCloner-CEP/CSXS/manifest.xml -->
+<ExtensionManifest Version="5.0" ExtensionBundleId="com.workflowmediapipe.gridcloner">
+  <HostList>
+    <Host Name="AEFT" Version="[13.0,99.9]" />
+  </HostList>
+</ExtensionManifest>
+```
+
+## 12. Panels Tiers & Audit (Hybrid 2.0)
 
 ### Analyse des Panels Existant
 L'audit **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** documente les patterns des panels CEP tiers :
@@ -360,7 +422,7 @@ Pour chaque panel tiers, le pattern recommandé est :
 
 **Golden Rule** : *Tout panel CEP tiers doit être documenté dans ae-script-audit.md avant intégration Hybrid 2.0.*
 
-## 12. Maintenance & Évolution
+## 13. Maintenance & Évolution
 
 ### Monitoring Production
 - **Logs erreurs** : Collecte automatique des problèmes

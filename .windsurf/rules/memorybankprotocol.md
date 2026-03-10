@@ -26,7 +26,7 @@ This protocol defines the mandatory cycle of life for project context. It uses t
 ---
 
 ## 2. File Structure & Responsibilities
-Access these via `fast_read_file`, `fast_edit_block`, or `fast_list_directory` using absolute paths in `/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/`.
+Access these via `fast_read_file`, `edit_file`, or `fast_list_directory` using absolute paths in `/home/kidpixel/After_Effects_Scripts_Plugins_Bundle/memory-bank/`.
 
 -   **`productContext.md`**: Project scope, goals, and standards.
 -   **`activeContext.md`**: Current session state, active decisions, and blockers.
@@ -75,7 +75,7 @@ Access these via `fast_read_file`, `fast_edit_block`, or `fast_list_directory` u
     1.  **Halt:** Stop current activity.
     2.  **Acknowledge:** Respond with `[MEMORY BANK: UPDATING]`.
     3.  **Audit:** Review current chat for decisions, changes, or clarifications.
-    4.  **Sync:** Call `fast_edit_block` on relevant files (usually `progress.md` and `activeContext.md`).
+    4.  **Sync:** Call `edit_file` on relevant files (usually `progress.md` and `activeContext.md`).
     5.  **Clean:** Do NOT summarize the entire project history, only the *current session's* deltas.
 
 ---

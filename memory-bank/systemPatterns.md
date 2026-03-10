@@ -12,7 +12,7 @@
 - **Scripts**: Organized by functionality in Scripts_AE/
 - **Frameworks**: Separate directories for major tools
 - **Documentation**: Centralized in docs/ directory
-- **Configuration**: .windsurf/ for development workflows
+- **Configuration**: .clinerules/ and .cline/skills/ for development workflows
 
 ## Architecture Patterns
 

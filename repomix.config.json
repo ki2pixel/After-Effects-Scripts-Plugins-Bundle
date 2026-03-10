@@ -9,8 +9,8 @@
   },
   "include": [
     "docs/**/*.md",
-    ".windsurf/rules/codingstandards.md",
-    ".windsurf/skills/**/*"
+    "inerules/codingstandards.md",
+    "ine/skills/**/*"
   ],
   "ignore": {
     "customPatterns": [

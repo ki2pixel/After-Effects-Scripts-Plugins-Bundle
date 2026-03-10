@@ -31,7 +31,7 @@ search(pattern, path)
 
 | Serveur MCP | Préfixes Documentaires à Éliminer | Noms Réels à Utiliser |
 |---|---|---|
-| fast-filesystem | `mcp0_fast_` | `fast_read_file`, `fast_write_file`, `fast_edit_block`, `fast_search_files`, `fast_list_directory`, `fast_get_directory_tree`, `fast_get_file_info`, `fast_create_directory`, `fast_copy_file`, `fast_move_file`, `fast_delete_file`, `fast_sync_directories`, `fast_compress_files`, `fast_extract_archive`, `fast_find_large_files`, `fast_get_disk_usage`, `fast_batch_file_operations`, `fast_extract_lines`, `fast_edit_multiple_blocks`, `fast_edit_blocks`, `fast_safe_edit`, `fast_large_write_file`, `fast_read_multiple_files`, `fast_search_code` |
+| fast-filesystem | `mcp0_fast_` | `fast_read_file`, `fast_write_file`, `edit_file`, `fast_search_files`, `fast_list_directory`, `fast_get_directory_tree`, `fast_get_file_info`, `fast_create_directory`, `fast_copy_file`, `fast_move_file`, `fast_delete_file`, `fast_sync_directories`, `fast_compress_files`, `fast_extract_archive`, `fast_find_large_files`, `fast_get_disk_usage`, `fast_batch_file_operations`, `fast_extract_lines`, `fast_edit_multiple_blocks`, `fast_edit_blocks`, `fast_safe_edit`, `fast_large_write_file`, `fast_read_multiple_files`, `fast_search_code` |
 | task-master-ai | `mcp11_` | `get_tasks`, `next_task`, `get_task`, `set_task_status`, `update_subtask`, `add_task`, `remove_task`, `expand_task`, `expand_all`, `parse_prd`, `analyze_project_complexity`, `complexity_report`, `add_subtask`, `initialize_project` |
 | sequential-thinking | `mcp10_` | `sequentialthinking_tools` |
 | filesystem-agent | `mcp1_` | `read_file`, `read_text_file`, `read_media_file`, `read_multiple_files`, `write_file`, `edit_file`, `create_directory`, `list_directory`, `list_directory_with_sizes`, `directory_tree`, `move_file`, `search_files`, `get_file_info`, `list_allowed_directories` |
@@ -68,7 +68,7 @@ Toujours utiliser les noms réels des outils MCP dans le code et les commandes.
 ```bash
 # Correct
 fast_read_file "/path/to/config.json"
-fast_edit_block --file "/path/to/file.js" --search "function oldName" --replacement "function newName"
+edit_file --file "/path/to/file.js" --search "function oldName" --replacement "function newName"
 
 # Incorrect
 mcp0_fast_read_file "/path/to/config.json"  # Échouera
