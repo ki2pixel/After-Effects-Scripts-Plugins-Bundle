@@ -1,7 +1,7 @@
 ---
-name: commit-message-format
+trigger: model_decision
 description: Applied when creating Git commit messages. Format rules for Conventional Commits-based Prefix + English summary + bulleted body
-alwaysApply: false
+globs:
 ---
 
 # Git Commit Message Format Rules

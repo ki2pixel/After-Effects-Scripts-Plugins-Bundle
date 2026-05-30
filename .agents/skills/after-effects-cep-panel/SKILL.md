@@ -47,7 +47,7 @@ PyShiftAE (Python 3.11+) → Mutations AE optimisées
 
 ### Structure des Dossiers CEP
 ```
-MediaSolution-CEP/
+MédiaSolution/MediaSolution-CEP/
 ├── CSXS/
 │   └── manifest.xml          # Configuration CEP
 ├── client/
@@ -118,7 +118,7 @@ sendToClient('batchProgress', {
 ### 3.3 Ponts PyShiftBridge/PyShiftAE (Hybrid 2.0)
 
 #### Architecture Recommandée
-Voir [**docs/02-guides/cep-python-bridge.md**](../../docs/02-guides/cep-python-bridge.md) pour le pattern complet :
+Voir [**docs/02-guides/cep-python-bridge.md**](../../../docs/02-guides/cep-python-bridge.md) pour le pattern complet :
 - **Transport adaptatif** : Named pipes/Unix sockets (prioritaire) + mailbox JSON (fallback)
 - **Registre dynamique** : `bridge_daemon.py` centralise les handlers de chaque panel CEP
 - **Single Daemon, Multi-Domain** : Chaque panel = package Python avec `register_handlers()`
@@ -156,10 +156,10 @@ function tryRunPythonCutsParserForCsv(comp, frameRate, csvFile) {
 ### Installation Développement (Debug)
 ```bash
 # Windows
-copy /s MediaSolution-CEP "%APPDATA%\Adobe\CEP\extensions\"
+xcopy /s /i "MédiaSolution\MediaSolution-CEP" "%APPDATA%\Adobe\CEP\extensions\MediaSolution-CEP"
 
 # macOS
-cp -r MediaSolution-CEP ~/Library/Application\ Support/Adobe/CEP/extensions/
+cp -r MédiaSolution/MediaSolution-CEP ~/Library/Application\ Support/Adobe/CEP/extensions/
 ```
 
 ### Activation Debug Mode
@@ -326,10 +326,10 @@ function testHostCommunication() {
 ## 9. Références Techniques
 
 ### Documentation Projet
-- **[docs/02-guides/cep-python-bridge.md](../../docs/02-guides/cep-python-bridge.md)** - Architecture Hybrid 2.0 complète
-- **[docs/04-reference/capabilities.md](../../docs/04-reference/capabilities.md)** - Matrice d'arbitrage PyShiftAE vs ExtendScript (80/20)
-- **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** - Audit des panels tiers (AEInfoGraphics, KBar, etc.)
-- **[docs/01-core/architecture.md](../../docs/01-core/architecture.md)** - Vue d'ensemble Hybrid 2.0
+- **[docs/02-guides/cep-python-bridge.md](../../../docs/02-guides/cep-python-bridge.md)** - Architecture Hybrid 2.0 complète
+- **[docs/04-reference/capabilities.md](../../../docs/04-reference/capabilities.md)** - Matrice d'arbitrage PyShiftAE vs ExtendScript (80/20)
+- **[docs/04-reference/ae-script-audit.md](../../../docs/04-reference/ae-script-audit.md)** - Audit des panels tiers (AEInfoGraphics, KBar, etc.)
+- **[docs/01-core/architecture.md](../../../docs/01-core/architecture.md)** - Vue d'ensemble Hybrid 2.0
 
 ### Documentation Adobe
 - **CEP Documentation** : Adobe Developer Portal
@@ -337,8 +337,8 @@ function testHostCommunication() {
 - **CSInterface Reference** : Guide communication CEP
 
 ### Standards Projet
-- **[.clinerules/codingstandards.md](../../.clinerules/codingstandards.md)** - Règles de développement
-- **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** - Patterns PyShiftAE production
+- **[.clinerules/codingstandards.md](../../rules/codingstandards.md)** - Règles de développement
+- **[docs/02-guides/coding-patterns.md](../../../docs/02-guides/coding-patterns.md)** - Patterns PyShiftAE production
 - **Tests Guidelines** : Stratégies de test
 
 ## 11. Panel GridCloner-CEP (Hybrid 2.0)
@@ -406,7 +406,7 @@ def _coerce_spacing(value: Any) -> Dict[str, float]:
 ## 12. Panels Tiers & Audit (Hybrid 2.0)
 
 ### Analyse des Panels Existant
-L'audit **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** documente les patterns des panels CEP tiers :
+L'audit **[docs/04-reference/ae-script-audit.md](../../../docs/04-reference/ae-script-audit.md)** documente les patterns des panels CEP tiers :
 
 | Panel | Pattern observé | Payload CEP ↔ JSX | Risques |
 |---|---|---|---|

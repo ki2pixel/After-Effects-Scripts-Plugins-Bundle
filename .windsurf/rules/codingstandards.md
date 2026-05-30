@@ -25,6 +25,7 @@ globs:
 - **Memory:** Short-lived AE handles, lock→use→unlock→free pattern
 - **Error Handling:** try/except with contextual messages (comp/layer/prop), never silent failures
 - **Dependencies:** Pure Python libraries only, document version strategy
+- **Undo Groups:** Use `with ae.UndoGroup("Operation Name"):` to wrap modifications, ensuring user-friendly undo actions.
 - **TaskScheduler Implementation:** All AE mutations go through C++ TaskScheduler (AETK wrapper) which queues tasks for execution on AE's main thread via idle hooks. Direct PyFx calls only when already on main thread (e.g., bridge_daemon.py).
 - **⚠️ NOTE:** `ae.schedule_task()` helper is conceptual only - current PyShiftAE runtime uses direct C++ TaskScheduler integration. Worker threads compute data, then schedule C++ tasks for main thread execution.
 
@@ -138,6 +139,7 @@ def handle_command(command):
 3. **Scheduler function**: Direct AE operations in bridge handlers, C++ TaskScheduler for deferred tasks via idle hooks
 4. **Error handling**: Wrap in try/except with context, return structured error responses to CEP
 5. **Main thread context**: Bridge daemon runs in AE process - all operations are main thread by default
+6. **Undo Groups**: Use `with ae.UndoGroup("Name"):` for all project modifications.
 
 ### ExtendScript UI Panels
 1. **Dockable detection**: Test `thisObj instanceof Panel`
@@ -238,5 +240,3 @@ For hybrid projects: Use primary skill + reference this file for unified convent
 
 ## Final notes
 - Keep this document under 12,000 characters. Revise after any major changes.
-- **PyShiftAE TODO:** Add `ae.schedule_task()` helper to align documentation with runtime capabilities.
-- **Bridge Daemon Pattern:** Document main-thread execution model for direct PyFx calls.

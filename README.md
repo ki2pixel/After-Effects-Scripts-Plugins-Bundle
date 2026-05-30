@@ -21,9 +21,8 @@ Collection of Adobe After Effects automation tools and scripts with modern devel
 ## Quick Start
 
 1. Install Sixth environment
-2. Follow migration guide in `docs/sixth-integration.md`
-3. Use `/enhance` for context-aware development
-4. Check `/test-migration` for validation
+2. Use `/enhance` for context-aware development
+3. Check `/test-migration` for validation
 
 ## Architecture
 
@@ -32,5 +31,3 @@ Hybrid 2.0 architecture: CEP panels → PyShiftBridge → PyShiftAE → AETK →
 ## Documentation
 
 - `docs/` - Complete documentation ecosystem
-- `docs/sixth-integration.md` - Migration and setup guide
-- `.sixthskills/*/SKILL.md` - Specialized expertise guides

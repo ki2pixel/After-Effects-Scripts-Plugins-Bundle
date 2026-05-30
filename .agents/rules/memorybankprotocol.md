@@ -1,7 +1,7 @@
 ---
-name: memorybankprotocol
-description: Memory Bank Protocol (Version Fast-Filesystem MCP-Optimized)
-alwaysApply: true
+trigger: always_on
+description: 
+globs: 
 ---
 
 # Memory Bank Protocol (Version Fast-Filesystem MCP-Optimized)
@@ -64,7 +64,7 @@ Access these via `fast_read_file`, `edit_file`, or `fast_list_directory` using a
 ### B. Coding & Architecture Context
 -   **Trigger:** Requests to generate, modify, refactor code, or architectural questions.
 -   **Instruction:** State: *"I will adhere to the project's mandatory architectural and coding standards."*
--   **Selective Pull:** Immediately call `read_file` for `inerules/codingstandards.md`.
+-   **Selective Pull:** Immediately call `read_file` for `.agents/rules/codingstandards.md`.
 -   **Constraint:** Formulate the plan based **strictly** on the principles found in the standards.
 
 ---

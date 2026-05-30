@@ -28,33 +28,34 @@ Sequential Thinking Logic décompose les problèmes complexes en séquences logi
 
 #### Pour architecture d'extension
 
-```bash
-# Décomposer l'architecture
-sequentialthinking_tools decompose "Extension Chrome: Background <-> Content <-> API"
+```json
+// Décomposer l'architecture
+{
+  "thought": "[Décomposition] Extension Chrome: Background <-> Content <-> API",
+  "thoughtNumber": 1,
+  "totalThoughts": 4,
+  "nextThoughtNeeded": true
+}
 
-# Valider chaque composant
-sequentialthinking_tools validate "Background script logic"
-sequentialthinking_tools validate "Content script injection"
-sequentialthinking_tools validate "API communication flow"
-
-# Tester la séquence complète
-sequentialthinking_tools test-sequence "user_action -> background -> content -> api -> response"
+// Valider chaque composant
+{
+  "thought": "[Validation] Background script logic",
+  "thoughtNumber": 2,
+  "totalThoughts": 4,
+  "nextThoughtNeeded": true
+}
 ```
 
 #### Pour logique métier complexe
 
-```bash
-# Analyser le flux métier
-sequentialthinking_tools decompose "User authentication flow"
-
-# Valider chaque étape
-sequentialthinking_tools validate "Input validation"
-sequentialthinking_tools validate "Credential verification"
-sequentialthinking_tools validate "Session management"
-sequentialthinking_tools validate "Error handling"
-
-# Identifier les points de rupture
-sequentialthinking_tools find-breakpoints "auth_flow"
+```json
+// Analyser le flux métier
+{
+  "thought": "[Décomposition] User authentication flow",
+  "thoughtNumber": 1,
+  "totalThoughts": 6,
+  "nextThoughtNeeded": true
+}
 ```
 
 ## Production-safe patterns
@@ -63,48 +64,41 @@ sequentialthinking_tools find-breakpoints "auth_flow"
 
 Pour chaque composant logique :
 
-```bash
-# 1. Décomposition
-sequentialthinking_tools decompose "[composant]"
-
-# 2. Validation logique
-sequentialthinking_tools validate "[sous-composant_1]"
-sequentialthinking_tools validate "[sous-composant_2]"
-
-# 3. Test de séquence
-sequentialthinking_tools test-sequence "[flux_complet]"
+```json
+// Utiliser la variable "thought" pour structurer l'étape :
+{
+  "thought": "[Décomposition] Analyse de composant...",
+  "thoughtNumber": 1,
+  "totalThoughts": 4,
+  "nextThoughtNeeded": true
+}
+// Suivi de [Validation] sous-composant_1, etc.
 ```
 
 ### Background vs Content Script
 
 Pattern spécifique pour extensions web :
 
-```bash
-# Background Script Logic
-sequentialthinking_tools validate-background "event_listeners"
-sequentialthinking_tools validate-background "message_routing"
-sequentialthinking_tools validate-background "storage_management"
-
-# Content Script Logic
-sequentialthinking_tools validate-content "dom_manipulation"
-sequentialthinking_tools validate-content "user_interaction"
-sequentialthinking_tools validate-content "message_communication"
-
-# Cross-script communication
-sequentialthinking_tools test-communication "background <-> content"
+```json
+// Formuler le thought explicitement :
+{
+  "thought": "[Validation-Background] event_listeners & message_routing",
+  "thoughtNumber": 1,
+  "totalThoughts": 3,
+  "nextThoughtNeeded": true
+}
 ```
 
 ### Gestion des erreurs logiques
 
-```bash
-# Identifier les points de défaillance
-sequentialthinking_tools find-breakpoints "[flux]"
-
-# Analyser les cas limites
-sequentialthinking_tools edge-cases "[composant]"
-
-# Valider la gestion d'erreurs
-sequentialthinking_tools validate-error-handling "[flux]"
+```json
+// Points de défaillance
+{
+  "thought": "[Points de rupture] Analyse des failles du flux...",
+  "thoughtNumber": 1,
+  "totalThoughts": 3,
+  "nextThoughtNeeded": true
+}
 ```
 
 ## Common gotchas
@@ -117,12 +111,13 @@ sequentialthinking_tools validate-error-handling "[flux]"
 
 ### Dépendances circulaires
 
-```bash
-# Détecter les circularités
-sequentialthinking_tools detect-cycles "[architecture]"
-
-# Résoudre les dépendances
-sequentialthinking_tools resolve-dependencies "[composants]"
+```json
+{
+  "thought": "[Détection de cycles] Validation de l'architecture...",
+  "thoughtNumber": 1,
+  "totalThoughts": 2,
+  "nextThoughtNeeded": true
+}
 ```
 
 ### Background/Content contamination
@@ -133,28 +128,15 @@ sequentialthinking_tools resolve-dependencies "[composants]"
 
 ## API Reference
 
-### Commandes principales
+### Configuration de l'Outil MCP
 
-- `sequentialthinking_tools decompose "<concept>"` : Décompose en composants logiques
-- `sequentialthinking_tools validate "<composant>"` : Valide la logique d'un composant
-- `sequentialthinking_tools test-sequence "<flux>"` : Teste une séquence complète
-- `sequentialthinking_tools find-breakpoints "<flux>"` : Identifie les points de rupture
-- `sequentialthinking_tools edge-cases "<composant>"` : Analyse les cas limites
+L'outil `sequentialthinking_tools` accepte un objet JSON avec les paramètres suivants :
+- `thought` (string) : Votre raisonnement actuel. C'est ici qu'il faut utiliser les préfixes comme `[Décomposition]`, `[Validation]`, `[Test-Séquence]`.
+- `thoughtNumber` (integer) : Le numéro de l'étape courante.
+- `totalThoughts` (integer) : Le nombre total estimé d'étapes.
+- `nextThoughtNeeded` (boolean) : Vrai s'il faut continuer le raisonnement.
 
-### Commandes spécialisées
-
-- `sequentialthinking_tools validate-background "<logique>"` : Validation Background Script
-- `sequentialthinking_tools validate-content "<logique>"` : Validation Content Script
-- `sequentialthinking_tools test-communication "<scripts>"` : Test communication inter-scripts
-- `sequentialthinking_tools detect-cycles "<architecture>"` : Détection dépendances circulaires
-- `sequentialthinking_tools resolve-dependencies "<composants>"` : Résolution dépendances
-
-### Options avancées
-
-- `--depth <n>` : Profondeur d'analyse (1-5)
-- `--verbose` : Sortie détaillée du raisonnement
-- `--export-logic` : Exporte le modèle logique en JSON
-- `--test-cases` : Génère cas de test automatiquement
+*Note : Les anciennes commandes CLI n'existent pas. Tout le contexte doit être structuré dans la variable `thought`.*
 
 ## Debugging checklist
 

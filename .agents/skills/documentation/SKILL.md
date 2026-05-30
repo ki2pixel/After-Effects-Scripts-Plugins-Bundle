@@ -230,7 +230,7 @@ The pattern " - " (space-hyphen-space) is a common AI writing artifact that shou
 
 3. **Em dash**: Use for dramatic pauses or parenthetical statements where semicolon and colon don't work
    - Before: `The app is fast - really fast`
-   - After: `The app is fast—really fast`
+   - After: `The app is fast-really fast`
 
 ### Common Patterns
 
@@ -239,7 +239,7 @@ The pattern " - " (space-hyphen-space) is a common AI writing artifact that shou
 - **Examples/Lists**: Use colon
   - `**Examples**: item1, item2, item3`
 - **Dramatic emphasis**: Use em dash
-  - `It's more than fast—it's instant`
+  - `It's more than fast-it's instant`
 - **Related statements**: Use semicolon
   - `The API is simple; the documentation is clear`
 
@@ -296,7 +296,7 @@ Services that connect to servers you deploy yourself. You provide the base URL o
   - `openai.ts`: OpenAI Whisper API
   - `groq.ts`: Groq transcription
   - `deepgram.ts`: Deepgram API
-[... exhaustive listing of every file]
+    [... exhaustive listing of every file]
 ```
 
 The good example explains the reasoning (deployment model categorization) without listing specifics. The bad example duplicates what's already visible and requires updates whenever files change.
@@ -344,45 +344,44 @@ When delegating article writing to a `document-writer` subagent, structure your 
 
 1. **Target audience**: Who is reading? What do they already know?
 
-```
-"Developers intermediate in TypeScript but new to API design trade-offs"
-```
+   ```
+   "Developers intermediate in TypeScript but new to API design trade-offs"
+   ```
 
 2. **Numbered themes**: List 5-8 specific topics to cover
 
-```
-1. What is introspection?
-2. The fundamental tension (functions vs objects)
-3. Example 1: Workspace system
-4. Example 2: Standard Schema
-...
-```
+   ```
+   1. What is introspection?
+   2. The fundamental tension (functions vs objects)
+   3. Example 1: Workspace system
+   4. Example 2: Standard Schema
+   ...
+   ```
 
 3. **Code examples in prompt**: Provide ❌/✅ patterns for the agent to expand on
 
-```typescript
-// ❌ Cannot introspect
-actions: (ctx) => ({ create: { handler: () => ctx.db.insert() } });
+   ```typescript
+   // ❌ Cannot introspect
+   actions: (ctx) => ({ create: { handler: () => ctx.db.insert() } });
 
-// ✅ Can introspect
-actions: {
-  create: {
-    handler: (input, ctx) => ctx.db.insert();
-  }
-}
-```
+   // ✅ Can introspect
+   actions: {
+   	create: {
+   		handler: (input, ctx) => ctx.db.insert();
+   	}
+   }
+   ```
 
 4. **Style constraints**: Word count, TL;DR requirement, analogy suggestions
 
-```
-"~1500-2000 words, include TL;DR at top, use restaurant menu analogy"
-```
+   ```
+   "~1500-2000 words, include TL;DR at top, use restaurant menu analogy"
+   ```
 
 5. **Exact output path**: No ambiguity
-
-```
-"Save to: /path/to/docs/articles/my-article.md"
-```
+   ```
+   "Save to: /path/to/docs/articles/my-article.md"
+   ```
 
 ### Example Full Prompt
 

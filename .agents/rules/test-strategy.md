@@ -1,7 +1,7 @@
 ---
-name: test-strategy
+trigger: model_decision
 description: Applied when implementing or modifying test code. Rules for creating test perspective tables (equivalence partitioning/boundary values), Given/When/Then format, and coverage targets
-alwaysApply: false
+globs: 
 ---
 
 ## Test Strategy Rules

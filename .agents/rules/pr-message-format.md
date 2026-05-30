@@ -1,7 +1,7 @@
 ---
-name: pr-message-format
+trigger: model_decision
 description: Applied when creating Pull Requests. Format rules for Prefix + English summary + structured body (overview, changes, test content)
-alwaysApply: false
+globs:
 ---
 
 # PR Message Format Rules

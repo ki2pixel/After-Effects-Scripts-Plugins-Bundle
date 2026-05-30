@@ -1,6 +1,6 @@
 ---
 name: fast-filesystem-ops
-description: Expert en édition chirurgicale. Obligation d'utiliser edit_file pour préserver les tokens. Recherche globale via fast_search_code.
+description: Expert en édition chirurgicale. Obligation d'utiliser edit_file pour préserver les tokens. Recherche globale via fast_search_files.
 ---
 
 # Fast Filesystem Operations
@@ -13,13 +13,13 @@ description: Expert en édition chirurgicale. Obligation d'utiliser edit_file po
 
 Fast Filesystem Ops optimise chaque opération fichier pour minimiser l'usage de tokens :
 - Édition ciblée avec `edit_file`
-- Recherche intelligente avec `fast_search_code`
+- Recherche intelligente avec `fast_search_files`
 - Lecture multiple avec `fast_read_multiple_files`
 - Évitement des chargements inutiles
 
 ### Workflow obligatoire
 
-1. **Localisation** : `fast_search_code` pour trouver les cibles
+1. **Localisation** : `fast_search_files` pour trouver les cibles
 2. **Lecture minimale** : `fast_read_multiple_files` uniquement des sections nécessaires
 3. **Édition chirurgicale** : `edit_file` pour modifications précises
 4. **Validation** : Vérification minimale des changements
@@ -30,7 +30,7 @@ Fast Filesystem Ops optimise chaque opération fichier pour minimiser l'usage de
 
 ```bash
 # 1. Localiser la fonction
-fast_search_code "function calculateTotal" --language python
+fast_search_files "function calculateTotal" --language python
 
 # 2. Lire uniquement le fichier contenant la fonction
 fast_read_multiple_files src/calculations.py --lines 45-67
@@ -43,7 +43,7 @@ edit_file src/calculations.py --start 45 --end 67 --replacement "new_function_co
 
 ```bash
 # 1. Rechercher toutes les occurrences
-fast_search_code "deprecated_function" --language javascript
+fast_search_files "deprecated_function" --language javascript
 
 # 2. Lire les sections pertinentes de chaque fichier
 fast_read_multiple_files file1.js file2.js file3.js --context 3
@@ -59,13 +59,13 @@ edit_file file2.js --line 45 --replacement "new_function_call"
 
 ```bash
 # Recherche ciblée avec filtres
-fast_search_code "class UserController" --language python --exclude test/
+fast_search_files "class UserController" --language python --exclude test/
 
 # Recherche par pattern avec contexte limité
-fast_search_code "TODO.*performance" --context 2
+fast_search_files "TODO.*performance" --context 2
 
 # Recherche multi-langages
-fast_search_code "import.*React" --language javascript,typescript
+fast_search_files "import.*React" --language javascript,typescript
 ```
 
 ### Lecture chirurgicale
@@ -105,7 +105,7 @@ read_file large_project/src/entier_fichier.py  # 5000+ lignes
 
 ✅ **Correct** :
 ```bash
-fast_search_code "function targetFunction" --language python
+fast_search_files "function targetFunction" --language python
 fast_read_multiple_files target_file.py --lines 100-150
 edit_file target_file.py --line 125 --replacement "optimized code"
 ```
@@ -115,7 +115,7 @@ edit_file target_file.py --line 125 --replacement "optimized code"
 Toujours rechercher avant de lire :
 ```bash
 # 1. Localiser
-fast_search_code "targetPattern" --language typescript
+fast_search_files "targetPattern" --language typescript
 
 # 2. Lire uniquement les résultats
 fast_read_multiple_files results... --context 2
@@ -148,7 +148,7 @@ read_file massive_config.json  # 5000+ lignes
 json_query_jsonpath massive_config.json "$.database.connection"
 
 # ✅ Pour code, recherche ciblée
-fast_search_code "database.*connection" --language python
+fast_search_files "database.*connection" --language python
 fast_read_multiple_files config.py --lines 50-60
 ```
 
@@ -177,7 +177,7 @@ fast_read_multiple_files target.py --lines 100-120  # Risque d'erreur
 
 ### Commandes principales
 
-- `fast_search_code "<pattern>"` : Recherche intelligente avec options
+- `fast_search_files "<pattern>"` : Recherche intelligente avec options
 - `fast_read_multiple_files <files>` : Lecture optimisée multi-fichiers  
 - `edit_file <file>` : Édition chirurgicale précise
 

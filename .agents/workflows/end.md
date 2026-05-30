@@ -1,7 +1,5 @@
 ---
-name: end
-description: end workflow migrated from Windsurf as executable prompt
-invokable: true
+description: Terminer la Session et Synchroniser la Memory Bank
 ---
 
 ### `/end` — Terminer la session et synchroniser la Memory Bank
@@ -9,7 +7,7 @@ invokable: true
    - Use the 'fast_read_file' tool to read ONLY 'activeContext.md' and 'progress.md' for session summarization.
    - Do NOT read productContext.md, systemPatterns.md or decisionLog.md unless a major architectural decision was made during the session.
    - If older decisions need to be reviewed, use targeted search instead of loading entire files.
-2. **Exécuter `.continue/rules/memorybankprotocol.md` conformément aux règles**  
+2. **Exécuter `.agents/rules/memorybankprotocol.md` conformément aux règles**  
    - Suspendre la tâche en cours puis résumer la session.  
    - Utiliser `search` pour identifier les fichiers additionnels à consulter (ex. docs liés à la session).
 3. **Mettre à jour la Memory Bank**  

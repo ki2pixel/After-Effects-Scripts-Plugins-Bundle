@@ -1,8 +1,7 @@
 ---
-name: skills-integration
+trigger: model_decision
 description: Skills integration system for automatic detection and loading
 globs: ["**/*.md"]
-alwaysApply: true
 ---
 
 # Skills Integration Matrix
@@ -28,7 +27,7 @@ alwaysApply: true
 
 When patterns detected, automatically load:
 ```
-fast_read_file(".continue/rules/[SKILL_NAME].md")
+fast_read_file(".agents/skills/[SKILL_NAME]/SKILL.md")
 ```
 
 ## Multi-Skill Support

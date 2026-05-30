@@ -214,11 +214,11 @@ pytest -q tests/unit/test_step6_json_reducer.py
 ### Documentation Projet
 | Document | Rôle | Cible |
 |---|---|---|
-| **[docs/README.md](../../docs/README.md)** | Vue d'ensemble documentation v2 | Tous |
-| **[docs/02-guides/coding-patterns.md](../../docs/02-guides/coding-patterns.md)** | Patterns production (app.settings, parsing) | Développeurs |
-| **[docs/04-reference/ae-internals.md](../../docs/04-reference/ae-internals.md)** | Registres MatchNames, tags, contrôles | Scripts avancés |
-| **[docs/04-reference/ae-script-audit.md](../../docs/04-reference/ae-script-audit.md)** | Labo d'audit des scripts tiers | Références |
-| **[docs/04-reference/capabilities.md](../../docs/04-reference/capabilities.md)** | Arbitrage PyShiftAE vs ExtendScript (80/20) | Architecture |
+| **[docs/README.md](../../../docs/README.md)** | Vue d'ensemble documentation v2 | Tous |
+| **[docs/02-guides/coding-patterns.md](../../../docs/02-guides/coding-patterns.md)** | Patterns production (app.settings, parsing) | Développeurs |
+| **[docs/04-reference/ae-internals.md](../../../docs/04-reference/ae-internals.md)** | Registres MatchNames, tags, contrôles | Scripts avancés |
+| **[docs/04-reference/ae-script-audit.md](../../../docs/04-reference/ae-script-audit.md)** | Labo d'audit des scripts tiers | Références |
+| **[docs/04-reference/capabilities.md](../../../docs/04-reference/capabilities.md)** | Arbitrage PyShiftAE vs ExtendScript (80/20) | Architecture |
 | **docs/legacy-adobe/** | Archive Adobe originale | Consultation historique |
 
 ### Scripts Clés

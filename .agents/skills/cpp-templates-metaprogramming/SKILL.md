@@ -1,11 +1,6 @@
 ---
 name: cpp-templates-metaprogramming
 description: Use when creating generic and type-safe C++ libraries with templates, SFINAE, concepts, and compile-time metaprogramming.
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
 ---
 
 # C++ Templates and Metaprogramming

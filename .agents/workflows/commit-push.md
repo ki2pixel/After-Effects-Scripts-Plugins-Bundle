@@ -1,7 +1,5 @@
 ---
-name: commit-push
 description: Commit changes to the current branch and push to remote
-invokable: true
 ---
 
 # Commit & Push (Current Branch)
@@ -15,10 +13,11 @@ Commits changes and pushes to remote.
 
 ## Execution Steps (Non-Interactive)
 
-1. Run quality checks as needed (lint / test / build, etc.)
-2. Stage changes (`git add -A`)
-3. Commit (use message from argument or environment variable)
-4. Push (`git push -u origin <current-branch>`)
+1. **Verify changes**: Use `read_file` or `grep_search` to review modifications if needed
+2. Run quality checks as needed (lint / test / build, etc.)
+3. Stage changes (`git add -A`)
+4. Commit (use message from argument or environment variable)
+5. Push (`git push -u origin <current-branch>`)
 
 ## Usage
 
@@ -64,5 +63,12 @@ git push -u origin "$BRANCH"
 
 ## Notes
 
-- Follow the commit message format and message generation principles in `.continue/rules/commit-message-format.md`.
+- Follow the commit message format and message generation principles in `.agents/rules/commit-message-format.md`.
 - Recommended to run `git status` or `git diff` to review diffs before execution.
+- Use `run_command` for git operations when executing from within the IDE environment.
+
+## Technical Lockdown
+
+Utilisez les outils fast-filesystem (fast_*) pour accéder aux fichiers memory-bank avec des chemins absolus.
+
+Windsurf is now in 'Token-Saver' mode. Minimize context usage by using tools instead of pre-loading.

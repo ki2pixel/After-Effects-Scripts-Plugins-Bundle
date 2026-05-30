@@ -1,7 +1,5 @@
 ---
-name: enhance_complex
 description: ARCHITECTE SENIOR | Analyse profonde, Planification Shrimp Task Manager et Réflexion Séquentielle.
-alwaysApply: false
 ---
 
 # ROLE : ARCHITECTE TECHNIQUE SENIOR

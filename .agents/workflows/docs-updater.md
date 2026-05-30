@@ -101,7 +101,7 @@ Plan :
 ### Sous-protocole Rédaction
 #### Point d'Entrée
 - Mode : Après plan.
-- Lecture : .continue/rules/documentation.md
+- Lecture : .agents/skills/documentation/SKILL.md
 - Modèle : Spécifié.
 
 #### Checkpoints
@@ -116,3 +116,6 @@ Application skill : Modèle, Éléments appliqués.
 - Git : Commentaire guidé.
 - Blocking : Checkpoints requis.
 - Audit : Note interne.
+
+## Technical Lockdown
+Utilisez fast-filesystem pour memory-bank.

@@ -1,10 +1,10 @@
 ---
-name: codingstandards
+trigger: always_on
 description: After Effects development standards covering PyShiftAE runtime patterns, ExtendScript/JSX conventions, CEP bridge, shape layers, ScriptUI panels, and production-ready patterns
-alwaysApply: true
+globs: 
 ---
 
-# After Effects Development
+# After Effects Development - Windsurf Rules
 
 ## Tech Stack
 
@@ -25,6 +25,7 @@ alwaysApply: true
 - **Memory:** Short-lived AE handles, lock→use→unlock→free pattern
 - **Error Handling:** try/except with contextual messages (comp/layer/prop), never silent failures
 - **Dependencies:** Pure Python libraries only, document version strategy
+- **Undo Groups:** Use `with ae.UndoGroup("Operation Name"):` to wrap modifications, ensuring user-friendly undo actions.
 - **TaskScheduler Implementation:** All AE mutations go through C++ TaskScheduler (AETK wrapper) which queues tasks for execution on AE's main thread via idle hooks. Direct PyFx calls only when already on main thread (e.g., bridge_daemon.py).
 - **⚠️ NOTE:** `ae.schedule_task()` helper is conceptual only - current PyShiftAE runtime uses direct C++ TaskScheduler integration. Worker threads compute data, then schedule C++ tasks for main thread execution.
 
@@ -35,7 +36,7 @@ alwaysApply: true
 - **Indexing:** Remember 1-based indexing for AE collections
 
 ### Documentation Updates
-- Any time you create or modify documentation (README, docs/, Markdown guides), you **must** apply the methodology defined in `.continue/rules/documentation.md` (TL;DR first, problem-first opening, ❌/✅ blocks, trade-offs, Golden Rule). Treat this skill file as the authoritative checklist before writing.
+- Any time you create or modify documentation (README, docs/, Markdown guides), you **must** apply the methodology defined in `.agents/skills/documentation/SKILL.md` (TL;DR first, problem-first opening, ❌/✅ blocks, trade-offs, Golden Rule). Treat this skill file as the authoritative checklist before writing.
 
 ## Patterns
 
@@ -138,6 +139,7 @@ def handle_command(command):
 3. **Scheduler function**: Direct AE operations in bridge handlers, C++ TaskScheduler for deferred tasks via idle hooks
 4. **Error handling**: Wrap in try/except with context, return structured error responses to CEP
 5. **Main thread context**: Bridge daemon runs in AE process - all operations are main thread by default
+6. **Undo Groups**: Use `with ae.UndoGroup("Name"):` for all project modifications.
 
 ### ExtendScript UI Panels
 1. **Dockable detection**: Test `thisObj instanceof Panel`
@@ -191,42 +193,42 @@ Test scenarios: project closed, layer deleted, comp inactive, undo groups
 
 ## Skills Invocation Guide
 
-### Use PyShiftAE Skill (@.continue/rules/pyshiftae.md)
+### Use PyShiftAE Skill (@.agents/skills/pyshiftae/SKILL.md)
 - Python automation with PyShiftAE
 - Threading patterns (worker + scheduler)
 - CEP bridge integration
 - Installation troubleshooting
 - Advanced API usage
 
-### Use AE Scripting Expert Skill (@.continue/rules/ae-scripting-expert.md)
+### Use AE Scripting Expert Skill (@.agents/skills/ae-scripting-expert/SKILL.md)
 - Traditional ExtendScript/JSX development
 - ScriptUI panel creation
 - Shape layer manipulation
 - Binary asset management
 - ES3 compatibility
 
-### Use AE CPP SDK Architecture Skill (@.continue/rules/ae-cpp-sdk-architecture.md)
+### Use AE CPP SDK Architecture Skill (@.agents/skills/ae-cpp-sdk-architecture/SKILL.md)
 - Writing C++ code for After Effects plugins (AETK)
 - Creating wrappers for AEGP Suites
 - Managing memory/threading in AE
 
-### Use After Effects CEP Panel Skill (@.continue/rules/after-effects-cep-panel.md)
+### Use After Effects CEP Panel Skill (@.agents/skills/after-effects-cep-panel/SKILL.md)
 - Developing CEP extensions (Common Extensibility Platform) for Adobe After Effects
 - Debugging and maintaining HTML/CSS/JS panels integrated with ExtendScript bridges
 
-### Use After Effects Scripts Skill (@.continue/rules/after-effects-scripts.md)
+### Use After Effects Scripts Skill (@.agents/skills/after-effects-scripts/SKILL.md)
 - Handling After Effects scripts (ExtendScript) and Python bridges for MediaPipe post-production
 - Operating AE scripts, system.callSystem() bridges, and STEP7 preprocessing
 
-### Use CPP Templates Metaprogramming Skill (@.continue/rules/cpp-templates-metaprogramming.md)
+### Use CPP Templates Metaprogramming Skill (@.agents/skills/cpp-templates-metaprogramming/SKILL.md)
 - Creating generic and type-safe C++ libraries with templates
 - SFINAE, concepts, and compile-time metaprogramming
 
-### Use Debugging Strategies Skill (@.continue/rules/debugging-strategies.md)
+### Use Debugging Strategies Skill (@.agents/skills/debugging-strategies/SKILL.md)
 - Systematic debugging techniques and profiling tools
 - Root cause analysis for bugs, performance issues, and unexpected behavior
 
-### Use Documentation Skill (@.continue/rules/documentation.md)
+### Use Documentation Skill (@.agents/skills/documentation/SKILL.md)
 - Technical writing and README guidelines
 - Punctuation rules for AI-free documentation
 ```
@@ -238,5 +240,3 @@ For hybrid projects: Use primary skill + reference this file for unified convent
 
 ## Final notes
 - Keep this document under 12,000 characters. Revise after any major changes.
-- **PyShiftAE TODO:** Add `ae.schedule_task()` helper to align documentation with runtime capabilities.
-- **Bridge Daemon Pattern:** Document main-thread execution model for direct PyFx calls.
