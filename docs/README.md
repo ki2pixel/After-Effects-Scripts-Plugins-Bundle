@@ -74,25 +74,25 @@ La métaphore tour de contrôle revient dans chaque section: si un guide manque 
 
 ## 📊 Métriques clés
 
-- **Total LOC projet** : 360 610 LOC (audit 2026-02-21 11:38 CET)
+- **Total LOC projet** : 362 647 LOC (audit 2026-06-04 13:40 CET)
 - **Ventilation détaillée** :
   - C/C++ Headers : 202 209 LOC
   - C++ : 73 310 LOC  
   - XML : 55 673 LOC
-  - Markdown : 13 549 LOC
-  - Python : 10 309 LOC (PyShiftAE: 7 fichiers, AETK-main: 40 fichiers, décentralisés: 70 fichiers, 1782 LOC premiers 10)
+  - Markdown : 15 552 LOC
+  - Python : 10 356 LOC (PyShiftAE: 7 fichiers, AETK-main: 40 fichiers, décentralisés: 71 fichiers, 1829 LOC premiers 10)
 - **Audits ciblés Scripts_AE** (cloc dédiés pour suivre les familles critiques) :
   - **Rigs procéduraux** (`3D Primitives`, `Crazy Shapes`, `Cloners + Effectors`) : 22 990 LOC — `3D Primitives Generator v3.jsx` dépasse toujours la fenêtre `cloc`, donc légère sous-estimation persistante.
   - **Toolkits pipeline/licensing** (`AW Autosaver`, `Automation Toolkit`, `KBar3`) : 11 299 LOC — `aw_Autosaver.jsx` continue de déclencher l'avertissement timeout.
   - **Panels CEP hybrides** (`AEInfoGraphics`, `Coco Color CoWorker`, `Infographics Toolkit`) : 9 547 LOC — `Coco Color CoWorker` embarque des blobs JSXBIN/binaire, `cloc` ignore encore ~230 lignes côté panel.
-- **CEP MediaSolution + GridCloner** : 3 713 LOC (JSX 1 892, JavaScript 1 266, CSS 362, HTML 193)
-- **Python décentralisés** : 70 fichiers (1782 LOC premiers 10)
-- **Assets CEP/Bridge** : 12 assets (550 LOC premiers 5)
+- **CEP MediaSolution + GridCloner** : 5 119 LOC (JSX 2 874, JavaScript 1 664, CSS 382, HTML 199)
+- **Python décentralisés** : 71 fichiers (1829 LOC premiers 10)
+- **Assets CEP/Bridge** : 12 assets (570 LOC premiers 5)
 - **GridCloner handler complet** : L’UI CEP ci-dessus pilote `gridcloner_apply` (validation PyShiftBridge + core PyShiftAE) pour générer jusqu’à 200 clones avec UndoGroup unique; voir [02-guides/cep-python-bridge.md](02-guides/cep-python-bridge.md#gridcloner-cep-panel) pour le pipeline UI → handler → AE.
 - **Documents fusionnés** : 20+ → 8 majeurs
 - **Couverture API** : PyShiftAE ~70%, ExtendScript 100%
 - **Transport** : Named pipe/Unix socket + mailbox JSON fallback
-- **Date d'audit** : 2026-02-21
+- **Date d'audit** : 2026-06-04
 
 ---
 
@@ -128,4 +128,4 @@ Tous les documents suivent la structure **SKILL.md** :
 
 ---
 
-*Version v2 — Créé le 2026-02-08 — Basé sur MIGRATION_PLAN.md*
+*Version v2.1 — Mis à jour le 2026-06-04 — Basé sur MIGRATION_PLAN.md*

@@ -122,7 +122,7 @@ function sendCommand(functionName, args) {
 **Chaque fois que tu touches After Effects ou que tu écris une doc, applique le duo Worker + TaskScheduler et TL;DR → Problème → Solution → Implémentation → Trade-offs → Golden Rule.**
 
 ## Références
-- `../internal/pyshiftae/pyshiftae_guide.md`
-- `../internal/pyshiftae/pyshiftae_safe_patterns_checklist.md`
-- `../DOCS_PLAYBOOK.md`
-- `../architecture_overview.md`
+- [architecture.md](architecture.md)
+- [coding-patterns.md](../02-guides/coding-patterns.md)
+- [cep-python-bridge.md](../02-guides/cep-python-bridge.md)
+- [api-reference.md](../03-api/api-reference.md)

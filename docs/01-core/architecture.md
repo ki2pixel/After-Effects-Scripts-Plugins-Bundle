@@ -194,7 +194,7 @@ Quand le startup JSX lance Python directement au démarrage, le chargement peut 
 - `../02-guides/coding-patterns.md`
 
 ## Références
-- `../architecture_overview.md`
-- `../internal/pyshiftae/architecture_interne_pyshiftae.md`
-- `../internal/pyshiftae/pyshiftae_safe_patterns_checklist.md`
-- `../bridge_communication.md`
+- [principles.md](principles.md)
+- [coding-patterns.md](../02-guides/coding-patterns.md)
+- [cep-python-bridge.md](../02-guides/cep-python-bridge.md)
+- [api-reference.md](../03-api/api-reference.md)

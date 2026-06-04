@@ -396,7 +396,7 @@ def _coerce_spacing(value: Any) -> Dict[str, float]:
 
 ```xml
 <!-- GridCloner-CEP/CSXS/manifest.xml -->
-<ExtensionManifest Version="5.0" ExtensionBundleId="com.workflowmediapipe.gridcloner">
+<ExtensionManifest Version="5.0" ExtensionBundleId="com.kidpixel.gridcloner">
   <HostList>
     <Host Name="AEFT" Version="[13.0,99.9]" />
   </HostList>

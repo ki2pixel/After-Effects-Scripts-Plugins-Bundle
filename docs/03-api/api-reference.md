@@ -57,6 +57,7 @@ Chaque endpoint est une fonction Python pure qui retourne un dictionnaire séria
 | --- | --- | --- | --- |
 | `mediasolution_apply_cuts_active_layer` | Parse un CSV et découpe le calque actif, recentre et colore les segments | `csv_path`, `frame_rate`, `comp_duration`, `snap_factor` (+ options) | `status`, `created`, `segments[]`, `notes[]` |
 | `mediasolution_apply_auto_recentering` | Recentrage intelligent basé sur un JSON de tracking | `tracking_json_path`, `config` | `status`, `layers_updated`, `notes[]` |
+| `gridcloner_apply` | Génère une grille de clones 2D/3D avec Null de contrôle et sliders d'effets | `rows`, `columns`, `depth`, `spacing` (`{x, y, z}`), `enable3D` (+ options) | `status`, `created_count`, `notes[]` |
 | `ping` | Vérifie la santé du daemon avant un traitement lourd | `{}` | `status`, `timestamp`, `version`, `transport` |
 
 #### Exemple CEP (async, non bloquant)

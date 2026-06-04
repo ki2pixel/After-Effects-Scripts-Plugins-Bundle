@@ -30,26 +30,26 @@ JSON Query Expert utilise le pattern "Sniper" pour les fichiers JSON :
 
 ```bash
 # 1. Localiser la configuration cible
-json_query_query_json package.json "$.scripts.dev"
+json_query_query_json json_data="{...}" query="$.scripts.dev"
 
 # 2. Trouver les lignes correspondantes
-json_query_search_keys package.json "scripts.dev"
+json_query_search_keys json_data="{...}" pattern="scripts.dev"
 
 # 3. Éditer chirurgicalement
-edit_file package.json --line 15 --replacement '"dev": "vite --port 3000",'
+edit_file path="package.json" edits='[{"oldText": "\"dev\": \"vite\"", "newText": "\"dev\": \"vite --port 3000\""}]'
 ```
 
 #### Pour manipulation de i18n
 
 ```bash
 # 1. Extraire uniquement les traductions nécessaires
-json_query_query_json locales/fr.json "$.pages.home.title"
+json_query_query_json json_data="{...}" query="$.pages.home.title"
 
 # 2. Localiser les clés manquantes
-json_query_search_keys locales/fr.json "pages.home"
+json_query_search_keys json_data="{...}" pattern="pages.home"
 
 # 3. Ajouter les traductions manquantes
-edit_file locales/fr.json --line 45 --replacement '"title": "Page d''accueil",'
+edit_file path="locales/fr.json" edits='[{"oldText": "\"title\": \"\"", "newText": "\"title\": \"Page d'\''accueil\""}]'
 ```
 
 ## Production-safe patterns
@@ -61,38 +61,39 @@ edit_file locales/fr.json --line 45 --replacement '"title": "Page d''accueil",'
 read_file massive_manifest.json  # 5000+ lignes = PROHIBÉ
 
 # ✅ Pattern "Sniper" obligatoire
+# D'abord fast_read_multiple_files ou fast_read_file
 # 1. Inspection ciblée
-json_query_query_json massive_manifest.json "$.components[0].props"
+json_query_query_json json_data="{...}" query="$.components[0].props"
 
 # 2. Localisation précise  
-json_query_search_keys massive_manifest.json "components[0].props"
+json_query_search_keys json_data="{...}" pattern="components[0].props"
 
 # 3. Édition chirurgicale
-edit_file massive_manifest.json --line 234 --replacement '"newProp": "value",'
+edit_file path="massive_manifest.json" edits='[{"oldText": "\"newProp\": \"old\"", "newText": "\"newProp\": \"value\""}]'
 ```
 
 ### Recherche multi-niveaux
 
 ```bash
 # Pour structures JSON complexes
-json_query_query_json config.json "$.database.connections[0].host"
-json_query_query_json config.json "$.api.endpoints[*].url"
+json_query_query_json json_data="{...}" query="$.database.connections[0].host"
+json_query_query_json json_data="{...}" query="$.api.endpoints[*].url"
 
 # Rechercher toutes les clés d'un niveau
-json_query_search_keys config.json "database.connections"
+json_query_search_keys json_data="{...}" pattern="database.connections"
 ```
 
 ### Validation avant modification
 
 ```bash
 # 1. Vérifier l'existence du chemin
-json_query_query_json target.json "$.deep.nested.path"
+json_query_query_json json_data="{...}" query="$.deep.nested.path"
 
 # 2. Confirmer la valeur actuelle
-json_query_query_json target.json "$.deep.nested.path.value"
+json_query_query_json json_data="{...}" query="$.deep.nested.path.value"
 
 # 3. Localiser pour édition
-json_query_search_keys target.json "deep.nested.path"
+json_query_search_keys json_data="{...}" pattern="deep.nested.path"
 ```
 
 ## Token optimization strategies
@@ -101,7 +102,7 @@ json_query_search_keys target.json "deep.nested.path"
 
 ```bash
 # Toujours inspecter avant de lire
-json_query_query_json large_config.json "$.featureFlags"
+json_query_query_json json_data="{...}" query="$.featureFlags"
 
 # Si trouvé et petit, alors lire avec contexte
 fast_read_multiple_files large_config.json --lines 100-120 --context 2
@@ -113,7 +114,7 @@ fast_read_multiple_files large_config.json --lines 100-120 --context 2
 
 ```bash
 # Extraire uniquement la branche nécessaire
-json_query_query_json manifest.json "$.permissions"
+json_query_query_json json_data="{...}" query="$.permissions"
 
 # Plutôt que charger tout le manifest
 read_file manifest.json  # 3000+ lignes = GASPILLAGE
@@ -123,10 +124,10 @@ read_file manifest.json  # 3000+ lignes = GASPILLAGE
 
 ```bash
 # Rechercher toutes les occurrences d'une clé
-json_query_search_keys translations.json "*.button.*"
+json_query_search_keys json_data="{...}" pattern="*.button.*"
 
 # Filtrer par pattern
-json_query_search_keys config.json "database.*.port"
+json_query_search_keys json_data="{...}" pattern="database.*.port"
 ```
 
 ## Common gotchas
@@ -140,25 +141,25 @@ RÈGLE D'OR : Jamais charger entièrement les fichiers JSON > 1000 lignes
 read_file massive_i18n.json  # 15000 lignes
 
 # ✅ OBLIGATOIRE
-json_query_query_json massive_i18n.json "$.fr.common.buttons[*]"
-json_query_search_keys massive_i18n.json "fr.common"
+json_query_query_json json_data="{...}" query="$.fr.common.buttons[*]"
+json_query_search_keys json_data="{...}" pattern="fr.common"
 ```
 
 ### JSONPath syntax errors
 
 ```bash
 # Syntaxe correcte pour JSONPath
-json_query_query_json file.json "$.root.array[0].property"  # ✅
+json_query_query_json json_data="{...}" query="$.root.array[0].property"  # ✅
 
 # Éviter les chemins relatifs
-json_query_query_json file.json "array[0].property"  # ❌
+json_query_query_json json_data="{...}" query="array[0].property"  # ❌
 ```
 
 ### Localisation de lignes incorrecte
 
 ```bash
 # Toujours vérifier que les lignes existent
-json_query_search_keys target.json "target.key"
+json_query_search_keys json_data="{...}" pattern="target.key"
 
 # Confirmer avant édition
 fast_read_multiple_files target.json --lines 50-60 --context 1
@@ -168,56 +169,56 @@ fast_read_multiple_files target.json --lines 50-60 --context 1
 
 ```bash
 # Valider la syntaxe après modification
-json_query_query_json modified.json "$.root"  # Test de validité
+json_query_query_json json_data="{...}" query="$.root"  # Test de validité
 
-# Utiliser l'option --validate si disponible
-edit_file file.json --line X --replacement "value," --validate
+# Utiliser dryRun
+edit_file path="file.json" edits='[{"oldText": "old_value,", "newText": "value,"}]' dryRun=true
 ```
 
 ## API Reference
 
 ### Commandes principales
 
-- `json_query_query_json <file> "<path>"` : Extraction ciblée via JSONPath
-- `json_query_search_keys <file> "<pattern>"` : Recherche de clés par pattern
+- `json_query_query_json json_data="{...}" query="<path>"` : Extraction ciblée via JSONPath (nécessite la lecture préalable)
+- `json_query_search_keys json_data="{...}" pattern="<pattern>"` : Recherche de clés par pattern
 - `edit_file <file>` : Édition chirurgicale (voir Fast Filesystem Ops)
 
 ### Patterns JSONPath courants
 
 ```bash
 # Racine
-json_query_query_json file.json "$"
+json_query_query_json json_data="{...}" query="$"
 
 # Propriété simple
-json_query_query_json file.json "$.propertyName"
+json_query_query_json json_data="{...}" query="$.propertyName"
 
 # Élément de tableau
-json_query_query_json file.json "$.array[0]"
+json_query_query_json json_data="{...}" query="$.array[0]"
 
 # Tous les éléments
-json_query_query_json file.json "$.array[*]"
+json_query_query_json json_data="{...}" query="$.array[*]"
 
 # Recherche récursive
-json_query_query_json file.json "$..deeplyNested"
+json_query_query_json json_data="{...}" query="$..deeplyNested"
 
 # Filtrage
-json_query_query_json file.json "$.array[?(@.type=='button')]"
+json_query_query_json json_data="{...}" query="$.array[?(@.type=='button')]"
 ```
 
 ### Patterns de recherche de clés
 
 ```bash
 # Recherche exacte
-json_query_search_keys file.json "exact.key.name"
+json_query_search_keys json_data="{...}" pattern="exact.key.name"
 
 # Recherche avec wildcard
-json_query_search_keys file.json "prefix.*.suffix"
+json_query_search_keys json_data="{...}" pattern="prefix.*.suffix"
 
 # Recherche récursive
-json_query_search_keys file.json "**.targetKey"
+json_query_search_keys json_data="{...}" pattern="**.targetKey"
 
 # Recherche d'indices
-json_query_search_keys file.json "array[?]"
+json_query_search_keys json_data="{...}" pattern="array[?]"
 ```
 
 ### Options avancées
@@ -262,24 +263,24 @@ Utilise pour manipuler les fichiers de configuration générés par Task Master.
 
 ### package.json
 ```bash
-json_query_query_json package.json "$.scripts"
-json_query_search_keys package.json "dependencies"
+json_query_query_json json_data="{...}" query="$.scripts"
+json_query_search_keys json_data="{...}" pattern="dependencies"
 ```
 
 ### manifest.json (Chrome/Extension)
 ```bash
-json_query_query_json manifest.json "$.permissions"
-json_query_search_keys manifest.json "content_scripts"
+json_query_query_json json_data="{...}" query="$.permissions"
+json_query_search_keys json_data="{...}" pattern="content_scripts"
 ```
 
 ### tsconfig.json
 ```bash
-json_query_query_json tsconfig.json "$.compilerOptions"
-json_query_search_keys tsconfig.json "include"
+json_query_query_json json_data="{...}" query="$.compilerOptions"
+json_query_search_keys json_data="{...}" pattern="include"
 ```
 
 ### i18n files
 ```bash
-json_query_query_json locales.json "$.fr.pages[*].title"
-json_query_search_keys locales.json "*.buttons.*"
+json_query_query_json json_data="{...}" query="$.fr.pages[*].title"
+json_query_search_keys json_data="{...}" pattern="*.buttons.*"
 ```

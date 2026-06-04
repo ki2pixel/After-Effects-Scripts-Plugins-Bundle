@@ -36,7 +36,7 @@ fast_search_files "function calculateTotal" --language python
 fast_read_multiple_files src/calculations.py --lines 45-67
 
 # 3. Éditer chirurgicalement
-edit_file src/calculations.py --start 45 --end 67 --replacement "new_function_code"
+edit_file path="src/calculations.py" edits='[{"oldText": "old_code", "newText": "new_function_code"}]'
 ```
 
 #### Pour refactoring multi-fichiers
@@ -49,8 +49,8 @@ fast_search_files "deprecated_function" --language javascript
 fast_read_multiple_files file1.js file2.js file3.js --context 3
 
 # 3. Éditer chaque occurrence chirurgicalement
-edit_file file1.js --line 123 --replacement "new_function_call"
-edit_file file2.js --line 45 --replacement "new_function_call"
+edit_file path="file1.js" edits='[{"oldText": "deprecated_function", "newText": "new_function_call"}]'
+edit_file path="file2.js" edits='[{"oldText": "deprecated_function", "newText": "new_function_call"}]'
 ```
 
 ## Production-safe patterns
@@ -84,14 +84,14 @@ fast_read_multiple_files src/*.js --pattern "export.*function"
 ### Édition précise
 
 ```bash
-# Édition par ligne unique
-edit_file src/app.js --line 234 --replacement "newCode"
+# Édition chirurgicale avec format MCP (ou utiliser replace_file_content nativement)
+edit_file path="src/app.js" edits='[{"oldText": "oldCode", "newText": "newCode"}]'
 
-# Édition par bloc
-edit_file src/app.js --start 200 --end 250 --replacement "newBlock"
+# Édition de bloc
+edit_file path="src/app.js" edits='[{"oldText": "oldBlock", "newText": "newBlock"}]'
 
-# Édition avec recherche automatique
-edit_file src/app.js --search "oldPattern" --replacement "newPattern"
+# Édition multiple
+edit_file path="src/app.js" edits='[{"oldText": "oldPattern", "newText": "newPattern"}]'
 ```
 
 ## Token optimization strategies
@@ -107,7 +107,7 @@ read_file large_project/src/entier_fichier.py  # 5000+ lignes
 ```bash
 fast_search_files "function targetFunction" --language python
 fast_read_multiple_files target_file.py --lines 100-150
-edit_file target_file.py --line 125 --replacement "optimized code"
+edit_file path="target_file.py" edits='[{"oldText": "targetFunction", "newText": "optimized code"}]'
 ```
 
 ### Recherche avant lecture
@@ -121,7 +121,7 @@ fast_search_files "targetPattern" --language typescript
 fast_read_multiple_files results... --context 2
 
 # 3. Éditer
-edit_file target_file.ts --line X --replacement "new code"
+edit_file path="target_file.ts" edits='[{"oldText": "targetPattern", "newText": "new code"}]'
 ```
 
 ### Lecture multiple optimisée
@@ -145,7 +145,7 @@ read_file file3.js
 read_file massive_config.json  # 5000+ lignes
 
 # ✅ Utiliser JSON Query pour les gros JSON
-json_query_jsonpath massive_config.json "$.database.connection"
+json_query_query_json json_data="{...}" query="$.database.connection"
 
 # ✅ Pour code, recherche ciblée
 fast_search_files "database.*connection" --language python
@@ -159,8 +159,8 @@ fast_read_multiple_files config.py --lines 50-60
 fast_read_multiple_files file1.js file2.js file3.js --pattern "oldFunction"
 
 # Puis éditer séquentiellement
-edit_file file1.js --search "oldFunction" --replacement "newFunction"
-edit_file file2.js --search "oldFunction" --replacement "newFunction"
+edit_file path="file1.js" edits='[{"oldText": "oldFunction", "newText": "newFunction"}]'
+edit_file path="file2.js" edits='[{"oldText": "oldFunction", "newText": "newFunction"}]'
 ```
 
 ### Contexte insuffisant
@@ -179,7 +179,7 @@ fast_read_multiple_files target.py --lines 100-120  # Risque d'erreur
 
 - `fast_search_files "<pattern>"` : Recherche intelligente avec options
 - `fast_read_multiple_files <files>` : Lecture optimisée multi-fichiers  
-- `edit_file <file>` : Édition chirurgicale précise
+- `edit_file` (via filesystem-agent) : Édition chirurgicale précise avec `path` et `edits`
 
 ### Options de recherche
 
@@ -194,12 +194,11 @@ fast_read_multiple_files target.py --lines 100-120  # Risque d'erreur
 - `--context <n>` : Lignes de contexte supplémentaires
 - `--pattern <regex>` : Filtrer lignes par pattern
 
-### Options d'édition
+### Paramètres d'édition (MCP filesystem-agent)
 
-- `--line <n>` : Ligne spécifique à remplacer
-- `--start <n> --end <n>` : Bloc de lignes
-- `--search <pattern>` : Rechercher et remplacer
-- `--replacement <code>` : Code de remplacement
+- `path` : Chemin absolu du fichier
+- `edits` : Tableau d'objets `[{"oldText": "...", "newText": "..."}]`
+- `dryRun` : (Optionnel) Validation sans appliquer
 
 ## Debugging checklist
 
@@ -230,4 +229,4 @@ Utilise pour implémenter les tâches générées par Task Master de manière op
 
 ### Avec JSON Query
 
-Utilise `json_query_jsonpath` pour les fichiers JSON volumineux avant édition.
+Utilise `json_query_query_json` pour les fichiers JSON volumineux avant édition.

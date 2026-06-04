@@ -8,9 +8,9 @@ globs:
 
 ## Tech Stack
 
-**Runtimes:** PyShiftAE (AEGP plugin embedding CPython 3.11+) for Python automation, ExtendScript/JSX (ES3) for traditional scripting
+**Runtimes:** PyShiftAE (AEGP plugin embedding CPython 3.11-3.13) for Python automation, ExtendScript/JSX (ES3) for traditional scripting
 
-**Languages:** Python 3.11+ (pure Python preferred), ExtendScript/JSX (ES3 compatible, var only)
+**Languages:** Python 3.11-3.13 (pure Python preferred), ExtendScript/JSX (ES3 compatible, var only)
 
 **Bridges:** CEP (HTML/JS) ↔ PyInterface (named pipes/Unix sockets) or Mailbox JSON fallback, ScriptUI panels (dockable/palette)
 
@@ -22,10 +22,11 @@ globs:
 
 ### PyShiftAE (Python)
 - **Threading:** Worker threads for computation, AE main thread for mutations via TaskScheduler
-- **Memory:** Short-lived AE handles, lock→use→unlock→free pattern
+- **Memory:** Short-lived AE handles strictly following the `lock→use→unlock→free` lifecycle. Handles must not outlive the immediate function scope to prevent stale references.
 - **Error Handling:** try/except with contextual messages (comp/layer/prop), never silent failures
+- **Preventive Validation:** Coerce arguments and validate physical limits (e.g., max comp dimensions, valid layer types) *before* AE API calls to avoid C++ memory corruption.
 - **Dependencies:** Pure Python libraries only, document version strategy
-- **Undo Groups:** Use `with ae.UndoGroup("Operation Name"):` to wrap modifications, ensuring user-friendly undo actions.
+- **Undo Groups & Batching:** The golden rule: eliminate N+1 queries by batch-reading data, computing in Python, then applying all AE property mutations within a single `with ae.UndoGroup("Operation Name"):` transaction.
 - **TaskScheduler Implementation:** All AE mutations go through C++ TaskScheduler (AETK wrapper) which queues tasks for execution on AE's main thread via idle hooks. Direct PyFx calls only when already on main thread (e.g., bridge_daemon.py).
 - **⚠️ NOTE:** `ae.schedule_task()` helper is conceptual only - current PyShiftAE runtime uses direct C++ TaskScheduler integration. Worker threads compute data, then schedule C++ tasks for main thread execution.
 
@@ -128,7 +129,12 @@ def handle_command(command):
         result = func(**command['args'])
         return {"status": "success", "result": result}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {
+            "status": "error", 
+            "error": type(e).__name__, 
+            "message": str(e),
+            "details": getattr(e, 'details', {})
+        }
 ```
 
 ## Common Tasks
@@ -137,7 +143,7 @@ def handle_command(command):
 1. **Thread boundary**: CEP/JavaScript for UI, Python bridge handlers for AE operations (already on main thread)
 2. **Worker function**: Heavy computation in CEP/JavaScript or pure Python functions
 3. **Scheduler function**: Direct AE operations in bridge handlers, C++ TaskScheduler for deferred tasks via idle hooks
-4. **Error handling**: Wrap in try/except with context, return structured error responses to CEP
+4. **Error handling**: Wrap in try/except with context. Catch exceptions at the thread boundary to return standardized JSON error payloads.
 5. **Main thread context**: Bridge daemon runs in AE process - all operations are main thread by default
 6. **Undo Groups**: Use `with ae.UndoGroup("Name"):` for all project modifications.
 
@@ -231,6 +237,18 @@ Test scenarios: project closed, layer deleted, comp inactive, undo groups
 ### Use Documentation Skill (@.agents/skills/documentation/SKILL.md)
 - Technical writing and README guidelines
 - Punctuation rules for AI-free documentation
+
+### Use Fast Filesystem Ops Skill (@.agents/skills/fast-filesystem-ops/SKILL.md)
+- Édition chirurgicale avec `edit_file` et recherche globale.
+
+### Use JSON Query Expert Skill (@.agents/skills/json-query-expert/SKILL.md)
+- Requêtage ciblé des gros fichiers JSON.
+
+### Use Sequential Thinking Logic Skill (@.agents/skills/sequentialthinking-logic/SKILL.md)
+- Raisonnement décomposé pour logique complexe.
+
+### Use Shrimp Task Manager Skill (@.agents/skills/shrimp-task-manager/SKILL.md)
+- Gestion de backlog et planification de tâches.
 ```
 Python automation? → PyShiftAE skill
 Traditional scripting? → AE Scripting Expert skill

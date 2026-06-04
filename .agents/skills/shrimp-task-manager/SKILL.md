@@ -171,4 +171,4 @@ Utilise `edit_file` pour implémenter les tâches générées par Shrimp Task Ma
 
 ### Avec JSON Query
 
-Utilise `json_query_jsonpath` pour extraire les données de configuration des PRD au format JSON.
+Utilise `json_query_query_json` pour extraire les données de configuration des PRD au format JSON.
